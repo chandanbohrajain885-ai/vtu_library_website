@@ -55,7 +55,7 @@ export default function HomePage() {
           </div>
           <div className="flex items-center space-x-4">
             <span>Email: library@vtu.ac.in</span>
-            <span>Phone: +91 (831) 2498000</span>
+            <span>Phone: 08312498191</span>
           </div>
         </div>
       </div>
@@ -447,7 +447,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4 text-orange-400" />
-                  <p className="font-paragraph text-gray-300 text-sm">+91 (831) 2498000</p>
+                  <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4 text-orange-400" />
