@@ -100,12 +100,12 @@ export default function HomePage() {
             <div className="max-w-2xl mx-auto mt-8">
               <div className="flex">
                 <Input
-                  placeholder="Search for books, journals, or specific topics you are interested in..."
-                  className="flex-1 h-12 text-gray-800 border-0 rounded-r-none"
-                />
+                    placeholder="Search for books, journals, or specific topics you are interested in..."
+                    className="flex-1 h-12 rounded-r-none bg-[transparent] border-[4px] border-[#ff8301] border-solid opacity-[0.89] text-secondary"
+                  />
                 <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
-                  <Search className="h-5 w-5" />
-                </Button>
+                <Search className="h-5 w-5" />
+              </Button>
               </div>
             </div>
 
