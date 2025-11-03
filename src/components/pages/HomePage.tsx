@@ -69,7 +69,7 @@ export default function HomePage() {
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
               <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-              <Link to="/journals" className="hover:text-orange-200 transition-colors">Journals</Link>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ON"}</Link>
               <Link to="/news" className="hover:text-orange-200 transition-colors">Consortium</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
 
