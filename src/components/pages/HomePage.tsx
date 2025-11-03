@@ -61,17 +61,16 @@ export default function HomePage() {
               <Link to="/guide" className="hover:text-secondary transition-colors">User Guide</Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Sign In
-              </Button>
               <Button className="bg-secondary hover:bg-secondary/90">
                 Get Access
               </Button>
-            </div>
+            <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                Sign In
+              </Button>
+              </div>
           </nav>
         </div>
       </header>
-
       {/* Hero Section - Inspired by the layout structure */}
       <section className="w-full max-w-[120rem] mx-auto px-6 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -125,7 +124,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Services Section - Three column layout inspired by the image */}
       <section className="bg-primary/5 py-16">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -192,7 +190,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Featured Resources */}
       <section className="py-16">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -245,7 +242,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Latest News */}
       <section className="bg-primary/5 py-16">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -291,7 +287,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-12">
         <div className="max-w-[120rem] mx-auto px-6">
