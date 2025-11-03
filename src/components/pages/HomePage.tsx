@@ -126,7 +126,7 @@ export default function HomePage() {
                   placeholder="Search for books, journals, or specific topics you are interested in..."
                   className="flex-1 h-12 rounded-r-none border-[4px] border-[#ff8301] border-solid text-[#ffffff] opacity-[1] bg-primary-foreground"
                 />
-              <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
+              <Button className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-primary">
               <Search className="h-5 w-5" />
             </Button>
             </div>
