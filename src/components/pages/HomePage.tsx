@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown } from 'lucide-react';
 
 export default function HomePage() {
   const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
@@ -51,6 +52,12 @@ export default function HomePage() {
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
+            <Image 
+              src="https://static.wixstatic.com/media/e79745_a590d112b3ad43e79706847a20a075d5~mv2.png"
+              alt="VTU Consortium Logo"
+              width={50}
+              className="h-12 w-12 object-contain"
+            />
             <span className="font-bold text-2xl">{"VTU Consortium"}</span>
           </div>
           <div className="flex items-center space-x-4">
@@ -72,12 +79,28 @@ export default function HomePage() {
               <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ONOS"}</Link>
               <Link to="/news" className="hover:text-orange-200 transition-colors">{"Downloads"}</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
-
+              <Link to="/guide" className="hover:text-orange-200 transition-colors">Links</Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Button className="bg-green-500 hover:bg-green-600 text-white px-6">
-                Login
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-green-500 hover:bg-green-600 text-white px-6 flex items-center space-x-2">
+                    <span>Login</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Admin Login
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Librarian/Nodal-officer Login
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Publisher's Login
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6">
                 Register
               </Button>
