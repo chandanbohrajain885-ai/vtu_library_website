@@ -51,7 +51,7 @@ export default function HomePage() {
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
-            <span>{"VTU Consortium"}</span>
+            <span className="font-bold text-4xl">{"VTU Consortium"}</span>
           </div>
           <div className="flex items-center space-x-4">
             <span>Email: library@vtu.ac.in</span>
@@ -64,8 +64,7 @@ export default function HomePage() {
         <div className="max-w-[120rem] mx-auto px-6 py-4 bg-primary">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8" />
-              <span className="font-heading text-xl font-bold">Library Portal</span>
+
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
@@ -101,7 +100,7 @@ export default function HomePage() {
               <div className="flex">
                 <Input
                     placeholder="Search for books, journals, or specific topics you are interested in..."
-                    className="flex-1 h-12 rounded-r-none bg-[transparent] border-[4px] border-[#ff8301] border-solid opacity-[0.89] text-secondary"
+                    className="flex-1 h-12 rounded-r-none border-[4px] border-[#ff8301] border-solid text-[#ffffff] opacity-[1] bg-primary-foreground"
                   />
                 <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
                 <Search className="h-5 w-5" />
