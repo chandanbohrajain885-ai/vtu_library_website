@@ -124,9 +124,9 @@ export default function HomePage() {
             <div className="flex">
               <Input
                   placeholder="Search for books, journals, or specific topics you are interested in..."
-                  className="flex-1 h-12 rounded-r-none border-[4px] border-[#ff8301] border-solid text-[#ffffff] opacity-[1] bg-primary-foreground"
+                  className="flex-1 h-12 rounded-r-none text-[#ffffff] opacity-[1] bg-primary-foreground border-[4px] border-[#f39c0a] border-solid"
                 />
-              <Button className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#f39c0a] border-[0px] border-[#0b1e5b] border-solid">
+              <Button className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid">
               <Search className="h-5 w-5" />
             </Button>
             </div>
