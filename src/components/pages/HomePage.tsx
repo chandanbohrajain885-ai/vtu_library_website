@@ -5,8 +5,9 @@ import { EResources, NewsandNotifications } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
-import { BookOpen, FileText, Newspaper, Users, Search, ArrowRight } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 export default function HomePage() {
   const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
@@ -38,177 +39,206 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-primary font-heading text-xl">Loading...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-800 font-heading text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header Navigation */}
-      <header className="bg-primary text-primary-foreground shadow-lg">
+    <div className="min-h-screen bg-white">
+      {/* Top Header Bar */}
+      <div className="bg-black text-white py-2">
+        <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
+          <div className="flex items-center space-x-4">
+            <span>VTU Consortium Digital Library</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span>Email: library@vtu.ac.in</span>
+            <span>Phone: +91 (831) 2498000</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <header className="bg-orange-500 text-white shadow-lg">
         <div className="max-w-[120rem] mx-auto px-6 py-4">
           <nav className="flex items-center justify-between">
-            <div className="font-heading text-2xl font-bold">
-              Academic Library Consortium
+            <div className="flex items-center space-x-2">
+              <BookOpen className="h-8 w-8" />
+              <span className="font-heading text-xl font-bold">Library Portal</span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="hover:text-secondary transition-colors">Home</Link>
-              <Link to="/resources" className="hover:text-secondary transition-colors">E-Resources</Link>
-              <Link to="/journals" className="hover:text-secondary transition-colors">Journals</Link>
-              <Link to="/news" className="hover:text-secondary transition-colors">News</Link>
-              <Link to="/guide" className="hover:text-secondary transition-colors">User Guide</Link>
+              <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
+              <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">Journals</Link>
+              <Link to="/news" className="hover:text-orange-200 transition-colors">Consortium</Link>
+              <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
+              <Link to="/guide" className="hover:text-orange-200 transition-colors">OPAC</Link>
             </div>
             <div className="flex items-center space-x-4">
-              <Button className="bg-secondary hover:bg-secondary/90">
-                Get Access
+              <Button className="bg-green-500 hover:bg-green-600 text-white px-6">
+                Login
               </Button>
-            <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Sign In
-              </Button>
-              </div>
+            </div>
           </nav>
         </div>
       </header>
-      {/* Hero Section - Inspired by the layout structure */}
-      <section className="w-full max-w-[120rem] mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Text content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="font-heading text-6xl lg:text-7xl font-bold text-primary leading-tight">
-                KNOWLEDGE
-                <br />
-                <span className="text-primary italic">DRIVEN</span>
-                <br />
-                <span className="text-secondary">ACADEMIC</span>
-                <br />
-                <span className="text-secondary">EXCELLENCE</span>
-              </h1>
-            </div>
+
+      {/* Hero Section with Library Background */}
+      <section className="relative bg-gray-900 text-white py-20" style={{
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_99252604bb974a358c5f83d03aa2dd0e~mv2.png?originWidth=1600&originHeight=768')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
+        <div className="max-w-[120rem] mx-auto px-6 text-center">
+          <div className="space-y-6">
+            <h1 className="font-heading text-5xl lg:text-6xl font-bold">
+              Welcome to VTU Consortium Digital Library
+            </h1>
+            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">
+              Access thousands of academic resources, research papers, and e-books to support your educational journey
+            </p>
             
-            <div className="space-y-6">
-              <p className="font-paragraph text-lg text-primary/80 max-w-lg">
-                Access thousands of academic resources, research papers, and scholarly journals 
-                from leading institutions worldwide. Advance your research with our comprehensive 
-                digital library platform.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-lg px-8">
-                  Explore Resources
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8">
-                  Learn More
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto mt-8">
+              <div className="flex">
+                <Input
+                  placeholder="Search for books, journals, or specific topics you are interested in..."
+                  className="flex-1 h-12 text-gray-800 border-0 rounded-r-none"
+                />
+                <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
+                  <Search className="h-5 w-5" />
                 </Button>
               </div>
             </div>
-          </div>
 
-          {/* Right side - Image */}
-          <div className="relative">
-            <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg overflow-hidden">
-              <Image
-                src="https://static.wixstatic.com/media/e79745_bf01863a3c5846ec8d5a5f6a6b2f132b~mv2.png?originWidth=576&originHeight=448"
-                alt="Students studying in a modern academic library with digital resources"
-                className="w-full h-full object-cover"
-                width={600}
-              />
-            </div>
-            {/* Overlay element */}
-            <div className="absolute -bottom-4 -left-4 bg-secondary text-secondary-foreground p-4 rounded-full">
-              <Search className="h-8 w-8" />
+            {/* Quick Access Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <BookOpen className="mr-2 h-4 w-4" />
+                E-Books
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Download className="mr-2 h-4 w-4" />
+                Journals
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Search className="mr-2 h-4 w-4" />
+                Research Papers
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Users className="mr-2 h-4 w-4" />
+                Video Lectures
+              </Button>
             </div>
           </div>
         </div>
       </section>
-      {/* Services Section - Three column layout inspired by the image */}
-      <section className="bg-primary/5 py-16">
+
+      {/* Library Features Section */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-primary mb-4">
-              EMPOWERING RESEARCH
+            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
+              Library Features
             </h2>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-secondary text-secondary-foreground p-2 rounded">
-                  <BookOpen className="h-6 w-6" />
+            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                  <BookOpen className="h-8 w-8 text-orange-500" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-primary">
-                  DIGITAL LIBRARY
-                  <br />
-                  ACCESS
-                </h3>
-              </div>
-              <p className="font-paragraph text-primary/70">
-                Comprehensive access to e-books and digital publications from 
-                leading academic publishers. Search through millions of titles 
-                across all disciplines with advanced filtering capabilities.
-              </p>
-            </div>
+                <CardTitle className="font-heading text-xl text-gray-800">Digital Reading</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-gray-600">
+                  Access thousands of e-books and digital resources from anywhere, anytime
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-secondary text-secondary-foreground p-2 rounded">
-                  <FileText className="h-6 w-6" />
+            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                  <Download className="h-8 w-8 text-orange-500" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-primary">
-                  RESEARCH PAPERS
-                  <br />
-                  & JOURNALS
-                </h3>
-              </div>
-              <p className="font-paragraph text-primary/70">
-                Access peer-reviewed research papers and scholarly journals from 
-                top-tier publications. Stay current with the latest research in 
-                your field with real-time updates and notifications.
-              </p>
-            </div>
+                <CardTitle className="font-heading text-xl text-gray-800">Download Resources</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-gray-600">
+                  Download research papers, journals and educational materials for offline access
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-secondary text-secondary-foreground p-2 rounded">
-                  <Users className="h-6 w-6" />
+            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                  <Users className="h-8 w-8 text-orange-500" />
                 </div>
-                <h3 className="font-heading text-xl font-bold text-primary">
-                  COLLABORATIVE
-                  <br />
-                  PLATFORM
-                </h3>
-              </div>
-              <p className="font-paragraph text-primary/70">
-                Connect with researchers worldwide through our collaborative 
-                platform. Share resources, participate in discussions, and 
-                build academic networks that advance your research goals.
-              </p>
-            </div>
+                <CardTitle className="font-heading text-xl text-gray-800">Collaborative Research</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-gray-600">
+                  Connect with peers and participate in collaborative research projects
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
-      {/* Featured Resources */}
-      <section className="py-16">
+
+      {/* Latest Resources Section */}
+      <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-primary">Featured Resources</h2>
+            <h2 className="font-heading text-4xl font-bold text-gray-800">Latest Resources</h2>
             <Link to="/resources">
-              <Button variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                View All Resources
-                <ArrowRight className="ml-2 h-4 w-4" />
+              <Button variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                View all Resources →
               </Button>
             </Link>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {featuredResources.map((resource) => (
+            {/* University Building Image Card */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="p-0">
+                <div className="aspect-video overflow-hidden rounded-t-lg">
+                  <Image
+                    src="https://static.wixstatic.com/media/e79745_1aaeb2c0f1414d29b36e92ef5ce85de5~mv2.png?originWidth=640&originHeight=384"
+                    alt="Visvesvaraya Technology University Building"
+                    className="w-full h-full object-cover"
+                    width={400}
+                  />
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-3">
+                  <h3 className="font-heading text-lg font-bold text-gray-800">
+                    Visvesvaraya Technology University, Belagavi
+                  </h3>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>Advanced Computer Networks</span>
+                    </div>
+                  </div>
+                  <p className="font-paragraph text-sm text-gray-600">
+                    Explore advanced networking concepts and protocols
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {featuredResources.slice(0, 2).map((resource) => (
               <Card key={resource._id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   {resource.coverImage && (
-                    <div className="aspect-[3/4] mb-4 overflow-hidden rounded-lg">
+                    <div className="aspect-video mb-4 overflow-hidden rounded-lg">
                       <Image
                         src={resource.coverImage}
                         alt={resource.resourceTitle || 'Resource cover'}
@@ -217,7 +247,7 @@ export default function HomePage() {
                       />
                     </div>
                   )}
-                  <CardTitle className="font-heading text-xl text-primary line-clamp-2">
+                  <CardTitle className="font-heading text-lg text-gray-800 line-clamp-2">
                     {resource.resourceTitle}
                   </CardTitle>
                   <CardDescription className="font-paragraph">
@@ -226,13 +256,13 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <Badge variant="secondary" className="bg-secondary/10 text-secondary">
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-600">
                       {resource.category}
                     </Badge>
-                    <p className="font-paragraph text-sm text-primary/70 line-clamp-3">
+                    <p className="font-paragraph text-sm text-gray-600 line-clamp-3">
                       {resource.description}
                     </p>
-                    <Button className="w-full bg-primary hover:bg-primary/90">
+                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
                       Access Resource
                     </Button>
                   </div>
@@ -242,109 +272,204 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* Latest News */}
-      <section className="bg-primary/5 py-16">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-primary">Latest Updates</h2>
-            <Link to="/news">
-              <Button variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                View All News
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {latestNews.map((news) => (
-              <Card key={news._id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Newspaper className="h-4 w-4 text-secondary" />
-                    <span className="font-paragraph text-sm text-primary/60">
-                      {news.publicationDate ? new Date(news.publicationDate).toLocaleDateString() : ''}
-                    </span>
-                  </div>
-                  <CardTitle className="font-heading text-xl text-primary line-clamp-2">
-                    {news.title}
-                  </CardTitle>
-                  {news.author && (
-                    <CardDescription className="font-paragraph">
-                      By {news.author}
-                    </CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <p className="font-paragraph text-sm text-primary/70 line-clamp-3 mb-4">
-                    {news.content}
-                  </p>
-                  <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                    Read More
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+      {/* How to Use the Library Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-[120rem] mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
+              How to Use the Library
+            </h2>
+          </div>
+          
+          <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
+              <div>
+                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Create an Account</h3>
+                <p className="font-paragraph text-gray-600">
+                  Register with your institutional email to create your library account
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
+                2
+              </div>
+              <div>
+                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Browse Resources</h3>
+                <p className="font-paragraph text-gray-600">
+                  Search for books, journals, or specific topics you are interested in
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
+                3
+              </div>
+              <div>
+                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Access Content</h3>
+                <p className="font-paragraph text-gray-600">
+                  Read online or download content for offline access on your device
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Library News & Events */}
+      <section className="py-16 bg-white">
+        <div className="max-w-[120rem] mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
+              Library News & Events
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
+              <CardHeader>
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                    11
+                  </div>
+                  <span className="text-sm text-gray-500">Nov</span>
+                </div>
+                <CardTitle className="font-heading text-lg text-gray-800">
+                  New Scientific Journals Added
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-sm text-gray-600 mb-4">
+                  Over 500 new scientific journals have been added to our collection
+                </p>
+                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                  Read More
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
+              <CardHeader>
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                    10
+                  </div>
+                  <span className="text-sm text-gray-500">Nov</span>
+                </div>
+                <CardTitle className="font-heading text-lg text-gray-800">
+                  Workshop on Research Methodology
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-sm text-gray-600 mb-4">
+                  Join us for a free day workshop on advanced research methodology
+                </p>
+                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                  Read More
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
+              <CardHeader>
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                    09
+                  </div>
+                  <span className="text-sm text-gray-500">Nov</span>
+                </div>
+                <CardTitle className="font-heading text-lg text-gray-800">
+                  Extended Library Hours During Exams
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="font-paragraph text-sm text-gray-600 mb-4">
+                  The digital library will be accessible 24/7 during the examination period
+                </p>
+                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                  Read More
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-8">
+            <Link to="/news">
+              <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8">
+                View all News →
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-12">
+      <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
-              <h3 className="font-heading text-xl font-bold">Academic Library Consortium</h3>
-              <p className="font-paragraph text-primary-foreground/80">
-                Advancing research and education through comprehensive digital library services.
+              <h3 className="font-heading text-xl font-bold">About Us</h3>
+              <p className="font-paragraph text-gray-300 text-sm">
+                VTU Consortium Digital Library provides comprehensive digital resources for academic, faculty, and research communities.
               </p>
             </div>
             
             <div className="space-y-4">
               <h4 className="font-heading text-lg font-semibold">Quick Links</h4>
               <div className="space-y-2">
-                <Link to="/resources" className="block font-paragraph text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/resources" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   E-Resources
                 </Link>
-                <Link to="/journals" className="block font-paragraph text-primary-foreground/80 hover:text-secondary transition-colors">
+                <Link to="/journals" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
                   Journals
                 </Link>
-                <Link to="/news" className="block font-paragraph text-primary-foreground/80 hover:text-secondary transition-colors">
-                  News & Updates
+                <Link to="/news" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Consortium
                 </Link>
-                <Link to="/guide" className="block font-paragraph text-primary-foreground/80 hover:text-secondary transition-colors">
-                  User Guide
+                <Link to="/guide" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
+                  Notifications
                 </Link>
               </div>
             </div>
             
             <div className="space-y-4">
-              <h4 className="font-heading text-lg font-semibold">Support</h4>
+              <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
               <div className="space-y-2">
-                <p className="font-paragraph text-primary-foreground/80">
-                  Email: support@academiclibrary.edu
-                </p>
-                <p className="font-paragraph text-primary-foreground/80">
-                  Phone: +1 (555) 123-4567
-                </p>
-                <p className="font-paragraph text-primary-foreground/80">
-                  Hours: Mon-Fri 8AM-6PM EST
-                </p>
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-4 w-4 text-orange-400" />
+                  <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Phone className="h-4 w-4 text-orange-400" />
+                  <p className="font-paragraph text-gray-300 text-sm">+91 (831) 2498000</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Mail className="h-4 w-4 text-orange-400" />
+                  <p className="font-paragraph text-gray-300 text-sm">library@vtu.ac.in</p>
+                </div>
               </div>
             </div>
             
             <div className="space-y-4">
-              <h4 className="font-heading text-lg font-semibold">Connect</h4>
-              <p className="font-paragraph text-primary-foreground/80">
-                Stay updated with the latest academic resources and research opportunities.
-              </p>
-              <Button className="bg-secondary hover:bg-secondary/90">
-                Subscribe to Updates
-              </Button>
+              <h4 className="font-heading text-lg font-semibold">Follow Us</h4>
+              <div className="flex space-x-4">
+                <Facebook className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
+                <Twitter className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
+                <Linkedin className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
+                <Instagram className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
+              </div>
             </div>
           </div>
           
-          <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
-            <p className="font-paragraph text-primary-foreground/60">
-              © 2024 Academic Library Consortium. All rights reserved.
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p className="font-paragraph text-gray-400 text-sm">
+              © 2024 VTU Consortium Digital Library. All Rights Reserved.
             </p>
           </div>
         </div>
