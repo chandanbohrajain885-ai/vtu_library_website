@@ -51,7 +51,7 @@ export default function HomePage() {
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
-            <span>VTU Consortium Digital Library</span>
+            <span>{"VTU Consortium"}</span>
           </div>
           <div className="flex items-center space-x-4">
             <span>Email: library@vtu.ac.in</span>
@@ -59,7 +59,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
       {/* Main Navigation */}
       <header className="bg-orange-500 text-white shadow-lg">
         <div className="max-w-[120rem] mx-auto px-6 py-4">
@@ -84,7 +83,6 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-
       {/* Hero Section with Library Background */}
       <section className="relative bg-gray-900 text-white py-20" style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_99252604bb974a358c5f83d03aa2dd0e~mv2.png?originWidth=1600&originHeight=768')",
@@ -93,9 +91,7 @@ export default function HomePage() {
       }}>
         <div className="max-w-[120rem] mx-auto px-6 text-center">
           <div className="space-y-6">
-            <h1 className="font-heading text-5xl lg:text-6xl font-bold">
-              Welcome to VTU Consortium Digital Library
-            </h1>
+            <h1 className="font-heading text-5xl lg:text-6xl font-bold">{"Welcome to VTU Consortium"}</h1>
             <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">
               Access thousands of academic resources, research papers, and e-books to support your educational journey
             </p>
@@ -135,7 +131,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Library Features Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -190,7 +185,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Latest Resources Section */}
       <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -272,7 +266,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* How to Use the Library Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -321,7 +314,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Library News & Events */}
       <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -408,7 +400,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
