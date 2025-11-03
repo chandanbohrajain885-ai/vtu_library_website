@@ -61,7 +61,7 @@ export default function HomePage() {
       </div>
       {/* Main Navigation */}
       <header className="bg-orange-500 text-white shadow-lg">
-        <div className="max-w-[120rem] mx-auto px-6 py-4">
+        <div className="max-w-[120rem] mx-auto px-6 py-4 bg-primary">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <BookOpen className="h-8 w-8" />
