@@ -97,7 +97,25 @@ export default function HomePage() {
             <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{"Symbolizes the connection between learning resources and learners."}</p>
             
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mt-8">
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Download className="mr-2 h-4 w-4" />
+                Journals
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <BookOpen className="mr-2 h-4 w-4" />
+                E-Books
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Search className="mr-2 h-4 w-4" />
+                Research Papers
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Users className="mr-2 h-4 w-4" />
+                Video Lectures
+              </Button>
+            </div>
+          <div className="max-w-2xl mx-auto mt-8">
               <div className="flex">
                 <Input
                     placeholder="Search for books, journals, or specific topics you are interested in..."
@@ -110,25 +128,7 @@ export default function HomePage() {
             </div>
 
             {/* Quick Access Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <BookOpen className="mr-2 h-4 w-4" />
-                E-Books
-              </Button>
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <Download className="mr-2 h-4 w-4" />
-                Journals
-              </Button>
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <Search className="mr-2 h-4 w-4" />
-                Research Papers
-              </Button>
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <Users className="mr-2 h-4 w-4" />
-                Video Lectures
-              </Button>
             </div>
-          </div>
         </div>
       </section>
       {/* Library Features Section */}
