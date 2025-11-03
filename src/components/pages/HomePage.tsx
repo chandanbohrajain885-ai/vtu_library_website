@@ -51,7 +51,7 @@ export default function HomePage() {
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
-            <span className="font-bold text-4xl">{"VTU Consortium"}</span>
+            <span className="font-bold text-2xl">{"VTU Consortium"}</span>
           </div>
           <div className="flex items-center space-x-4">
             <span>Email: library@vtu.ac.in</span>
@@ -72,7 +72,7 @@ export default function HomePage() {
               <Link to="/journals" className="hover:text-orange-200 transition-colors">Journals</Link>
               <Link to="/news" className="hover:text-orange-200 transition-colors">Consortium</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
-              <Link to="/guide" className="hover:text-orange-200 transition-colors">OPAC</Link>
+
             </div>
             <div className="flex items-center space-x-4">
               <Button className="bg-green-500 hover:bg-green-600 text-white px-6">
