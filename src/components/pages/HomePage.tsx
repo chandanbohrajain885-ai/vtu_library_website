@@ -69,8 +69,8 @@ export default function HomePage() {
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
               <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-              <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ON"}</Link>
-              <Link to="/news" className="hover:text-orange-200 transition-colors">Consortium</Link>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ONOS"}</Link>
+              <Link to="/news" className="hover:text-orange-200 transition-colors">{"Downloads"}</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
 
             </div>
@@ -94,9 +94,7 @@ export default function HomePage() {
         <div className="max-w-[120rem] mx-auto px-6 text-center">
           <div className="space-y-6">
             <h1 className="font-heading text-5xl lg:text-6xl font-bold">{"Welcome to VTU Consortium"}</h1>
-            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">
-              Access thousands of academic resources, research papers, and e-books to support your educational journey
-            </p>
+            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{"Symbolizes the connection between learning resources and learners."}</p>
             
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-8">
