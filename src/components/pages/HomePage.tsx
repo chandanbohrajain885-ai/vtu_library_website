@@ -96,38 +96,35 @@ export default function HomePage() {
             <h1 className="font-heading text-5xl lg:text-6xl font-bold">{"Welcome to VTU Consortium"}</h1>
             <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{"Symbolizes the connection between learning resources and learners."}</p>
             
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <Download className="mr-2 h-4 w-4" />
-              Journals
-            </Button>
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <BookOpen className="mr-2 h-4 w-4" />
-              E-Books
-            </Button>
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <Search className="mr-2 h-4 w-4" />
-              Research Papers
-            </Button>
-            <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <Users className="mr-2 h-4 w-4" />
-              Video Lectures
-            </Button>
-          </div>
-          {/* Search Bar */}
+            {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-8">
-              <div className="flex">
-                <Input
-                    placeholder="Search for books, journals, or specific topics you are interested in..."
-                    className="flex-1 h-12 rounded-r-none border-[4px] border-[#ff8301] border-solid text-[#ffffff] opacity-[1] bg-primary-foreground"
-                  />
-                <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
-                <Search className="h-5 w-5" />
-              </Button>
-              </div>
+            <div className="flex">
+              <Input
+                  placeholder="Search for books, journals, or specific topics you are interested in..."
+                  className="flex-1 h-12 rounded-r-none border-[4px] border-[#ff8301] border-solid text-[#ffffff] opacity-[1] bg-primary-foreground"
+                />
+              <Button className="bg-orange-500 hover:bg-orange-600 h-12 px-8 rounded-l-none">
+              <Search className="h-5 w-5" />
+            </Button>
             </div>
+          </div>
 
-            {/* Quick Access Buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Download className="mr-2 h-4 w-4" />
+                Journals
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <BookOpen className="mr-2 h-4 w-4" />
+                E-Books
+              </Button>
+
+              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <Users className="mr-2 h-4 w-4" />
+                Video Lectures
+              </Button>
+            </div>
+          {/* Quick Access Buttons */}
             </div>
         </div>
       </section>
@@ -267,60 +264,11 @@ export default function HomePage() {
         </div>
       </section>
       {/* How to Use the Library Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
-              How to Use the Library
-            </h2>
-          </div>
-          
-          <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
-                1
-              </div>
-              <div>
-                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Create an Account</h3>
-                <p className="font-paragraph text-gray-600">
-                  Register with your institutional email to create your library account
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Browse Resources</h3>
-                <p className="font-paragraph text-gray-600">
-                  Search for books, journals, or specific topics you are interested in
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h3 className="font-heading text-xl font-bold text-gray-800 mb-2">Access Content</h3>
-                <p className="font-paragraph text-gray-600">
-                  Read online or download content for offline access on your device
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
       {/* Library News & Events */}
       <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
-              Library News & Events
-            </h2>
+            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">{"News & Events"}</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
