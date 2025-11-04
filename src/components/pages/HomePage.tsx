@@ -97,17 +97,15 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      {/* Main Navigation */}
+      {/* Unified Navigation Bar */}
       <header className="bg-orange-500 text-white shadow-lg">
         <div className="max-w-[120rem] mx-auto px-6 py-4 bg-primary">
           <nav className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
+            {/* All Navigation Options in Single Line */}
+            <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
               <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-              <Link to="/news" className="hover:text-orange-200 transition-colors">{"Downloads"}</Link>
+              <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -124,8 +122,23 @@ export default function HomePage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ONOS"}</Link>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                About Us
+              </Button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                Committee
+              </Button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                Training
+              </Button>
+              <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                Gallery
+              </Button>
             </div>
+            
+            {/* Login and Register Buttons */}
             <div className="flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -156,31 +169,6 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-
-      {/* Blue Navigation Bar */}
-      <div className="bg-blue-600 text-white py-3">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <nav className="flex items-center justify-center space-x-8">
-            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
-              About Us
-            </Button>
-            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
-              Committee
-            </Button>
-            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
-              Training
-            </Button>
-            <Link to="/guide">
-              <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
-                User Guide
-              </Button>
-            </Link>
-            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
-              Gallery
-            </Button>
-          </nav>
-        </div>
-      </div>
       {/* Hero Section with Library Background */}
       <section className="relative bg-gray-900 text-white py-20" style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_99252604bb974a358c5f83d03aa2dd0e~mv2.png?originWidth=1600&originHeight=768')",
@@ -336,7 +324,7 @@ export default function HomePage() {
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
             <p className="font-paragraph text-gray-400 text-sm">
-              copyright © 2025 vtu consortium portal, All Rights Reserved.
+              2025 VTU Consortium Portal. All Rights Reserved.
             </p>
           </div>
         </div>
