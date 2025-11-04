@@ -12,19 +12,15 @@ export interface EResources {
   _createdDate?: Date;
   _updatedDate?: Date;
   /** @wixFieldType text */
-  resourceTitle?: string;
+  academicYear?: string;
   /** @wixFieldType text */
-  category?: string;
-  /** @wixFieldType text */
-  description?: string;
-  /** @wixFieldType text */
-  author?: string;
+  yearlyOverview?: string;
+  /** @wixFieldType url */
+  mainResourceLink?: string;
   /** @wixFieldType date */
   publicationDate?: Date | string;
-  /** @wixFieldType url */
-  resourceLink?: string;
-  /** @wixFieldType image */
-  coverImage?: string;
+  /** @wixFieldType boolean */
+  isArchived?: boolean;
 }
 
 
@@ -73,4 +69,25 @@ export interface UserGuideArticles {
   slug?: string;
   /** @wixFieldType image */
   featuredImage?: string;
+}
+
+
+/**
+ * Collection ID: eresources
+ * Interface for EResources
+ */
+export interface EResources {
+  _id: string;
+  _createdDate?: Date;
+  _updatedDate?: Date;
+  /** @wixFieldType text */
+  academicYear?: string;
+  /** @wixFieldType text */
+  yearlyOverview?: string;
+  /** @wixFieldType url */
+  mainResourceLink?: string;
+  /** @wixFieldType date */
+  publicationDate?: Date | string;
+  /** @wixFieldType boolean */
+  isArchived?: boolean;
 }
