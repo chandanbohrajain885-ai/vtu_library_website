@@ -1,79 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BaseCrudService } from '@/integrations';
-import { EResources } from '@/entities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Image } from '@/components/ui/image';
-import { Search, Filter, BookOpen, FileText, Video, Newspaper } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<EResources[]>([]);
-  const [filteredResources, setFilteredResources] = useState<EResources[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchResources = async () => {
-      try {
-        const response = await BaseCrudService.getAll<EResources>('eresources');
-        setResources(response.items);
-        setFilteredResources(response.items);
-      } catch (error) {
-        console.error('Error fetching resources:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchResources();
-  }, []);
-
-  useEffect(() => {
-    let filtered = resources;
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(resource =>
-        resource.resourceTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        resource.author?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        resource.description?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(resource =>
-        resource.category?.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-
-    setFilteredResources(filtered);
-  }, [searchTerm, selectedCategory, resources]);
-
-  const categories = Array.from(new Set(resources.map(r => r.category).filter(Boolean)));
-
-  const getCategoryIcon = (category: string) => {
-    const cat = category.toLowerCase();
-    if (cat.includes('book') || cat.includes('ebook')) return BookOpen;
-    if (cat.includes('paper') || cat.includes('research')) return FileText;
-    if (cat.includes('video') || cat.includes('lecture')) return Video;
-    if (cat.includes('journal') || cat.includes('article')) return Newspaper;
-    return BookOpen;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-primary font-heading text-xl">Loading resources...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header Navigation */}
@@ -110,167 +40,33 @@ export default function ResourcesPage() {
               E-RESOURCES
             </h1>
             <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-              Discover thousands of academic resources including e-books, research papers, 
-              journals, and multimedia content from leading institutions worldwide.
+              E-Resources section is currently being updated. Please check back soon for the latest academic resources.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Search and Filter Section */}
-      <section className="py-8 border-b">
+      {/* Coming Soon Section */}
+      <section className="py-20">
         <div className="max-w-[120rem] mx-auto px-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/50 h-4 w-4" />
-                <Input
-                  placeholder="Search resources, authors, or topics..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 font-paragraph"
-                />
-              </div>
+          <div className="text-center space-y-8">
+            <div className="mx-auto w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
+              <BookOpen className="h-12 w-12 text-primary/50" />
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Filter className="h-4 w-4 text-primary" />
-                <span className="font-paragraph text-sm text-primary">Filter by:</span>
-              </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-48 font-paragraph">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category || ''}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <div className="mt-4 flex items-center justify-between">
-            <p className="font-paragraph text-sm text-primary/60">
-              Showing {filteredResources.length} of {resources.length} resources
+            <h2 className="font-heading text-3xl font-bold text-primary">
+              Coming Soon
+            </h2>
+            <p className="font-paragraph text-lg text-primary/70 max-w-2xl mx-auto">
+              We are working on bringing you an enhanced E-Resources experience. 
+              Our team is curating the best academic materials for your research and learning needs.
             </p>
-            {(searchTerm || selectedCategory !== 'all') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                }}
-                className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                Clear Filters
-              </Button>
-            )}
+            <Button 
+              onClick={() => window.location.href = '/'}
+              className="bg-primary hover:bg-primary/90"
+            >
+              Return to Home
+            </Button>
           </div>
-        </div>
-      </section>
-
-      {/* Resources Grid */}
-      <section className="py-12">
-        <div className="max-w-[120rem] mx-auto px-6">
-          {filteredResources.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="space-y-4">
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Search className="h-8 w-8 text-primary/50" />
-                </div>
-                <h3 className="font-heading text-2xl font-bold text-primary">No resources found</h3>
-                <p className="font-paragraph text-primary/60 max-w-md mx-auto">
-                  Try adjusting your search terms or filters to find what you're looking for.
-                </p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedCategory('all');
-                  }}
-                  className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                  View All Resources
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredResources.map((resource) => {
-                const CategoryIcon = getCategoryIcon(resource.category || '');
-                return (
-                  <Card key={resource._id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardHeader className="pb-3">
-                      {resource.coverImage ? (
-                        <div className="aspect-[3/4] mb-4 overflow-hidden rounded-lg">
-                          <Image
-                            src={resource.coverImage}
-                            alt={resource.resourceTitle || 'Resource cover'}
-                            className="w-full h-full object-cover"
-                            width={250}
-                          />
-                        </div>
-                      ) : (
-                        <div className="aspect-[3/4] mb-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
-                          <CategoryIcon className="h-16 w-16 text-primary/30" />
-                        </div>
-                      )}
-                      
-                      <div className="space-y-2">
-                        <Badge variant="secondary" className="bg-secondary/10 text-secondary w-fit">
-                          {resource.category}
-                        </Badge>
-                        <CardTitle className="font-heading text-lg text-primary line-clamp-2 leading-tight">
-                          {resource.resourceTitle}
-                        </CardTitle>
-                        <CardDescription className="font-paragraph text-sm">
-                          By {resource.author}
-                        </CardDescription>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-0">
-                      <div className="space-y-4">
-                        <p className="font-paragraph text-sm text-primary/70 line-clamp-3">
-                          {resource.description}
-                        </p>
-                        
-                        {resource.publicationDate && (
-                          <p className="font-paragraph text-xs text-primary/50">
-                            Published: {new Date(resource.publicationDate).toLocaleDateString()}
-                          </p>
-                        )}
-                        
-                        <div className="flex flex-col gap-2">
-                          <Button 
-                            className="w-full bg-primary hover:bg-primary/90"
-                            onClick={() => {
-                              if (resource.resourceLink) {
-                                window.open(resource.resourceLink, '_blank');
-                              }
-                            }}
-                          >
-                            Access Resource
-                          </Button>
-                          <Link to={`/resources/${resource._id}`}>
-                            <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                              View Details
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
         </div>
       </section>
 
