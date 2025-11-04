@@ -204,6 +204,9 @@ export default function YearResourcesPage() {
     action();
   };
 
+  // Special handling for 2025-26 year
+  const isInProgressYear = year === '2025-26';
+  
   const resources = yearResourcesData[year || '2025-26'] || [];
   const categories = ['All', ...Array.from(new Set(resources.map(r => r.category)))];
 
@@ -376,50 +379,91 @@ export default function YearResourcesPage() {
             </p>
           </div>
 
-          {/* Search and Filter Section */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search resources by title, description, or author..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+          {/* Search and Filter Section - Only show if not in progress year */}
+          {!isInProgressYear && (
+            <div className="flex flex-col md:flex-row gap-4 mb-8">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Search resources by title, description, or author..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div className="md:w-48">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between">
+                      {selectedCategory}
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48">
+                    {categories.map((category) => (
+                      <DropdownMenuItem
+                        key={category}
+                        onClick={() => setSelectedCategory(category)}
+                        className="cursor-pointer"
+                      >
+                        {category}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
-            <div className="md:w-48">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {selectedCategory}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-48">
-                  {categories.map((category) => (
-                    <DropdownMenuItem
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className="cursor-pointer"
-                    >
-                      {category}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+          )}
 
-          {/* Results Count */}
-          <div className="text-gray-600 mb-6">
-            Showing {filteredResources.length} of {resources.length} resources
-          </div>
+          {/* Results Count - Only show if not in progress year */}
+          {!isInProgressYear && (
+            <div className="text-gray-600 mb-6">
+              Showing {filteredResources.length} of {resources.length} resources
+            </div>
+          )}
         </div>
 
-        {/* Resources Grid */}
-        {filteredResources.length > 0 ? (
+        {/* Resources Grid or In Progress Message */}
+        {isInProgressYear ? (
+          <div className="text-center py-20">
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-12 border border-orange-200 shadow-lg">
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <BookOpen className="h-10 w-10 text-white" />
+                  </div>
+                </div>
+                <h2 className="font-heading text-3xl lg:text-4xl font-bold text-gray-800 mb-6">
+                  The Information is in Progress
+                </h2>
+                <p className="font-paragraph text-lg text-gray-600 mb-8 leading-relaxed">
+                  We are currently working on compiling and organizing the E-Resources for the academic year {year}. 
+                  Our team is dedicated to providing you with the most comprehensive and up-to-date materials.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center space-x-2 text-orange-600">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                  <p className="font-paragraph text-sm text-gray-500">
+                    Please check back soon for updates
+                  </p>
+                </div>
+                <div className="mt-8">
+                  <Button
+                    onClick={() => navigate('/')}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold"
+                  >
+                    Return to Home
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : filteredResources.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredResources.map((resource) => (
               <Card key={resource.id} className="hover:shadow-lg transition-shadow duration-300 border-l-4 border-orange-500">
