@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { BookOpen } from 'lucide-react';
 
 export default function ResourcesPage() {
+  const { year } = useParams();
+  
   return (
     <div className="min-h-screen bg-background">
       {/* Header Navigation */}
@@ -37,10 +39,13 @@ export default function ResourcesPage() {
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center space-y-4">
             <h1 className="font-heading text-5xl font-bold text-primary">
-              E-RESOURCES
+              E-RESOURCES {year && `- ${year}`}
             </h1>
             <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-              E-Resources section is currently being updated. Please check back soon for the latest academic resources.
+              {year 
+                ? `Academic resources for the ${year} academic year are currently being prepared.`
+                : "E-Resources section is currently being updated. Please check back soon for the latest academic resources."
+              }
             </p>
           </div>
         </div>
@@ -54,18 +59,31 @@ export default function ResourcesPage() {
               <BookOpen className="h-12 w-12 text-primary/50" />
             </div>
             <h2 className="font-heading text-3xl font-bold text-primary">
-              Coming Soon
+              {year ? `${year} Resources Coming Soon` : 'Coming Soon'}
             </h2>
             <p className="font-paragraph text-lg text-primary/70 max-w-2xl mx-auto">
-              We are working on bringing you an enhanced E-Resources experience. 
-              Our team is curating the best academic materials for your research and learning needs.
+              {year 
+                ? `We are working on curating the best academic resources for the ${year} academic year. Our team is preparing comprehensive materials for your research and learning needs.`
+                : "We are working on bringing you an enhanced E-Resources experience. Our team is curating the best academic materials for your research and learning needs."
+              }
             </p>
-            <Button 
-              onClick={() => window.location.href = '/'}
-              className="bg-primary hover:bg-primary/90"
-            >
-              Return to Home
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={() => window.location.href = '/'}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Return to Home
+              </Button>
+              {year && (
+                <Button 
+                  variant="outline"
+                  onClick={() => window.location.href = '/resources'}
+                  className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  View All Resources
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </section>

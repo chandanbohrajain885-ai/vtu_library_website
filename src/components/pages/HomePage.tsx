@@ -117,9 +117,51 @@ export default function HomePage() {
             {/* All Navigation Options in Single Line */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => navigate('/resources'))}>
-                E-Resources
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                    E-Resources <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2026-25'))}>
+                    2026-25
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2025-24'))}>
+                    2025-24
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-23'))}>
+                    2024-23
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2023-22'))}>
+                    2023-22
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2022-21'))}>
+                    2022-21
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2021-20'))}>
+                    2021-20
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2020-19'))}>
+                    2020-19
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2019-18'))}>
+                    2019-18
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2018-17'))}>
+                    2018-17
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2017-16'))}>
+                    2017-16
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2016-15'))}>
+                    2016-15
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2015-14'))}>
+                    2015-14
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <button onClick={() => handleProtectedAction(() => navigate('/news'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
               <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Notifications</button>
               <DropdownMenu>

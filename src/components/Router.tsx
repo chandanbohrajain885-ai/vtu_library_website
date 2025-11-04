@@ -35,6 +35,10 @@ const router = createBrowserRouter([
         element: <ResourcesPage />,
       },
       {
+        path: "resources/:year",
+        element: <ResourcesPage />,
+      },
+      {
         path: "journals",
         element: <JournalsPage />,
       },
