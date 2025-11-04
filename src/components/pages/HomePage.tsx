@@ -124,11 +124,11 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2026-25'))}>
-                    2026-25
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2025-26'))}>
+                    2025-26
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2025-24'))}>
-                    2025-24
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-25'))}>
+                    2024-25
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-23'))}>
                     2024-23
