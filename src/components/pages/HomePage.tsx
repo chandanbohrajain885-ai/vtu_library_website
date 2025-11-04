@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { EResources, NewsandNotifications } from '@/entities';
@@ -14,6 +14,7 @@ export default function HomePage() {
   const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
   const [latestNews, setLatestNews] = useState<NewsandNotifications[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +27,7 @@ export default function HomePage() {
         setFeaturedResources(resourcesResponse.items.slice(0, 3));
         setLatestNews(newsResponse.items
           .sort((a, b) => new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime())
-          .slice(0, 3)
+          .slice(0, 6) // Increased to 6 for better scrolling effect
         );
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -37,6 +38,34 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
+  // Auto-scroll effect for news cards
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer || latestNews.length === 0) return;
+
+    const scrollWidth = scrollContainer.scrollWidth;
+    const clientWidth = scrollContainer.clientWidth;
+    
+    if (scrollWidth <= clientWidth) return; // No need to scroll if content fits
+
+    let scrollPosition = 0;
+    const scrollSpeed = 1; // pixels per frame
+    
+    const scroll = () => {
+      scrollPosition += scrollSpeed;
+      
+      if (scrollPosition >= scrollWidth - clientWidth) {
+        scrollPosition = 0; // Reset to start
+      }
+      
+      scrollContainer.scrollLeft = scrollPosition;
+    };
+
+    const intervalId = setInterval(scroll, 50); // 50ms interval for smooth scrolling
+
+    return () => clearInterval(intervalId);
+  }, [latestNews]);
 
   if (isLoading) {
     return (
@@ -52,13 +81,15 @@ export default function HomePage() {
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
-            <Image 
-              src="https://static.wixstatic.com/media/e79745_a590d112b3ad43e79706847a20a075d5~mv2.png"
-              alt="VTU Consortium Logo"
-              width={50}
-              className="h-12 w-12 object-contain"
-            />
-            <span className="font-bold text-2xl">{"VTU Consortium"}</span>
+            <a href="https://vtu.ac.in" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
+              <Image 
+                src="https://static.wixstatic.com/media/e79745_a590d112b3ad43e79706847a20a075d5~mv2.png"
+                alt="VTU Consortium Logo"
+                width={50}
+                className="h-12 w-12 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+              />
+              <span className="font-bold text-2xl cursor-pointer hover:opacity-80 transition-opacity">{"VTU Consortium"}</span>
+            </a>
           </div>
           <div className="flex items-center space-x-4">
             <span>Email: library@vtu.ac.in</span>
@@ -78,9 +109,23 @@ export default function HomePage() {
               <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
               <Link to="/news" className="hover:text-orange-200 transition-colors">{"Downloads"}</Link>
               <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
-              <Link to="/guide" className="hover:text-orange-200 transition-colors">Links</Link>
-            <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ONOS"}</Link>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                    Links <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  <DropdownMenuItem className="cursor-pointer">
+                    VTU Link's
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Others link's
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">{"ONOS"}</Link>
+            </div>
             <div className="flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -90,6 +135,9 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Super Admin Login
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     Admin Login
                   </DropdownMenuItem>
@@ -108,6 +156,31 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
+
+      {/* Blue Navigation Bar */}
+      <div className="bg-blue-600 text-white py-3">
+        <div className="max-w-[120rem] mx-auto px-6">
+          <nav className="flex items-center justify-center space-x-8">
+            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
+              About Us
+            </Button>
+            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
+              Committee
+            </Button>
+            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
+              Training
+            </Button>
+            <Link to="/guide">
+              <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
+                User Guide
+              </Button>
+            </Link>
+            <Button variant="ghost" className="text-white hover:text-blue-200 transition-colors p-2 h-auto font-normal">
+              Gallery
+            </Button>
+          </nav>
+        </div>
+      </div>
       {/* Hero Section with Library Background */}
       <section className="relative bg-gray-900 text-white py-20" style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_99252604bb974a358c5f83d03aa2dd0e~mv2.png?originWidth=1600&originHeight=768')",
@@ -124,7 +197,7 @@ export default function HomePage() {
             <div className="flex">
               <Input
                   placeholder="Search for books, journals, or specific topics you are interested in..."
-                  className="flex-1 h-12 rounded-r-none text-[#ffffff] opacity-[1] bg-primary-foreground border-[4px] border-[#f39c0a] border-solid"
+                  className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
                 />
               <Button className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid">
               <Search className="h-5 w-5" />
@@ -132,23 +205,8 @@ export default function HomePage() {
             </div>
           </div>
 
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <Download className="mr-2 h-4 w-4" />
-                Journals
-              </Button>
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <BookOpen className="mr-2 h-4 w-4" />
-                E-Books
-              </Button>
-
-              <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <Users className="mr-2 h-4 w-4" />
-                Video Lectures
-              </Button>
-            </div>
-          {/* Quick Access Buttons */}
-            </div>
+          {/* Quick Access Buttons - Removed */}
+          </div>
         </div>
       </section>
       {/* Library Features Section */}
@@ -161,80 +219,63 @@ export default function HomePage() {
             <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">{"News & Events"}</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
-              <CardHeader>
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                    11
+          {/* Scrolling News Cards */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-8 overflow-x-hidden"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            {latestNews.map((news, index) => (
+              <Card key={news._id || index} className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 min-w-[300px] flex-shrink-0">
+                <CardHeader>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                      {new Date(news.publicationDate || Date.now()).getDate()}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
+                    </span>
                   </div>
-                  <span className="text-sm text-gray-500">Nov</span>
-                </div>
-                <CardTitle className="font-heading text-lg text-gray-800">
-                  New Scientific Journals Added
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-sm text-gray-600 mb-4">
-                  Over 500 new scientific journals have been added to our collection
-                </p>
-                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                  Read More
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
-              <CardHeader>
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                    10
+                  <CardTitle className="font-heading text-lg text-gray-800">
+                    {news.title || 'News Title'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-paragraph text-sm text-gray-600 mb-4">
+                    {news.content?.substring(0, 100) || 'News content...'}...
+                  </p>
+                  <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+            {/* Duplicate cards for seamless scrolling */}
+            {latestNews.map((news, index) => (
+              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 min-w-[300px] flex-shrink-0">
+                <CardHeader>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                      {new Date(news.publicationDate || Date.now()).getDate()}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
+                    </span>
                   </div>
-                  <span className="text-sm text-gray-500">Nov</span>
-                </div>
-                <CardTitle className="font-heading text-lg text-gray-800">
-                  Workshop on Research Methodology
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-sm text-gray-600 mb-4">
-                  Join us for a free day workshop on advanced research methodology
-                </p>
-                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                  Read More
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
-              <CardHeader>
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                    09
-                  </div>
-                  <span className="text-sm text-gray-500">Nov</span>
-                </div>
-                <CardTitle className="font-heading text-lg text-gray-800">
-                  Extended Library Hours During Exams
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-sm text-gray-600 mb-4">
-                  The digital library will be accessible 24/7 during the examination period
-                </p>
-                <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                  Read More
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center mt-8">
-            <Link to="/news">
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8">
-                View all News →
-              </Button>
-            </Link>
+                  <CardTitle className="font-heading text-lg text-gray-800">
+                    {news.title || 'News Title'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-paragraph text-sm text-gray-600 mb-4">
+                    {news.content?.substring(0, 100) || 'News content...'}...
+                  </p>
+                  <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -295,7 +336,7 @@ export default function HomePage() {
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
             <p className="font-paragraph text-gray-400 text-sm">
-              © 2024 VTU Consortium Digital Library. All Rights Reserved.
+              copyright © 2025 vtu consortium portal, All Rights Reserved.
             </p>
           </div>
         </div>
