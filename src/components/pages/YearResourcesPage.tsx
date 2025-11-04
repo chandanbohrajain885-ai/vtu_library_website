@@ -21,7 +21,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Rajesh Kumar',
       publicationDate: '2025-01-15',
       resourceLink: 'https://example.com/ml-resources-2025',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=ml-2025'
+      coverImage: 'https://static.wixstatic.com/media/e79745_c383cb99f43e40888ab77a19bd2a5c33~mv2.png?originWidth=384&originHeight=192'
     },
     {
       id: '2',
@@ -31,7 +31,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Anita Sharma',
       publicationDate: '2025-02-01',
       resourceLink: 'https://example.com/quantum-computing',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=quantum-2025'
+      coverImage: 'https://static.wixstatic.com/media/e79745_35df6bdf7f144ac888310e2d1e5bff43~mv2.png?originWidth=384&originHeight=192'
     },
     {
       id: '3',
@@ -41,7 +41,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Vikram Patel',
       publicationDate: '2025-01-20',
       resourceLink: 'https://example.com/sustainable-engineering',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=sustainable-2025'
+      coverImage: 'https://static.wixstatic.com/media/e79745_ef2100a126a1453ea2011bf5e8ece0ce~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2024-25': [
@@ -53,7 +53,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Priya Nair',
       publicationDate: '2024-09-15',
       resourceLink: 'https://example.com/data-science-2024',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=data-science-2024'
+      coverImage: 'https://static.wixstatic.com/media/e79745_14b6d2fd30854f43922f39460b054212~mv2.png?originWidth=384&originHeight=192'
     },
     {
       id: '5',
@@ -63,7 +63,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Suresh Reddy',
       publicationDate: '2024-10-01',
       resourceLink: 'https://example.com/renewable-energy',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=renewable-2024'
+      coverImage: 'https://static.wixstatic.com/media/e79745_4263afe1b2af4eb99fdf62b7bfbde691~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2023-24': [
@@ -75,7 +75,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Meera Gupta',
       publicationDate: '2023-11-15',
       resourceLink: 'https://example.com/ai-ethics',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=ai-ethics-2023'
+      coverImage: 'https://static.wixstatic.com/media/e79745_d135cc187d2b46deb7eb0e0b2e051a17~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2022-23': [
@@ -87,7 +87,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Amit Singh',
       publicationDate: '2022-12-01',
       resourceLink: 'https://example.com/blockchain-2022',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=blockchain-2022'
+      coverImage: 'https://static.wixstatic.com/media/e79745_ef4284fe388c4e4f8bd089cae4036932~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2021-22': [
@@ -99,7 +99,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Kavita Joshi',
       publicationDate: '2021-10-15',
       resourceLink: 'https://example.com/iot-systems',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=iot-2021'
+      coverImage: 'https://static.wixstatic.com/media/e79745_2989ecb27c93410ba47e63a0743b7d11~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2020-21': [
@@ -111,7 +111,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Ravi Kumar',
       publicationDate: '2020-09-01',
       resourceLink: 'https://example.com/cloud-computing',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=cloud-2020'
+      coverImage: 'https://static.wixstatic.com/media/e79745_d6e1b67c6c5344aeaa835cd4bf494eaa~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2019-20': [
@@ -123,7 +123,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Sanjay Verma',
       publicationDate: '2019-11-20',
       resourceLink: 'https://example.com/cybersecurity',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=cybersecurity-2019'
+      coverImage: 'https://static.wixstatic.com/media/e79745_9f597ebbe8c344f2a8c8ee3ed4d6f80f~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2018-19': [
@@ -135,7 +135,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Neha Agarwal',
       publicationDate: '2018-08-15',
       resourceLink: 'https://example.com/mobile-dev',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=mobile-2018'
+      coverImage: 'https://static.wixstatic.com/media/e79745_89228e9cfa2f474f8ff19e120ff199af~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2017-18': [
@@ -147,7 +147,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Rahul Sharma',
       publicationDate: '2017-09-10',
       resourceLink: 'https://example.com/web-dev',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=web-2017'
+      coverImage: 'https://static.wixstatic.com/media/e79745_26bb004ac0ed48bc8ad904764bf33586~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2016-17': [
@@ -159,7 +159,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Sunita Rao',
       publicationDate: '2016-10-05',
       resourceLink: 'https://example.com/database-systems',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=database-2016'
+      coverImage: 'https://static.wixstatic.com/media/e79745_77c67b96baf44980b3655f8676c58e07~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2015-16': [
@@ -171,7 +171,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Dr. Manoj Gupta',
       publicationDate: '2015-11-12',
       resourceLink: 'https://example.com/software-engineering',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=software-2015'
+      coverImage: 'https://static.wixstatic.com/media/e79745_260bd176836b4daba43def803d672c6c~mv2.png?originWidth=384&originHeight=192'
     }
   ],
   '2014-15': [
@@ -183,7 +183,7 @@ const yearResourcesData: Record<string, any[]> = {
       author: 'Prof. Deepak Jain',
       publicationDate: '2014-12-08',
       resourceLink: 'https://example.com/computer-networks',
-      coverImage: 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=networks-2014'
+      coverImage: 'https://static.wixstatic.com/media/e79745_70921570da584adfb1b5cbcbeb98b9a7~mv2.png?originWidth=384&originHeight=192'
     }
   ]
 };
