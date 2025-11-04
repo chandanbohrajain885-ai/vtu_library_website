@@ -8,6 +8,8 @@ import ResourceDetailPage from '@/components/pages/ResourceDetailPage';
 import JournalsPage from '@/components/pages/JournalsPage';
 import NewsPage from '@/components/pages/NewsPage';
 import UserGuidePage from '@/components/pages/UserGuidePage';
+import AdminDashboard from '@/components/pages/AdminDashboard';
+import { AuthProvider } from '@/components/auth/AuthContext';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -50,6 +52,10 @@ const router = createBrowserRouter([
         element: <UserGuidePage />,
       },
       {
+        path: "admin",
+        element: <AdminDashboard />,
+      },
+      {
         path: "*",
         element: <Navigate to="/" replace />,
       },
@@ -61,8 +67,10 @@ const router = createBrowserRouter([
 
 export default function AppRouter() {
   return (
-    <MemberProvider>
-      <RouterProvider router={router} />
-    </MemberProvider>
+    <AuthProvider>
+      <MemberProvider>
+        <RouterProvider router={router} />
+      </MemberProvider>
+    </AuthProvider>
   );
 }

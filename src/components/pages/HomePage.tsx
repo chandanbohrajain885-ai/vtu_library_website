@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { EResources, NewsandNotifications } from '@/entities';
 import { Button } from '@/components/ui/button';
@@ -8,13 +8,26 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthContext';
+import { LoginModal } from '@/components/auth/LoginModal';
 
 export default function HomePage() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
   const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
   const [latestNews, setLatestNews] = useState<NewsandNotifications[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleProtectedAction = (action: () => void) => {
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    action();
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +105,7 @@ export default function HomePage() {
             </a>
           </div>
           <div className="flex items-center space-x-4">
-            <span>Email: library@vtu.ac.in</span>
+            <span>Email: <a href="mailto:library@vtu.ac.in" className="hover:text-orange-400 transition-colors">library@vtu.ac.in</a></span>
             <span>Phone: 08312498191</span>
           </div>
         </div>
@@ -104,67 +117,65 @@ export default function HomePage() {
             {/* All Navigation Options in Single Line */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
-              <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-              <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
-              <Link to="/guide" className="hover:text-orange-200 transition-colors">Notifications</Link>
+              <button onClick={() => handleProtectedAction(() => navigate('/resources'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">E-Resources</button>
+              <button onClick={() => handleProtectedAction(() => navigate('/news'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
+              <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Notifications</button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
                     Links <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => {})}>
                     VTU Link's
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => {})}>
                     Others link's
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <button onClick={() => handleProtectedAction(() => navigate('/journals'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
                 About Us
               </Button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
                 Committee
               </Button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
                 Training
               </Button>
-              <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">User Guide</button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
                 Gallery
               </Button>
             </div>
             
             {/* Login and Register Buttons */}
             <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-green-500 hover:bg-green-600 text-white px-6 flex items-center space-x-2">
-                    <span>Login</span>
-                    <ChevronDown className="h-4 w-4" />
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-white">Welcome, {user?.username}</span>
+                  {user?.role === 'superadmin' && (
+                    <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4">
+                      Admin Panel
+                    </Button>
+                  )}
+                  <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="cursor-pointer">
-                    Super Admin Login
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Admin Login
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Librarian/Nodal-officer Login
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Publisher's Login
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6">
-                Register
-              </Button>
+                </div>
+              ) : (
+                <>
+                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6">
+                    Login
+                  </Button>
+                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
+                    Register
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>
@@ -186,8 +197,12 @@ export default function HomePage() {
               <Input
                   placeholder="Search for books, journals, or specific topics you are interested in..."
                   className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
+                  onClick={() => handleProtectedAction(() => {})}
                 />
-              <Button className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid">
+              <Button 
+                className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid"
+                onClick={() => handleProtectedAction(() => {})}
+              >
               <Search className="h-5 w-5" />
             </Button>
             </div>
@@ -306,7 +321,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4 text-orange-400" />
-                  <p className="font-paragraph text-gray-300 text-sm">library@vtu.ac.in</p>
+                  <a href="mailto:library@vtu.ac.in" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">library@vtu.ac.in</a>
                 </div>
               </div>
             </div>
@@ -327,6 +342,12 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 }
