@@ -152,140 +152,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* Library Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">
-              Library Features
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                  <BookOpen className="h-8 w-8 text-orange-500" />
-                </div>
-                <CardTitle className="font-heading text-xl text-gray-800">Digital Reading</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-gray-600">
-                  Access thousands of e-books and digital resources from anywhere, anytime
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                  <Download className="h-8 w-8 text-orange-500" />
-                </div>
-                <CardTitle className="font-heading text-xl text-gray-800">Download Resources</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-gray-600">
-                  Download research papers, journals and educational materials for offline access
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center hover:shadow-lg transition-shadow bg-white">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                  <Users className="h-8 w-8 text-orange-500" />
-                </div>
-                <CardTitle className="font-heading text-xl text-gray-800">Collaborative Research</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-paragraph text-gray-600">
-                  Connect with peers and participate in collaborative research projects
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
       {/* Latest Resources Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800">Latest Resources</h2>
-            <Link to="/resources">
-              <Button variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                View all Resources →
-              </Button>
-            </Link>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* University Building Image Card */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader className="p-0">
-                <div className="aspect-video overflow-hidden rounded-t-lg">
-                  <Image
-                    src="https://static.wixstatic.com/media/e79745_1aaeb2c0f1414d29b36e92ef5ce85de5~mv2.png?originWidth=640&originHeight=384"
-                    alt="Visvesvaraya Technology University Building"
-                    className="w-full h-full object-cover"
-                    width={400}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  <h3 className="font-heading text-lg font-bold text-gray-800">
-                    Visvesvaraya Technology University, Belagavi
-                  </h3>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>Advanced Computer Networks</span>
-                    </div>
-                  </div>
-                  <p className="font-paragraph text-sm text-gray-600">
-                    Explore advanced networking concepts and protocols
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {featuredResources.slice(0, 2).map((resource) => (
-              <Card key={resource._id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  {resource.coverImage && (
-                    <div className="aspect-video mb-4 overflow-hidden rounded-lg">
-                      <Image
-                        src={resource.coverImage}
-                        alt={resource.resourceTitle || 'Resource cover'}
-                        className="w-full h-full object-cover"
-                        width={300}
-                      />
-                    </div>
-                  )}
-                  <CardTitle className="font-heading text-lg text-gray-800 line-clamp-2">
-                    {resource.resourceTitle}
-                  </CardTitle>
-                  <CardDescription className="font-paragraph">
-                    By {resource.author}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <Badge variant="secondary" className="bg-orange-100 text-orange-600">
-                      {resource.category}
-                    </Badge>
-                    <p className="font-paragraph text-sm text-gray-600 line-clamp-3">
-                      {resource.description}
-                    </p>
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                      Access Resource
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
       {/* How to Use the Library Section */}
       {/* Library News & Events */}
       <section className="py-16 bg-white">
@@ -376,10 +243,7 @@ export default function HomePage() {
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
-              <h3 className="font-heading text-xl font-bold">About Us</h3>
-              <p className="font-paragraph text-gray-300 text-sm">
-                VTU Consortium Digital Library provides comprehensive digital resources for academic, faculty, and research communities.
-              </p>
+
             </div>
             
             <div className="space-y-4">
