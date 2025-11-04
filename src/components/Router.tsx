@@ -5,6 +5,7 @@ import ErrorPage from '@/integrations/errorHandlers/ErrorPage';
 import HomePage from '@/components/pages/HomePage';
 import ResourcesPage from '@/components/pages/ResourcesPage';
 import ResourceDetailPage from '@/components/pages/ResourceDetailPage';
+import YearResourcesPage from '@/components/pages/YearResourcesPage';
 import JournalsPage from '@/components/pages/JournalsPage';
 import NewsPage from '@/components/pages/NewsPage';
 import UserGuidePage from '@/components/pages/UserGuidePage';
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "resources",
         element: <ResourcesPage />,
+      },
+      {
+        path: "resources/:year",
+        element: <YearResourcesPage />,
       },
       {
         path: "resources/:id",
