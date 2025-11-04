@@ -14,19 +14,7 @@ export interface EResources {
   /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
-  resourceTitle?: string;
-  /** @wixFieldType text */
-  author?: string;
-  /** @wixFieldType text */
-  description?: string;
-  /** @wixFieldType text */
-  category?: string;
-  /** @wixFieldType datetime */
-  publicationDate?: Date | string;
-  /** @wixFieldType url */
-  resourceLink?: string;
-  /** @wixFieldType image */
-  coverImage?: string;
+  1?: string;
 }
 
 
