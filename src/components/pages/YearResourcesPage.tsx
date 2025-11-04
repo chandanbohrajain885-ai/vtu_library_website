@@ -374,9 +374,28 @@ export default function YearResourcesPage() {
             <h1 className="font-heading text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
               E-Resources {year}
             </h1>
-            <p className="font-paragraph text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="font-paragraph text-xl text-gray-600 max-w-3xl mx-auto mb-6">
               Explore our comprehensive collection of electronic resources for the academic year {year}
             </p>
+            
+            {/* E-Resource Button - Prominently displayed for 2024-25 */}
+            {year === '2024-25' && (
+              <div className="flex justify-center mb-8">
+                <Button
+                  onClick={() => handleProtectedAction(() => {
+                    // Scroll to resources section
+                    const resourcesSection = document.getElementById('resources-section');
+                    if (resourcesSection) {
+                      resourcesSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  })}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <BookOpen className="h-5 w-5 mr-3" />
+                  Access E-Resources 2024-25
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Search and Filter Section - Only show if not in progress year */}
@@ -426,7 +445,8 @@ export default function YearResourcesPage() {
         </div>
 
         {/* Resources Grid or In Progress Message */}
-        {isInProgressYear ? (
+        <div id="resources-section">
+          {isInProgressYear ? (
           <div className="text-center py-20">
             <div className="max-w-2xl mx-auto">
               <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-12 border border-orange-200 shadow-lg">
@@ -525,6 +545,7 @@ export default function YearResourcesPage() {
             </p>
           </div>
         )}
+        </div>
       </div>
 
       {/* Login Modal */}
