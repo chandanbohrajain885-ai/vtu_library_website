@@ -28,6 +28,9 @@ export default function ResourcesPage() {
   
   // Check if this is the 2019-20 year (styled content)
   const is2019Year = year === '2019-20';
+  
+  // Check if this is the 2018-19 year (styled content)
+  const is2018Year = year === '2018-19';
 
   // Render under progress page for 2025-26
   if (isUnderProgress) {
@@ -1323,6 +1326,228 @@ export default function ResourcesPage() {
                       </h3>
                       <p className="font-paragraph text-gray-700">
                         Writing and grammar learning tool
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Render styled content for 2018-19
+  if (is2018Year) {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
+              <Button 
+                onClick={() => window.location.href = '/'}
+                variant="outline" 
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                E-RESOURCES - {year}
+              </h1>
+              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+                Academic Year {year} Resources
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* E-Resources Content Section */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="prose prose-lg max-w-none">
+                <h1 className="font-heading text-4xl font-bold text-primary text-center mb-12">
+                  VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2018-19
+                </h1>
+                
+                {/* E-Journals Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    E-Journals
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-blue-800 mb-2">
+                        Elsevier
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Comprehensive collection of scientific journals covering engineering, computer science, and allied disciplines
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-green-800 mb-2">
+                        Springer Nature
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Leading publisher of scientific journals in engineering, technology, and applied sciences
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-orange-800 mb-2">
+                        Taylor & Francis
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Academic journals covering engineering, technology, and multidisciplinary research areas
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-2">
+                        ICE
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Institution of Civil Engineers journals providing access to civil engineering research and practice
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-teal-800 mb-2">
+                        Emerald
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Specialized journals in management, business, and social sciences for comprehensive academic research
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* E-Books Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    E-Books
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-red-800 mb-2">
+                        Elsevier e-books
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Comprehensive collection of engineering and science e-books from Elsevier publications
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-pink-500 pl-6 bg-pink-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-pink-800 mb-2">
+                        Taylor & Francis e-books
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Academic e-books covering engineering, technology, and multidisciplinary subjects
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-yellow-500 pl-6 bg-yellow-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-yellow-800 mb-2">
+                        McGraw Hill Education
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Engineering, Computer Science, Mathematics, Physics, Chemistry, and Management e-books
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-indigo-500 pl-6 bg-indigo-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-indigo-800 mb-2">
+                        New Age International
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Educational e-books covering various engineering and technical subjects
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-cyan-500 pl-6 bg-cyan-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-cyan-800 mb-2">
+                        Packt Publishing
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Technology and programming e-books for software development and IT professionals
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Digital Library & Cloud Access Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    Digital Library & Cloud Access
+                  </h2>
+                  
+                  <div className="border-l-4 border-violet-500 pl-6 bg-violet-50/50 p-4 rounded-r-lg">
+                    <h3 className="font-heading text-xl font-semibold text-violet-800 mb-2">
+                      Knimbus
+                    </h3>
+                    <p className="font-paragraph text-gray-700">
+                      Cloud-based digital library platform providing federated search and remote access to academic resources
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Plagiarism Detection & Academic Tools Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    Plagiarism Detection & Academic Tools
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="border-l-4 border-emerald-500 pl-6 bg-emerald-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-emerald-800 mb-2">
+                        Turnitin
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Industry-leading plagiarism detection software for academic integrity and originality checking
+                      </p>
+                    </div>
+                    
+                    <div className="border-l-4 border-lime-500 pl-6 bg-lime-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-lime-800 mb-2">
+                        NetAnalytiks' Sententia
+                      </h3>
+                      <p className="font-paragraph text-gray-700">
+                        Advanced writing analysis and grammar enhancement tool for academic writing improvement
                       </p>
                     </div>
                   </div>
