@@ -12,31 +12,17 @@ export interface EResources {
   _createdDate?: Date;
   _updatedDate?: Date;
   /** @wixFieldType text */
-  title?: string;
-  /** @wixFieldType text */
-  resourceTitle?: string;
-  /** @wixFieldType text */
-  author?: string;
-  /** @wixFieldType text */
-  description?: string;
-  /** @wixFieldType text */
-  category?: string;
-  /** @wixFieldType image */
-  coverImage?: string;
-  /** @wixFieldType url */
-  resourceLink?: string;
-  /** @wixFieldType datetime */
-  publicationDate?: Date | string;
-  /** @wixFieldType text */
-  1?: string;
-  /** @wixFieldType text */
-  eJournals?: string;
+  plagiarismDetectionSoftware?: string;
   /** @wixFieldType text */
   eBooks?: string;
   /** @wixFieldType text */
   languageLabsAndElearning?: string;
   /** @wixFieldType text */
-  plagiarismDetectionSoftware?: string;
+  eJournals?: string;
+  /** @wixFieldType text */
+  title?: string;
+  /** @wixFieldType text */
+  1?: string;
 }
 
 
