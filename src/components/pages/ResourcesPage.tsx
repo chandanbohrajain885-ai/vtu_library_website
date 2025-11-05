@@ -152,241 +152,127 @@ export default function ResourcesPage() {
         <section className="py-16">
           <div className="max-w-[120rem] mx-auto px-6">
             
-            {/* Database Access Section */}
+            {/* VTU Consortium E-Resources Content */}
             <div className="mb-16">
-              <h2 className="font-heading text-3xl font-bold text-primary mb-8 text-center">
-                Database Access & Digital Libraries
-              </h2>
-              
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {/* IEEE Xplore */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500">
-                  <CardHeader>
-                    <div className="flex items-center space-x-3">
-                      <Database className="h-8 w-8 text-blue-500" />
-                      <CardTitle className="font-heading text-xl text-primary">IEEE Xplore</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Access to IEEE journals, conference proceedings, and standards in engineering and technology.
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1 mb-4">
-                      <li>• 5+ million documents</li>
-                      <li>• Latest research in engineering</li>
-                      <li>• Conference proceedings</li>
-                      <li>• IEEE standards</li>
-                    </ul>
-                    <Button className="w-full bg-blue-500 hover:bg-blue-600">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Access IEEE Xplore
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Springer Nature */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500">
-                  <CardHeader>
-                    <div className="flex items-center space-x-3">
-                      <BookOpen className="h-8 w-8 text-green-500" />
-                      <CardTitle className="font-heading text-xl text-primary">Springer Nature</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Comprehensive collection of scientific journals, books, and reference works.
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1 mb-4">
-                      <li>• 3,000+ journals</li>
-                      <li>• 300,000+ books</li>
-                      <li>• Reference works</li>
-                      <li>• Protocols and methods</li>
-                    </ul>
-                    <Button className="w-full bg-green-500 hover:bg-green-600">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Access Springer
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* ScienceDirect */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
-                  <CardHeader>
-                    <div className="flex items-center space-x-3">
-                      <Globe className="h-8 w-8 text-orange-500" />
-                      <CardTitle className="font-heading text-xl text-primary">ScienceDirect</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Elsevier's leading platform for peer-reviewed literature in science and technology.
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1 mb-4">
-                      <li>• 16+ million articles</li>
-                      <li>• 2,500+ journals</li>
-                      <li>• 39,000+ books</li>
-                      <li>• Advanced search tools</li>
-                    </ul>
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Access ScienceDirect
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Subject-wise Resources */}
-            <div className="mb-16">
-              <h2 className="font-heading text-3xl font-bold text-primary mb-8 text-center">
-                Subject-wise Digital Resources
-              </h2>
-              
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Engineering & Technology */}
-                <Card className="border-l-4 border-purple-500">
-                  <CardHeader>
-                    <CardTitle className="font-heading text-2xl text-primary flex items-center">
-                      <FileText className="h-6 w-6 mr-3 text-purple-500" />
-                      Engineering & Technology
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-heading text-lg font-semibold text-gray-800 mb-2">Key Databases:</h4>
-                        <ul className="font-paragraph text-gray-600 space-y-1">
-                          <li>• IEEE Xplore Digital Library</li>
-                          <li>• ASME Digital Collection</li>
-                          <li>• ACM Digital Library</li>
-                          <li>• Engineering Village (Compendex)</li>
-                        </ul>
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <div className="prose prose-lg max-w-none">
+                  <h1 className="font-heading text-4xl font-bold text-primary text-center mb-8">
+                    VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2024-25
+                  </h1>
+                  
+                  {/* E-Journals Section */}
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-6">E-Journals</h2>
+                    
+                    <div className="space-y-6">
+                      <div className="border-l-4 border-blue-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Elsevier (ScienceDirect)</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Engineering, CS, EE, ME, EC, CV, AI, and various allied branches</p>
+                        <p className="font-paragraph text-blue-600 font-semibold">327 e-journals</p>
                       </div>
-                      <div>
-                        <h4 className="font-heading text-lg font-semibold text-gray-800 mb-2">Specialized Resources:</h4>
-                        <ul className="font-paragraph text-gray-600 space-y-1">
-                          <li>• Standards and Patents</li>
-                          <li>• Conference Proceedings</li>
-                          <li>• Technical Reports</li>
-                          <li>• Industry Publications</li>
-                        </ul>
+                      
+                      <div className="border-l-4 border-green-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Springer Nature</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Electrical & Electronics, Mechanical, Civil, CS, Allied Engineering, Chemistry, Math, Physics</p>
+                        <p className="font-paragraph text-green-600 font-semibold">689 e-journals</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-purple-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">IEEE ASPP & POP ALL</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">IEEE Society periodicals & Conference proceedings</p>
+                        <p className="font-paragraph text-purple-600 font-semibold">201 e-journals + 1800+ IEEE conference proceedings</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-orange-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Emerald</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Management, Accounting, Finance, HR, Business Strategy, Marketing, and related fields</p>
+                        <p className="font-paragraph text-orange-600 font-semibold">212 e-journals</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-teal-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">EBSCO Engineering Suite</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Engineering, Management, Architecture</p>
+                        <p className="font-paragraph text-teal-600 font-semibold">6100 e-journals + 24015 e-books</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Science & Mathematics */}
-                <Card className="border-l-4 border-teal-500">
-                  <CardHeader>
-                    <CardTitle className="font-heading text-2xl text-primary flex items-center">
-                      <Database className="h-6 w-6 mr-3 text-teal-500" />
-                      Science & Mathematics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-heading text-lg font-semibold text-gray-800 mb-2">Key Databases:</h4>
-                        <ul className="font-paragraph text-gray-600 space-y-1">
-                          <li>• Web of Science</li>
-                          <li>• Scopus</li>
-                          <li>• MathSciNet</li>
-                          <li>• Chemical Abstracts Service</li>
-                        </ul>
+                  </div>
+                  
+                  {/* E-Books Section */}
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-6">E-Books</h2>
+                    
+                    <div className="space-y-6">
+                      <div className="border-l-4 border-red-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Eduport Global-CBS</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Covers Agriculture, Engineering, Architecture, Biotechnology, Chemical, Civil, Management, Pharmacy, and more</p>
+                        <p className="font-paragraph text-red-600 font-semibold">174 e-books</p>
                       </div>
-                      <div>
-                        <h4 className="font-heading text-lg font-semibold text-gray-800 mb-2">Specialized Resources:</h4>
-                        <ul className="font-paragraph text-gray-600 space-y-1">
-                          <li>• Research Articles</li>
-                          <li>• Citation Analysis</li>
-                          <li>• Data Sets</li>
-                          <li>• Research Metrics</li>
-                        </ul>
+                      
+                      <div className="border-l-4 border-indigo-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">BSP E-Books</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Various Engineering disciplines, Management, Nanotechnology</p>
+                        <p className="font-paragraph text-indigo-600 font-semibold">141 e-books</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-pink-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Cengage Learning</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Engineering, Mathematics, MBA</p>
+                        <p className="font-paragraph text-pink-600 font-semibold">69 e-books</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-yellow-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Cambridge University Press</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Chemistry, Computer Science, Earth Sciences, Engineering, Life Sciences, Sociology, etc.</p>
+                        <p className="font-paragraph text-yellow-600 font-semibold">58 e-books</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-cyan-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Mint Books</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Covers various Engineering branches, Competitive & Entrance, MBA</p>
+                        <p className="font-paragraph text-cyan-600 font-semibold">1360 e-books</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-lime-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Quiklrn</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">First-year courses, ECE/EEE, CSE, MBA</p>
+                        <p className="font-paragraph text-lime-600 font-semibold">91 e-books</p>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Access Information */}
-            <div className="mb-16">
-              <h2 className="font-heading text-3xl font-bold text-primary mb-8 text-center">
-                Access Information & Support
-              </h2>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                <Card className="text-center border-l-4 border-blue-500">
-                  <CardHeader>
-                    <Users className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-                    <CardTitle className="font-heading text-xl text-primary">User Authentication</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Access through institutional login or VTU credentials
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1">
-                      <li>• Single Sign-On (SSO)</li>
-                      <li>• VTU ID Authentication</li>
-                      <li>• Remote Access Available</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="text-center border-l-4 border-green-500">
-                  <CardHeader>
-                    <Download className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <CardTitle className="font-heading text-xl text-primary">Download Limits</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Generous download allowances for academic use
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1">
-                      <li>• 50 articles/day per user</li>
-                      <li>• Full-text PDF access</li>
-                      <li>• Citation export tools</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="text-center border-l-4 border-orange-500">
-                  <CardHeader>
-                    <BookOpen className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                    <CardTitle className="font-heading text-xl text-primary">Training & Support</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4">
-                      Comprehensive training and support services
-                    </p>
-                    <ul className="font-paragraph text-sm text-gray-600 space-y-1">
-                      <li>• Online tutorials</li>
-                      <li>• Webinar sessions</li>
-                      <li>• 24/7 technical support</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div className="text-center">
-              <h2 className="font-heading text-3xl font-bold text-primary mb-8">
-                Quick Access Links
-              </h2>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button className="bg-primary hover:bg-primary/90">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Database Portal
-                </Button>
-                <Button variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                  <Download className="h-4 w-4 mr-2" />
-                  User Guides
-                </Button>
-                <Button variant="outline" className="text-primary border-primary hover:bg-primary hover:text-primary-foreground">
-                  <Users className="h-4 w-4 mr-2" />
-                  Contact Support
-                </Button>
+                  </div>
+                  
+                  {/* Language Lab & E-Learning Platforms Section */}
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-6">Language Lab & E-Learning Platforms</h2>
+                    
+                    <div className="space-y-6">
+                      <div className="border-l-4 border-violet-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Quiklrn - Language Communication Lab</h3>
+                        <p className="font-paragraph text-gray-700">English language learning modules with grammar and vocabulary support</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-emerald-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">IEEE Blended e-Learning Platform</h3>
+                        <p className="font-paragraph text-gray-700">60 e-learning courses with video content</p>
+                      </div>
+                      
+                      <div className="border-l-4 border-rose-500 pl-6">
+                        <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">KNIMBUS</h3>
+                        <p className="font-paragraph text-gray-700 mb-2">Cloud-based digital library with federated search and remote access</p>
+                        <p className="font-paragraph text-gray-700">Access to eBooks, journals, videos, and MOOC courses</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Plagiarism Detection Software Section */}
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-6">Plagiarism Detection Software</h2>
+                    
+                    <div className="border-l-4 border-gray-500 pl-6">
+                      <h3 className="font-heading text-xl font-semibold text-gray-800 mb-2">Drillbit</h3>
+                      <p className="font-paragraph text-gray-700">Plagiarism detection software with instructor and student profiles</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

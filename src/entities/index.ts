@@ -21,12 +21,22 @@ export interface EResources {
   description?: string;
   /** @wixFieldType text */
   category?: string;
-  /** @wixFieldType url */
-  resourceLink?: string;
   /** @wixFieldType image */
   coverImage?: string;
+  /** @wixFieldType url */
+  resourceLink?: string;
   /** @wixFieldType datetime */
   publicationDate?: Date | string;
+  /** @wixFieldType text */
+  1?: string;
+  /** @wixFieldType text */
+  eJournals?: string;
+  /** @wixFieldType text */
+  eBooks?: string;
+  /** @wixFieldType text */
+  languageLabsAndElearning?: string;
+  /** @wixFieldType text */
+  plagiarismDetectionSoftware?: string;
 }
 
 
