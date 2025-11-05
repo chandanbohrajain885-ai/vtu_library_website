@@ -35,7 +35,7 @@ export interface EResources {
   publicationDate?: Date | string;
   /** @wixFieldType url */
   resourceLink?: string;
-  /** @wixFieldType image */
+  /** @wixFieldType url */
   coverImage?: string;
 }
 
