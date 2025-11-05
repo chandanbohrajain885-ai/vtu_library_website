@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, Star, Award, TrendingUp, Globe } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 
@@ -20,7 +20,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const demoScrollContainerRef = useRef<HTMLDivElement>(null);
+  const topNewsScrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (action: () => void) => {
     if (!isAuthenticated) {
@@ -81,56 +81,10 @@ export default function HomePage() {
     return () => clearInterval(intervalId);
   }, [latestNews]);
 
-  // Demo cards data
-  const demoCards = [
-    {
-      id: 1,
-      title: "Research Excellence",
-      description: "Discover cutting-edge research publications and academic papers from leading institutions.",
-      icon: Star,
-      color: "bg-blue-500"
-    },
-    {
-      id: 2,
-      title: "Digital Library",
-      description: "Access thousands of e-books, journals, and digital resources available 24/7.",
-      icon: BookOpen,
-      color: "bg-green-500"
-    },
-    {
-      id: 3,
-      title: "Academic Awards",
-      description: "Celebrating outstanding achievements and recognitions in academic excellence.",
-      icon: Award,
-      color: "bg-purple-500"
-    },
-    {
-      id: 4,
-      title: "Global Network",
-      description: "Connect with universities and institutions worldwide through our consortium.",
-      icon: Globe,
-      color: "bg-orange-500"
-    },
-    {
-      id: 5,
-      title: "Innovation Hub",
-      description: "Explore innovative solutions and technological advancements in education.",
-      icon: TrendingUp,
-      color: "bg-red-500"
-    },
-    {
-      id: 6,
-      title: "Knowledge Base",
-      description: "Comprehensive collection of educational materials and learning resources.",
-      icon: Users,
-      color: "bg-indigo-500"
-    }
-  ];
-
-  // Auto-scroll effect for demo cards
+  // Auto-scroll effect for top news cards
   useEffect(() => {
-    const scrollContainer = demoScrollContainerRef.current;
-    if (!scrollContainer) return;
+    const scrollContainer = topNewsScrollContainerRef.current;
+    if (!scrollContainer || latestNews.length === 0) return;
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;
@@ -138,7 +92,7 @@ export default function HomePage() {
     if (scrollWidth <= clientWidth) return; // No need to scroll if content fits
 
     let scrollPosition = 0;
-    const scrollSpeed = 1.5; // pixels per frame
+    const scrollSpeed = 1.2; // pixels per frame
     
     const scroll = () => {
       scrollPosition += scrollSpeed;
@@ -153,7 +107,7 @@ export default function HomePage() {
     const intervalId = setInterval(scroll, 50); // 50ms interval for smooth scrolling
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [latestNews]);
 
   if (isLoading) {
     return (
@@ -341,7 +295,66 @@ export default function HomePage() {
             <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">{"News & Events"}</h2>
           </div>
 
-          {/* Scrolling News Cards */}
+          {/* Top Scrolling News Cards */}
+          <div 
+            ref={topNewsScrollContainerRef}
+            className="flex gap-8 overflow-x-hidden mb-12"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            {latestNews.map((news, index) => (
+              <Card key={`top-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 min-w-[300px] flex-shrink-0">
+                <CardHeader>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 bg-blue-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                      {new Date(news.publicationDate || Date.now()).getDate()}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
+                    </span>
+                  </div>
+                  <CardTitle className="font-heading text-lg text-gray-800">
+                    {news.title || 'News Title'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-paragraph text-sm text-gray-600 mb-4">
+                    {news.content?.substring(0, 100) || 'News content...'}...
+                  </p>
+                  <Button variant="outline" size="sm" className="text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white">
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+            {/* Duplicate cards for seamless scrolling */}
+            {latestNews.map((news, index) => (
+              <Card key={`top-duplicate-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 min-w-[300px] flex-shrink-0">
+                <CardHeader>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-8 h-8 bg-blue-500 text-white rounded flex items-center justify-center font-bold text-sm">
+                      {new Date(news.publicationDate || Date.now()).getDate()}
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
+                    </span>
+                  </div>
+                  <CardTitle className="font-heading text-lg text-gray-800">
+                    {news.title || 'News Title'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-paragraph text-sm text-gray-600 mb-4">
+                    {news.content?.substring(0, 100) || 'News content...'}...
+                  </p>
+                  <Button variant="outline" size="sm" className="text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white">
+                    Read More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Bottom Scrolling News Cards */}
           <div 
             ref={scrollContainerRef}
             className="flex gap-8 overflow-x-hidden"
@@ -402,80 +415,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Cards Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">Featured Services</h2>
-            <p className="font-paragraph text-gray-600 max-w-2xl mx-auto">
-              Explore our comprehensive range of academic services and resources designed to enhance your learning experience.
-            </p>
-          </div>
-
-          {/* Scrolling Demo Cards */}
-          <div 
-            ref={demoScrollContainerRef}
-            className="flex gap-8 overflow-x-hidden"
-            style={{ scrollBehavior: 'smooth' }}
-          >
-            {demoCards.map((card) => {
-              const IconComponent = card.icon;
-              return (
-                <Card key={card.id} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 min-w-[320px] flex-shrink-0 bg-white border-0 shadow-lg">
-                  <CardHeader className="text-center pb-4">
-                    <div className={`w-16 h-16 ${card.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <IconComponent className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="font-heading text-xl text-gray-800">
-                      {card.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="font-paragraph text-gray-600 leading-relaxed">
-                      {card.description}
-                    </p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mt-4 text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-            {/* Duplicate cards for seamless scrolling */}
-            {demoCards.map((card) => {
-              const IconComponent = card.icon;
-              return (
-                <Card key={`duplicate-${card.id}`} className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 min-w-[320px] flex-shrink-0 bg-white border-0 shadow-lg">
-                  <CardHeader className="text-center pb-4">
-                    <div className={`w-16 h-16 ${card.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <IconComponent className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="font-heading text-xl text-gray-800">
-                      {card.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="font-paragraph text-gray-600 leading-relaxed">
-                      {card.description}
-                    </p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mt-4 text-gray-700 border-gray-300 hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
