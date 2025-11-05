@@ -71,8 +71,7 @@ export default function HomePage() {
     }
   ];
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const topNewsScrollContainerRef = useRef<HTMLDivElement>(null);
+  const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (action: () => void) => {
     if (!isAuthenticated) {
@@ -112,7 +111,7 @@ export default function HomePage() {
 
   // Auto-scroll effect for news cards
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
+    const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer) return;
 
     const scrollWidth = scrollContainer.scrollWidth;
@@ -122,34 +121,6 @@ export default function HomePage() {
 
     let scrollPosition = 0;
     const scrollSpeed = 1; // pixels per frame
-    
-    const scroll = () => {
-      scrollPosition += scrollSpeed;
-      
-      if (scrollPosition >= scrollWidth - clientWidth) {
-        scrollPosition = 0; // Reset to start
-      }
-      
-      scrollContainer.scrollLeft = scrollPosition;
-    };
-
-    const intervalId = setInterval(scroll, 50); // 50ms interval for smooth scrolling
-
-    return () => clearInterval(intervalId);
-  }, [latestNews]);
-
-  // Auto-scroll effect for top news cards
-  useEffect(() => {
-    const scrollContainer = topNewsScrollContainerRef.current;
-    if (!scrollContainer) return;
-
-    const scrollWidth = scrollContainer.scrollWidth;
-    const clientWidth = scrollContainer.clientWidth;
-    
-    if (scrollWidth <= clientWidth) return; // No need to scroll if content fits
-
-    let scrollPosition = 0;
-    const scrollSpeed = 1.2; // pixels per frame
     
     const scroll = () => {
       scrollPosition += scrollSpeed;
@@ -352,119 +323,100 @@ export default function HomePage() {
             <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">{"News & Events"}</h2>
           </div>
 
-          {/* Top Scrolling News Cards */}
+          {/* Single Row of Auto-Scrolling News Cards */}
           <div 
-            ref={topNewsScrollContainerRef}
-            className="flex gap-8 overflow-x-hidden mb-12"
+            ref={newsScrollContainerRef}
+            className="flex gap-6 overflow-x-hidden"
             style={{ scrollBehavior: 'smooth' }}
           >
             {latestNews.map((news, index) => (
-              <Card key={`top-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 min-w-[300px] flex-shrink-0">
-                <CardHeader>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-8 h-8 bg-blue-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                      {new Date(news.publicationDate || Date.now()).getDate()}
+              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] flex-shrink-0 bg-white shadow-md">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold">
+                        {new Date(news.publicationDate || Date.now()).getDate()}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        <div className="font-medium">
+                          {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </div>
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
-                    </span>
+                    {news.isFeatured && (
+                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                        Featured
+                      </Badge>
+                    )}
                   </div>
-                  <CardTitle className="font-heading text-lg text-gray-800">
+                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-sm text-gray-600 mb-4">
-                    {news.content?.substring(0, 100) || 'News content...'}...
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
+                    {news.content?.substring(0, 120) || 'News content...'}...
                   </p>
-                  <Button variant="outline" size="sm" className="text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white">
-                    Read More
-                  </Button>
+                  <div className="flex items-center justify-between">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                    >
+                      Read More
+                    </Button>
+                    {news.author && (
+                      <span className="text-xs text-gray-500">
+                        By {news.author}
+                      </span>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
             {/* Duplicate cards for seamless scrolling */}
             {latestNews.map((news, index) => (
-              <Card key={`top-duplicate-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 min-w-[300px] flex-shrink-0">
-                <CardHeader>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-8 h-8 bg-blue-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                      {new Date(news.publicationDate || Date.now()).getDate()}
+              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] flex-shrink-0 bg-white shadow-md">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold">
+                        {new Date(news.publicationDate || Date.now()).getDate()}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        <div className="font-medium">
+                          {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </div>
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
-                    </span>
+                    {news.isFeatured && (
+                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                        Featured
+                      </Badge>
+                    )}
                   </div>
-                  <CardTitle className="font-heading text-lg text-gray-800">
+                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-sm text-gray-600 mb-4">
-                    {news.content?.substring(0, 100) || 'News content...'}...
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
+                    {news.content?.substring(0, 120) || 'News content...'}...
                   </p>
-                  <Button variant="outline" size="sm" className="text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white">
-                    Read More
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Bottom Scrolling News Cards */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-8 overflow-x-hidden"
-            style={{ scrollBehavior: 'smooth' }}
-          >
-            {latestNews.map((news, index) => (
-              <Card key={news._id || index} className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 min-w-[300px] flex-shrink-0">
-                <CardHeader>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                      {new Date(news.publicationDate || Date.now()).getDate()}
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
-                    </span>
+                  <div className="flex items-center justify-between">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                    >
+                      Read More
+                    </Button>
+                    {news.author && (
+                      <span className="text-xs text-gray-500">
+                        By {news.author}
+                      </span>
+                    )}
                   </div>
-                  <CardTitle className="font-heading text-lg text-gray-800">
-                    {news.title || 'News Title'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-paragraph text-sm text-gray-600 mb-4">
-                    {news.content?.substring(0, 100) || 'News content...'}...
-                  </p>
-                  <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                    Read More
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-            {/* Duplicate cards for seamless scrolling */}
-            {latestNews.map((news, index) => (
-              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 min-w-[300px] flex-shrink-0">
-                <CardHeader>
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-8 h-8 bg-orange-500 text-white rounded flex items-center justify-center font-bold text-sm">
-                      {new Date(news.publicationDate || Date.now()).getDate()}
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short' })}
-                    </span>
-                  </div>
-                  <CardTitle className="font-heading text-lg text-gray-800">
-                    {news.title || 'News Title'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-paragraph text-sm text-gray-600 mb-4">
-                    {news.content?.substring(0, 100) || 'News content...'}...
-                  </p>
-                  <Button variant="outline" size="sm" className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white">
-                    Read More
-                  </Button>
                 </CardContent>
               </Card>
             ))}
