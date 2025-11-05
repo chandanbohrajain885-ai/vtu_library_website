@@ -22,9 +22,11 @@ export interface EResources {
   /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
-  resourceTitle?: string;
+  1?: string;
   /** @wixFieldType text */
   category?: string;
+  /** @wixFieldType text */
+  resourceTitle?: string;
   /** @wixFieldType text */
   author?: string;
   /** @wixFieldType text */
@@ -33,10 +35,8 @@ export interface EResources {
   publicationDate?: Date | string;
   /** @wixFieldType url */
   resourceLink?: string;
-  /** @wixFieldType url */
+  /** @wixFieldType image */
   coverImage?: string;
-  /** @wixFieldType text */
-  1?: string;
 }
 
 
