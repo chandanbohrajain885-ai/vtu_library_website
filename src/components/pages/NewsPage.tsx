@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
-import { NewsandNotifications } from '@/entities';
+import { NewsandEvents } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,15 +9,15 @@ import { Input } from '@/components/ui/input';
 import { Newspaper, Calendar, User, Search, ExternalLink, Star } from 'lucide-react';
 
 export default function NewsPage() {
-  const [news, setNews] = useState<NewsandNotifications[]>([]);
-  const [filteredNews, setFilteredNews] = useState<NewsandNotifications[]>([]);
+  const [news, setNews] = useState<NewsandEvents[]>([]);
+  const [filteredNews, setFilteredNews] = useState<NewsandEvents[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await BaseCrudService.getAll<NewsandNotifications>('newsandnotifications');
+        const response = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
         // Sort by publication date (newest first)
         const sortedNews = response.items.sort((a, b) => 
           new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime()
