@@ -181,35 +181,35 @@ export default function HomePage() {
                   <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-25'))}>
                     2024-25
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-23'))}>
-                    2024-23
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2023-24'))}>
+                    2023-24
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2023-22'))}>
-                    2023-22
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2022-23'))}>
+                    2022-23
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2022-21'))}>
-                    2022-21
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2021-22'))}>
+                    2021-22
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2021-20'))}>
-                    2021-20
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2020-21'))}>
+                    2020-21
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2020-19'))}>
-                    2020-19
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2019-20'))}>
+                    2019-20
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2019-18'))}>
-                    2019-18
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2018-19'))}>
+                    2018-19
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2018-17'))}>
-                    2018-17
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2017-18'))}>
+                    2017-18
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2017-16'))}>
-                    2017-16
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2016-17'))}>
+                    2016-17
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2016-15'))}>
-                    2016-15
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2015-16'))}>
+                    2015-16
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2015-14'))}>
-                    2015-14
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2014-15'))}>
+                    2014-15
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -22,6 +22,20 @@ export interface EResources {
   /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
+  resourceTitle?: string;
+  /** @wixFieldType text */
+  category?: string;
+  /** @wixFieldType text */
+  author?: string;
+  /** @wixFieldType text */
+  description?: string;
+  /** @wixFieldType datetime */
+  publicationDate?: Date | string;
+  /** @wixFieldType url */
+  resourceLink?: string;
+  /** @wixFieldType url */
+  coverImage?: string;
+  /** @wixFieldType text */
   1?: string;
 }
 
