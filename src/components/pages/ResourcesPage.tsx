@@ -345,25 +345,10 @@ export default function ResourcesPage() {
                   <div className="space-y-6">
                     <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
                       <h3 className="font-heading text-xl font-semibold text-blue-800 mb-2">
-                        Elsevier (ScienceDirect)
+                        Elsevier
                       </h3>
                       <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering, Computer Science, Electrical Engineering, Mechanical Engineering, Electronics & Communication, Civil Engineering, Artificial Intelligence, and allied branches
-                      </p>
-                      <p className="font-paragraph text-blue-600 font-semibold text-lg">
-                        265 e-journals
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-2">
-                        IEEE ASPP (All Society Periodicals Package)
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Covers Aerospace, Bioengineering, Communication Technology, Power Engineering, Robotics, Signal Processing, and more
-                      </p>
-                      <p className="font-paragraph text-purple-600 font-semibold text-lg">
-                        185 e-journals
+                        Comprehensive collection of scientific journals covering engineering, computer science, and allied disciplines
                       </p>
                     </div>
                     
@@ -372,10 +357,7 @@ export default function ResourcesPage() {
                         Springer Nature
                       </h3>
                       <p className="font-paragraph text-gray-700 mb-2">
-                        Electrical & Electronics Engineering, Mechanical Engineering, Civil Engineering, Computer Science, Chemistry, Mathematics, Physics, and allied sciences
-                      </p>
-                      <p className="font-paragraph text-green-600 font-semibold text-lg">
-                        620 e-journals
+                        Leading publisher of scientific journals in engineering, technology, and applied sciences
                       </p>
                     </div>
                     
@@ -384,10 +366,7 @@ export default function ResourcesPage() {
                         Taylor & Francis
                       </h3>
                       <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering disciplines, Computer Science & Engineering, Mechanical Engineering, Civil Engineering, Architecture, and Allied Sciences
-                      </p>
-                      <p className="font-paragraph text-orange-600 font-semibold text-lg">
-                        520 e-journals
+                        Academic journals covering engineering, technology, and multidisciplinary research areas
                       </p>
                     </div>
                     
@@ -396,143 +375,52 @@ export default function ResourcesPage() {
                         Emerald
                       </h3>
                       <p className="font-paragraph text-gray-700 mb-2">
-                        Management Studies, Finance, Economics, Human Resources, Marketing, Public Policy, and Business Strategy
-                      </p>
-                      <p className="font-paragraph text-teal-600 font-semibold text-lg">
-                        190 e-journals
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-indigo-500 pl-6 bg-indigo-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-indigo-800 mb-2">
-                        ASCE (American Society of Civil Engineers)
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Civil Engineering, Environmental Engineering, Construction Engineering, and Structural Engineering
-                      </p>
-                      <p className="font-paragraph text-indigo-600 font-semibold text-lg">
-                        32 e-journals
+                        Specialized journals in management, business, and social sciences for comprehensive academic research
                       </p>
                     </div>
                   </div>
                 </div>
                 
-                {/* E-Books Section */}
+                {/* Digital Library & Cloud Access Section */}
                 <div className="mb-12">
                   <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    E-Books
+                    Digital Library & Cloud Access
+                  </h2>
+                  
+                  <div className="border-l-4 border-violet-500 pl-6 bg-violet-50/50 p-4 rounded-r-lg">
+                    <h3 className="font-heading text-xl font-semibold text-violet-800 mb-2">
+                      Knimbus
+                    </h3>
+                    <p className="font-paragraph text-gray-700 mb-2">
+                      Cloud-based digital library platform providing federated search and remote access to academic resources
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Plagiarism Detection & Academic Tools Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    Plagiarism Detection & Academic Tools
                   </h2>
                   
                   <div className="space-y-6">
                     <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
                       <h3 className="font-heading text-xl font-semibold text-red-800 mb-2">
-                        McGraw Hill Education
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering, Computer Science, Mathematics, Physics, Chemistry, and Management
-                      </p>
-                      <p className="font-paragraph text-red-600 font-semibold text-lg">
-                        350+ e-books
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-pink-500 pl-6 bg-pink-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-pink-800 mb-2">
-                        Cengage Learning
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering disciplines, Mathematics, Computer Science, and MBA programs
-                      </p>
-                      <p className="font-paragraph text-pink-600 font-semibold text-lg">
-                        240+ e-books
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-yellow-500 pl-6 bg-yellow-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-yellow-800 mb-2">
-                        Wiley Online Library
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering, Technology, Computer Science, Mathematics, and Applied Sciences
-                      </p>
-                      <p className="font-paragraph text-yellow-600 font-semibold text-lg">
-                        220+ e-books
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-cyan-500 pl-6 bg-cyan-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-cyan-800 mb-2">
-                        Cambridge University Press
-                      </h3>
-                      <p className="font-paragraph text-gray-700 mb-2">
-                        Engineering, Computer Science, Mathematics, Physics, Chemistry, and Applied Sciences
-                      </p>
-                      <p className="font-paragraph text-cyan-600 font-semibold text-lg">
-                        160+ e-books
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Cloud-Based & Remote Access Solutions Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    Cloud-Based & Remote Access Solutions
-                  </h2>
-                  
-                  <div className="border-l-4 border-violet-500 pl-6 bg-violet-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-violet-800 mb-2">
-                      Remote Access Platform
-                    </h3>
-                    <p className="font-paragraph text-gray-700 mb-2">
-                      Federated search platform providing remote access to journals, e-books, and educational resources
-                    </p>
-                    <p className="font-paragraph text-violet-600 font-semibold text-lg">
-                      6,800+ e-books & 4,200+ e-journals
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Plagiarism Detection & Learning Tools Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    Plagiarism Detection & Learning Tools
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-emerald-500 pl-6 bg-emerald-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-emerald-800 mb-2">
-                        Plagiarism Detection Software
+                        Turnitin
                       </h3>
                       <p className="font-paragraph text-gray-700">
-                        Comprehensive plagiarism detection tool with instructor and student access for academic integrity
+                        Industry-leading plagiarism detection software for academic integrity and originality checking
                       </p>
                     </div>
                     
-                    <div className="border-l-4 border-rose-500 pl-6 bg-rose-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-rose-800 mb-2">
-                        Writing Enhancement Tools
+                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-2">
+                        NetAnalytiks' Sententia
                       </h3>
                       <p className="font-paragraph text-gray-700">
-                        Grammar and writing improvement tools for academic writing and communication
+                        Advanced writing analysis and grammar enhancement tool for academic writing improvement
                       </p>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Language Lab & E-Learning Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    Language Lab & E-Learning Platforms
-                  </h2>
-                  
-                  <div className="border-l-4 border-lime-500 pl-6 bg-lime-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-lime-800 mb-2">
-                      English Language Communication Lab
-                    </h3>
-                    <p className="font-paragraph text-gray-700">
-                      Interactive English language learning modules with comprehensive grammar and vocabulary support for technical communication
-                    </p>
                   </div>
                 </div>
               </div>
