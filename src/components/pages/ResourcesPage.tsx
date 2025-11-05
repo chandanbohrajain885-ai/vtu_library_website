@@ -88,77 +88,6 @@ export default function ResourcesPage() {
 
   // Render detailed content for 2024-25
   if (isDetailedYear) {
-    // ... keep existing code (2024-25 detailed content)
-  }
-
-  // Render plain text content for 2023-24
-  if (is2023Year) {
-    return (
-      <div className="min-h-screen bg-background">
-        {/* Header Navigation */}
-        <header className="bg-primary text-primary-foreground shadow-lg">
-          <div className="max-w-[120rem] mx-auto px-6 py-4">
-            <nav className="flex items-center justify-between">
-              <Link to="/" className="font-heading text-2xl font-bold">
-                VTU Consortium
-              </Link>
-              <div className="hidden md:flex items-center space-x-8">
-                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
-                <span className="text-orange-200 font-semibold">E-Resources</span>
-                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
-                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
-                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
-              </div>
-              <Button 
-                onClick={() => window.location.href = '/'}
-                variant="outline" 
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Button>
-            </nav>
-          </div>
-        </header>
-
-        {/* Page Header */}
-        <section className="bg-primary/5 py-16">
-          <div className="max-w-[120rem] mx-auto px-6">
-            <div className="text-center space-y-4">
-              <h1 className="font-heading text-5xl font-bold text-primary">
-                E-RESOURCES - {year}
-              </h1>
-              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-                Academic Year {year} Resources
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* E-Resources Content Section */}
-        <section className="py-20">
-          <div className="max-w-[120rem] mx-auto px-6">
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto">
-{`VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2023-24 E-Journals Elsevier (ScienceDirect) Engineering, CS, EE, ME, EC, CV,       AI, and allied branches 298 e-journals IEEE ASPP (All Society      Periodicals Package) Covers Aerospace,       Bioengineering, Communication, Power, Robotics, etc. 198 e-journals Springer Nature Electrical & Electronics,       Mechanical, Civil, CS, Chemistry, Math, Physics 690 e-journals Taylor & Francis Engineering, CSE, ME, Civil,       Architecture, and Allied Sciences 585 e-journals Emerald Management, Finance, Economics,       HR, Marketing, Public Policy 212 e-journals ProQuest Covers Architecture,       Engineering, Aerospace, and Material Science 4900 full-text journals, 7800       indexed journals Cloud-Based & Remote Access Solutions MAPMy Access Universal federated search,       remote access to journals, e-books, e-theses, and educational videos 10,000+ e-books & 5700+       e-journals Plagiarism Detection & Learning Tools Plagiarism Originality Online      Check End-user licenses for instructor       and student profiles NetAnalytiks' LANQUILL Writing and grammar learning       tool`}
-              </pre>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="bg-gray-800 text-white py-12">
-          <div className="max-w-[120rem] mx-auto px-6">
-            <div className="text-center">
-              <p className="font-paragraph text-gray-400">
-                © 2025 VTU Consortium Portal. All Rights Reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
-    );
-  }
     return (
       <div className="min-h-screen bg-background">
         {/* Header Navigation */}
@@ -327,6 +256,75 @@ export default function ResourcesPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Render plain text content for 2023-24
+  if (is2023Year) {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
+              <Button 
+                onClick={() => window.location.href = '/'}
+                variant="outline" 
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                E-RESOURCES - {year}
+              </h1>
+              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+                Academic Year {year} Resources
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* E-Resources Content Section */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto">
+{`VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2023-24 E-Journals Elsevier (ScienceDirect) Engineering, CS, EE, ME, EC, CV,       AI, and allied branches 298 e-journals IEEE ASPP (All Society      Periodicals Package) Covers Aerospace,       Bioengineering, Communication, Power, Robotics, etc. 198 e-journals Springer Nature Electrical & Electronics,       Mechanical, Civil, CS, Chemistry, Math, Physics 690 e-journals Taylor & Francis Engineering, CSE, ME, Civil,       Architecture, and Allied Sciences 585 e-journals Emerald Management, Finance, Economics,       HR, Marketing, Public Policy 212 e-journals ProQuest Covers Architecture,       Engineering, Aerospace, and Material Science 4900 full-text journals, 7800       indexed journals Cloud-Based & Remote Access Solutions MAPMy Access Universal federated search,       remote access to journals, e-books, e-theses, and educational videos 10,000+ e-books & 5700+       e-journals Plagiarism Detection & Learning Tools Plagiarism Originality Online      Check End-user licenses for instructor       and student profiles NetAnalytiks' LANQUILL Writing and grammar learning       tool`}
+              </pre>
             </div>
           </div>
         </section>
