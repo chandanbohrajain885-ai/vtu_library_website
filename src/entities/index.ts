@@ -24,16 +24,16 @@ export interface EResources {
   /** @wixFieldType text */
   resourceTitle?: string;
   /** @wixFieldType text */
-  category?: string;
-  /** @wixFieldType text */
   author?: string;
   /** @wixFieldType text */
   description?: string;
+  /** @wixFieldType text */
+  category?: string;
   /** @wixFieldType datetime */
   publicationDate?: Date | string;
   /** @wixFieldType url */
   resourceLink?: string;
-  /** @wixFieldType url */
+  /** @wixFieldType image */
   coverImage?: string;
   /** @wixFieldType text */
   1?: string;

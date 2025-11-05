@@ -57,35 +57,286 @@ export default function ResourcesPage() {
           </div>
         </section>
 
-        {/* Under Progress Section */}
+        {/* E-Resources Content Section */}
         <section className="py-20">
           <div className="max-w-[120rem] mx-auto px-6">
-            <div className="text-center space-y-8">
-              <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                <BookOpen className="h-12 w-12 text-orange-500" />
-              </div>
-              <h2 className="font-heading text-4xl font-bold text-primary">
-                This information is under progress.
-              </h2>
-              <p className="font-paragraph text-lg text-primary/70 max-w-2xl mx-auto">
-                We are currently working on compiling and organizing the resources for the {year} academic year. 
-                Please check back soon for updates.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  onClick={() => window.location.href = '/'}
-                  className="bg-primary hover:bg-primary/90"
-                >
-                  Return to Home
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => window.location.href = '/resources'}
-                  className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                  View Other Years
-                </Button>
-              </div>
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap overflow-x-auto">
+{`ANNEXURE-1
+VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2025-26
+Sl. No Publisher Logo Publishers e-Resources Website
+Subscription
+Period
+Contact person
+1
+IEEE
+ASPP 202 Journals &
+POP ALL conference
+1800 proceedings
+https://ieeexplore.ieee.org
+01-10-2025
+to
+30-06-2026
+Mr.Manjunath Rudrappa
+mrudrappa@ebsco.com
+9870200104
+2
+Elsevier Science
+Direct
+405 e-Journals https://www.sciencedirect.com
+23-05-2025
+to
+22-05-2026
+Pranav Shukla
+p.shukla.1@elsevier.com
+9810332529
+3
+Springer Nature 710 e-Journals https://link.springer.com
+01-06-2025
+to
+31-05-2026
+Rajaneesh Appayya
+rajaneesh@springer.com
+9900555516
+4
+Taylor &
+Francis
+260 e-Journals https://www.tandfonline.com/
+01-09-2025
+to
+31-08-2026
+Rajesh Shetty
+rajesh.shetty@informa.com
+9818500210
+5
+Emerald
+Publishing
+Management 212 e-
+Journals
+https://www.emerald.com/insight/
+01-10-2025
+to
+30-09-2026
+S Vinay Kumar
+svkumar@emerald.com
+9916252539
+6
+ICE 29 e-Journals https://www.emerald.com/insight/
+01-10-2025
+to
+30-09-2026
+S Vinay Kumar
+svkumar@emerald.com
+9916252539
+7
+EBSCO
+Engineering
+Suite
+6100 e-Journals
+24015 e-Books
+80+ microcourses
+https://search.ebscohost.com
+01-10-2025
+to
+30-09-2026
+Rekha Choyal
+rchoyal@ebsco.com
+81309 95682
+8
+Magzter
+database
+Magazines-3174
+Newspapers-1260
+Journals-4581
+Others -2595
+https://library.magzter.com
+01-09-2025
+to
+31-08-2026
+Savam Talukdar
+contact@verse.in, sovam.talukdar@verse.in
+8102556806
+Deepa Balaji
+clienthelpdesk@magzter.com
+9840952472
+9
+PACKT 2300 e-Books https://learning.packt.com
+01-09-2025
+to
+31-08-2026
+Pravin Shet
+pravins@packt.com
+9987680770
+10
+New Age
+International
+450 e-Books https://digital.elib4u.com/
+Perpetual
+access from
+01-09-2025
+Manish Gupta
+manish@newagepublishers.com
+9315905295
+11
+Edsol Informatics
+20 e-Books https://ebooks.edsolinformatics.com/
+Perpetual access from 01-09-2025
+Vikas Madan
+vikas@edsolinformatics.com
+9711175377
+12
+Quiklrn
+Language Communication Lab unlimited users
+https://home.quiklrn.com
+19-09-2025
+to
+18-09-2026
+Rajesh Shetty
+rajesh@quiklrn.com
+9845005732
+13
+Quiklrn
+185 e-Books access with smart mobile app
+https://home.quiklrn.com
+19-09-2025
+to
+18-09-2026
+Rajesh Shetty
+rajesh@quiklrn.com
+9845005732
+14
+IEEE Blended e-Learning
+70 e-Learning Courses
+http://blendedlearning.ieee.org
+19-09-2025
+to
+18-09-2026
+Pramod Kumar P
+pramod.p@ieee.org
+9343071441
+15
+PAT Technology
+14 e-Learning Courses https://vtu.edutainer.in/
+01-09-2025
+to
+31-08-2026
+Mr.Shrawan Tiwari
+info@edutainer.in
+9513399613
+16
+DrillBit
+Plagiarism Detection Software https://www.drillbitplagiarism.com
+12-05-2025
+to
+11-05-2026
+Mr.Jayanna jayanna.belavadi@drillbitplagiarism.com
+9739904021
+17
+MAP Systems
+Technology Platform https://access.vtuconsortium.com
+18-11-2025
+to
+17-05-2027
+Mr.Somshekhar V Thalange
+somshekhar@maplibraryservices.com 86001 05949
+18
+CELUS Online Software for automated harvesting and analysis of COUNTER and non-COUNTER statistics https://www.celus.net/
+01-10-2025
+to
+31-09-2026
+Amit Verma
+amit@umbrellapalm.in
+9999354563
+ANNEXURE-II
+VTU CONSORTIUM EXISTING PERPETUAL /SUBSCRIPTION ACCESS OF E-BOOKS
+Sl. No
+Publisher
+Logo
+Publishers e-Resources Website
+Subscriptio
+n Period
+Contact Details
+1
+CBS Publishers 174 e-Books https://www.eduport-global.com
+17-09-2024
+To
+16-09-2031
+G Anjaneyulu
+anji.ebooks@cbspd.com
+9908075875
+2
+Cambridge University
+Press
+58 e-Books https://www.cambridge.org
+Perpetual
+access from
+September
+2024
+Aiam Aftab
+Aftab.alam2@cambridge.org
+7795045801
+3
+Cengage Learning 69 e-Books
+https://cengageindiaelibrary.ipublis
+hcentral.net
+17-09-2024
+to
+16-09-2031
+Vishal Kumar Singh
+vishal.kumar@cengage.com
+8800001621
+4
+BSP Books 141 e-Books
+https://ebookstore.bspublications.ne
+t
+17-09-2024
+to
+16-09-2029
+Nikunjesh A Shah
+nikunjesh.shah@bspbooks.net
+8374105220
+5
+Taylor & Francis 5731 e-Books
+https://www.taylorfrancis.com
+Perpetual
+access from
+2014
+Rajesh Shetty
+rajesh.shetty@informa.com
+9818500210
+6
+Springer 12,863 e-Books https://link.springer.com
+Perpetual
+access from
+2014
+Rajaneesh Appayya
+rajaneesh@springer.com
+9900555516
+7
+PACKT 5000 e-Books https://learning.packt.com
+Perpetual
+access from
+2019
+Pravin Shet
+pravins@packt.com
+9987680770
+8
+New Age International 220 e-Books https://digital.elib4u.com/
+Perpetual
+access from
+2019
+Manish Gupta
+manish@newagepublishers.com
+9315905295
+9
+Elsevier Science Direct 436 e-Books https://www.sciencedirect.com
+Perpetual
+access from
+2019
+Pranav Shukla
+p.shukla.1@elsevier.com
+9810332529`}
+              </pre>
             </div>
           </div>
         </section>
