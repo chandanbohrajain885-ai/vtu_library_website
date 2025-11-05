@@ -214,7 +214,7 @@ export default function HomePage() {
                 </DropdownMenuContent>
               </DropdownMenu>
               <button onClick={() => handleProtectedAction(() => navigate('/news'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
-              <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Notifications</button>
+              <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{"NodalOfficersCorner"}</button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
@@ -417,8 +417,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -479,7 +477,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-
       {/* Login Modal */}
       <LoginModal 
         isOpen={isLoginModalOpen} 
