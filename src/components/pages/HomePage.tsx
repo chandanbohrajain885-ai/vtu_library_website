@@ -18,6 +18,58 @@ export default function HomePage() {
   const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
   const [latestNews, setLatestNews] = useState<NewsandNotifications[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Demo news data for fallback when CMS has no data
+  const demoNewsData: NewsandNotifications[] = [
+    {
+      _id: 'demo-1',
+      title: 'New Digital Library Resources Available',
+      content: 'We are excited to announce the addition of over 1,000 new digital books and research papers to our online library collection. These resources cover various academic disciplines including science, technology, humanities, and social sciences.',
+      publicationDate: new Date('2024-11-01'),
+      isFeatured: true,
+      author: 'Library Administration'
+    },
+    {
+      _id: 'demo-2',
+      title: 'Extended Library Hours During Exam Period',
+      content: 'To support students during the upcoming examination period, the library will extend its operating hours. We will be open from 7:00 AM to 11:00 PM Monday through Friday, and 9:00 AM to 9:00 PM on weekends.',
+      publicationDate: new Date('2024-10-28'),
+      isFeatured: false,
+      author: 'Student Services'
+    },
+    {
+      _id: 'demo-3',
+      title: 'Research Workshop Series Begins Next Week',
+      content: 'Join our comprehensive research methodology workshop series starting next Monday. Learn advanced research techniques, citation methods, and how to effectively use our database resources for your academic projects.',
+      publicationDate: new Date('2024-10-25'),
+      isFeatured: true,
+      author: 'Academic Support Team'
+    },
+    {
+      _id: 'demo-4',
+      title: 'New Study Spaces Now Open',
+      content: 'We have opened additional quiet study areas on the third floor, featuring comfortable seating, power outlets, and high-speed Wi-Fi. These spaces are perfect for individual study sessions and small group collaborations.',
+      publicationDate: new Date('2024-10-22'),
+      isFeatured: false,
+      author: 'Facilities Management'
+    },
+    {
+      _id: 'demo-5',
+      title: 'Guest Lecture: Future of Academic Publishing',
+      content: 'Renowned publisher Dr. Sarah Mitchell will be presenting a lecture on the evolving landscape of academic publishing and open access initiatives. The event will be held in the main auditorium this Friday at 2:00 PM.',
+      publicationDate: new Date('2024-10-20'),
+      isFeatured: true,
+      author: 'Events Committee'
+    },
+    {
+      _id: 'demo-6',
+      title: 'Library Mobile App Update Released',
+      content: 'Our mobile application has been updated with new features including book reservation, real-time availability checking, and push notifications for due dates. Download the latest version from your app store.',
+      publicationDate: new Date('2024-10-18'),
+      isFeatured: false,
+      author: 'IT Department'
+    }
+  ];
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const topNewsScrollContainerRef = useRef<HTMLDivElement>(null);
@@ -39,10 +91,15 @@ export default function HomePage() {
         ]);
 
         setFeaturedResources(resourcesResponse.items.slice(0, 3));
-        setLatestNews(newsResponse.items
-          .sort((a, b) => new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime())
-          .slice(0, 6) // Increased to 6 for better scrolling effect
-        );
+        
+        // Use CMS data if available, otherwise use demo data
+        const newsData = newsResponse.items.length > 0 
+          ? newsResponse.items
+              .sort((a, b) => new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime())
+              .slice(0, 6)
+          : demoNewsData;
+        
+        setLatestNews(newsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -56,7 +113,7 @@ export default function HomePage() {
   // Auto-scroll effect for news cards
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer || latestNews.length === 0) return;
+    if (!scrollContainer) return;
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;
@@ -84,7 +141,7 @@ export default function HomePage() {
   // Auto-scroll effect for top news cards
   useEffect(() => {
     const scrollContainer = topNewsScrollContainerRef.current;
-    if (!scrollContainer || latestNews.length === 0) return;
+    if (!scrollContainer) return;
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;

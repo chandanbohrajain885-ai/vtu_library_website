@@ -19,10 +19,10 @@ export interface EResources {
   category?: string;
   /** @wixFieldType text */
   author?: string;
-  /** @wixFieldType text */
+  /** @wixFieldType richText */
   description?: string;
-  /** @wixFieldType datetime */
-  publicationDate?: Date | string;
+  /** @wixFieldType date */
+  publicationDate?: Date;
   /** @wixFieldType url */
   resourceLink?: string;
   /** @wixFieldType image */
