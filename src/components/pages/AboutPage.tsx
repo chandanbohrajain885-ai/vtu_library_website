@@ -1,5 +1,7 @@
 import React from 'react';
-import { BookOpen, Users, Download } from 'lucide-react';
+import { BookOpen, Users, Download, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 export default function AboutPage() {
   return (
@@ -7,6 +9,19 @@ export default function AboutPage() {
       {/* Header */}
       <header className="bg-primary text-white py-16">
         <div className="max-w-[120rem] mx-auto px-6">
+          {/* Back Button */}
+          <div className="mb-8">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                className="bg-white text-primary hover:bg-gray-100 border-white"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+          
           <div className="text-center">
             <h1 className="font-heading text-5xl font-bold mb-4">About VTU Consortium</h1>
             <p className="font-paragraph text-xl max-w-3xl mx-auto">
