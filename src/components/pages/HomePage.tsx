@@ -383,8 +383,8 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
-                    <span className="text-gray-500">Venue: </span>
-                    <span className="font-bold text-primary">{news.content || 'News content...'}</span>
+                    <span className="font-bold text-green-600">Venue: </span>
+                    <span className="font-bold text-green-600">{news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
@@ -428,8 +428,8 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
-                    <span className="text-gray-500">Venue: </span>
-                    <span className="font-bold text-primary">{news.content || 'News content...'}</span>
+                    <span className="font-bold text-green-600">Venue: </span>
+                    <span className="font-bold text-green-600">{news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
