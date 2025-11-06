@@ -9,6 +9,17 @@ export interface User {
   createdAt?: Date;
 }
 
+export interface RegistrationRequest {
+  id: string;
+  username: string;
+  email: string;
+  role: 'admin' | 'librarian' | 'publisher';
+  requestedPermissions: string[];
+  requestDate: Date;
+  status: 'pending' | 'approved' | 'rejected';
+  reason?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -18,6 +29,10 @@ interface AuthContextType {
   createUser: (userData: Omit<User, 'id' | 'createdAt'>) => void;
   updateUserPermissions: (userId: string, permissions: string[]) => void;
   deleteUser: (userId: string) => void;
+  registrationRequests: RegistrationRequest[];
+  submitRegistrationRequest: (request: Omit<RegistrationRequest, 'id' | 'requestDate' | 'status'>) => void;
+  approveRegistrationRequest: (requestId: string) => void;
+  rejectRegistrationRequest: (requestId: string, reason?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -67,11 +82,13 @@ const defaultPasswords: Record<string, string> = {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>(defaultUsers);
+  const [registrationRequests, setRegistrationRequests] = useState<RegistrationRequest[]>([]);
 
   useEffect(() => {
     // Check for stored auth
     const storedUser = localStorage.getItem('vtu_auth_user');
     const storedUsers = localStorage.getItem('vtu_auth_users');
+    const storedRequests = localStorage.getItem('vtu_registration_requests');
     
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -79,6 +96,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (storedUsers) {
       setUsers(JSON.parse(storedUsers));
+    }
+    
+    if (storedRequests) {
+      setRegistrationRequests(JSON.parse(storedRequests));
     }
   }, []);
 
@@ -142,6 +163,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('vtu_auth_users', JSON.stringify(updatedUsers));
   };
 
+  const submitRegistrationRequest = (request: Omit<RegistrationRequest, 'id' | 'requestDate' | 'status'>) => {
+    const newRequest: RegistrationRequest = {
+      ...request,
+      id: Date.now().toString(),
+      requestDate: new Date(),
+      status: 'pending'
+    };
+    
+    const updatedRequests = [...registrationRequests, newRequest];
+    setRegistrationRequests(updatedRequests);
+    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
+  };
+
+  const approveRegistrationRequest = (requestId: string) => {
+    const request = registrationRequests.find(r => r.id === requestId);
+    if (!request) return;
+
+    // Create the user account
+    const newUser: User = {
+      id: Date.now().toString(),
+      username: request.username,
+      role: request.role,
+      permissions: request.requestedPermissions,
+      createdBy: 'superadmin',
+      createdAt: new Date()
+    };
+
+    const updatedUsers = [...users, newUser];
+    setUsers(updatedUsers);
+    localStorage.setItem('vtu_auth_users', JSON.stringify(updatedUsers));
+
+    // Update request status
+    const updatedRequests = registrationRequests.map(r => 
+      r.id === requestId ? { ...r, status: 'approved' as const } : r
+    );
+    setRegistrationRequests(updatedRequests);
+    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
+  };
+
+  const rejectRegistrationRequest = (requestId: string, reason?: string) => {
+    const updatedRequests = registrationRequests.map(r => 
+      r.id === requestId ? { ...r, status: 'rejected' as const, reason } : r
+    );
+    setRegistrationRequests(updatedRequests);
+    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -151,7 +219,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       users,
       createUser,
       updateUserPermissions,
-      deleteUser
+      deleteUser,
+      registrationRequests,
+      submitRegistrationRequest,
+      approveRegistrationRequest,
+      rejectRegistrationRequest
     }}>
       {children}
     </AuthContext.Provider>

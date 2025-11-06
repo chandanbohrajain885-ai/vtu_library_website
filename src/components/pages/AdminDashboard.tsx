@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth, User } from '@/components/auth/AuthContext';
+import { useAuth, User, RegistrationRequest } from '@/components/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Edit, Plus, Users, Settings, Shield } from 'lucide-react';
+import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const availablePermissions = [
@@ -26,9 +26,21 @@ const availablePermissions = [
 ];
 
 export default function AdminDashboard() {
-  const { user, users, createUser, updateUserPermissions, deleteUser, logout } = useAuth();
+  const { 
+    user, 
+    users, 
+    createUser, 
+    updateUserPermissions, 
+    deleteUser, 
+    logout,
+    registrationRequests,
+    approveRegistrationRequest,
+    rejectRegistrationRequest
+  } = useAuth();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [viewingRequest, setViewingRequest] = useState<RegistrationRequest | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
   const [newUser, setNewUser] = useState({
     username: '',
     password: '',
@@ -74,6 +86,18 @@ export default function AdminDashboard() {
     setEditingUser(null);
   };
 
+  const handleApproveRequest = (requestId: string) => {
+    approveRegistrationRequest(requestId);
+    setViewingRequest(null);
+  };
+
+  const handleRejectRequest = (requestId: string) => {
+    rejectRegistrationRequest(requestId, rejectReason);
+    setViewingRequest(null);
+    setRejectReason('');
+  };
+
+  const pendingRequests = registrationRequests.filter(r => r.status === 'pending');
   const togglePermission = (permission: string, isEditing: boolean = false) => {
     if (isEditing && editingUser) {
       const updatedPermissions = editingUser.permissions.includes(permission)
@@ -110,7 +134,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -144,7 +168,155 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Requests</CardTitle>
+              <Clock className="h-4 w-4 text-orange-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {pendingRequests.length}
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Registration Requests Section */}
+        {pendingRequests.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-orange-500" />
+                  Pending Registration Requests
+                </CardTitle>
+                <Badge variant="secondary">{pendingRequests.length} pending</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {pendingRequests.map((request) => (
+                  <div key={request.id} className="flex items-center justify-between p-4 border rounded-lg bg-orange-50">
+                    <div className="flex items-center space-x-4">
+                      <div>
+                        <h3 className="font-medium">{request.username}</h3>
+                        <p className="text-sm text-gray-500">{request.email}</p>
+                        <p className="text-sm text-gray-500 capitalize">Requested Role: {request.role}</p>
+                        <p className="text-xs text-gray-400">
+                          Submitted: {new Date(request.requestDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {request.requestedPermissions.slice(0, 3).map((permission) => (
+                          <Badge key={permission} variant="outline" className="text-xs">
+                            {permission.replace('_', ' ')}
+                          </Badge>
+                        ))}
+                        {request.requestedPermissions.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{request.requestedPermissions.length - 3} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setViewingRequest(request)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Review
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>Review Registration Request</DialogTitle>
+                          </DialogHeader>
+                          {viewingRequest && (
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <Label className="text-sm font-medium">Username</Label>
+                                  <p className="text-sm">{viewingRequest.username}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Email</Label>
+                                  <p className="text-sm">{viewingRequest.email}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Requested Role</Label>
+                                  <p className="text-sm capitalize">{viewingRequest.role}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Request Date</Label>
+                                  <p className="text-sm">{new Date(viewingRequest.requestDate).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <Label className="text-sm font-medium">Requested Permissions</Label>
+                                <div className="grid grid-cols-2 gap-2 mt-2">
+                                  {viewingRequest.requestedPermissions.map((permission) => (
+                                    <div key={permission} className="flex items-center space-x-2">
+                                      <CheckCircle className="h-4 w-4 text-green-500" />
+                                      <span className="text-sm">
+                                        {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="rejectReason">Rejection Reason (optional)</Label>
+                                <Input
+                                  id="rejectReason"
+                                  value={rejectReason}
+                                  onChange={(e) => setRejectReason(e.target.value)}
+                                  placeholder="Enter reason for rejection..."
+                                />
+                              </div>
+                              
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setViewingRequest(null);
+                                    setRejectReason('');
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => handleRejectRequest(viewingRequest.id)}
+                                >
+                                  <XCircle className="h-4 w-4 mr-1" />
+                                  Reject
+                                </Button>
+                                <Button
+                                  onClick={() => handleApproveRequest(viewingRequest.id)}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Approve
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* User Management */}
         <Card>
