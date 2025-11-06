@@ -206,9 +206,7 @@ export default function HomePage() {
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/1XdCgDWRtO_PK9yN-M5Fi5ud4OH25gWfT?usp=sharing', '_blank')}
-                  >
-                    Governing Council
-                  </DropdownMenuItem>
+                  >{"Governing Council"}</DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/19GgIpBfrtg6zljHwXeiBSgxTO6BxObAD?usp=sharing', '_blank')}
@@ -386,7 +384,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Library News & Events */}
       <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -559,13 +556,11 @@ export default function HomePage() {
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
       />
-      
       {/* Registration Modal */}
       <RegistrationModal 
         isOpen={isRegistrationModalOpen} 
         onClose={() => setIsRegistrationModalOpen(false)} 
       />
-      
       {/* Super Executive Modal */}
       <SuperExecutiveModal 
         isOpen={isSuperExecutiveModalOpen} 
