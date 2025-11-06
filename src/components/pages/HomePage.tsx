@@ -22,52 +22,36 @@ export default function HomePage() {
   // Demo news data for fallback when CMS has no data
   const demoNewsData: NewsandEvents[] = [
     {
-      _id: 'demo-1',
-      title: 'New Digital Library Resources Available',
-      content: 'We are excited to announce the addition of over 1,000 new digital books and research papers to our online library collection. These resources cover various academic disciplines including science, technology, humanities, and social sciences.',
-      publicationDate: new Date('2024-11-01'),
+      _id: 'training-1',
+      title: 'One Day Training Programs on VTU Consortium e-resources',
+      content: 'Join us for a comprehensive training program on VTU Consortium e-resources. Learn how to effectively utilize digital libraries, research databases, and academic journals for your research and academic needs. Venue: Government Engineering College, Ramanagara.',
+      publicationDate: new Date('2024-11-15'),
       isFeatured: true,
-      author: 'Library Administration'
+      author: 'VTU Consortium'
     },
     {
-      _id: 'demo-2',
-      title: 'Extended Library Hours During Exam Period',
-      content: 'To support students during the upcoming examination period, the library will extend its operating hours. We will be open from 7:00 AM to 11:00 PM Monday through Friday, and 9:00 AM to 9:00 PM on weekends.',
-      publicationDate: new Date('2024-10-28'),
-      isFeatured: false,
-      author: 'Student Services'
-    },
-    {
-      _id: 'demo-3',
-      title: 'Research Workshop Series Begins Next Week',
-      content: 'Join our comprehensive research methodology workshop series starting next Monday. Learn advanced research techniques, citation methods, and how to effectively use our database resources for your academic projects.',
-      publicationDate: new Date('2024-10-25'),
+      _id: 'training-2',
+      title: 'One Day Training Programs on VTU Consortium e-resources',
+      content: 'Comprehensive training session on accessing and utilizing VTU Consortium e-resources including IEEE, Springer, Elsevier, and other premium databases. Enhance your research capabilities with expert guidance. Venue: BMS College of Engineering, Bangalore.',
+      publicationDate: new Date('2024-11-22'),
       isFeatured: true,
-      author: 'Academic Support Team'
+      author: 'VTU Consortium'
     },
     {
-      _id: 'demo-4',
-      title: 'New Study Spaces Now Open',
-      content: 'We have opened additional quiet study areas on the third floor, featuring comfortable seating, power outlets, and high-speed Wi-Fi. These spaces are perfect for individual study sessions and small group collaborations.',
-      publicationDate: new Date('2024-10-22'),
-      isFeatured: false,
-      author: 'Facilities Management'
-    },
-    {
-      _id: 'demo-5',
-      title: 'Guest Lecture: Future of Academic Publishing',
-      content: 'Renowned publisher Dr. Sarah Mitchell will be presenting a lecture on the evolving landscape of academic publishing and open access initiatives. The event will be held in the main auditorium this Friday at 2:00 PM.',
-      publicationDate: new Date('2024-10-20'),
+      _id: 'training-3',
+      title: 'One Day Training Programs on VTU Consortium e-resources',
+      content: 'Discover the full potential of VTU Consortium e-resources in this hands-on training program. Learn advanced search techniques, citation management, and research methodology using digital resources. Venue: RV College of Engineering, Bangalore.',
+      publicationDate: new Date('2024-11-29'),
       isFeatured: true,
-      author: 'Events Committee'
+      author: 'VTU Consortium'
     },
     {
-      _id: 'demo-6',
-      title: 'Library Mobile App Update Released',
-      content: 'Our mobile application has been updated with new features including book reservation, real-time availability checking, and push notifications for due dates. Download the latest version from your app store.',
-      publicationDate: new Date('2024-10-18'),
-      isFeatured: false,
-      author: 'IT Department'
+      _id: 'training-4',
+      title: 'One Day Training Programs on VTU Consortium e-resources',
+      content: 'Master the art of digital research with our specialized training on VTU Consortium e-resources. Explore vast collections of academic journals, conference papers, and research databases. Venue: Dayananda Sagar College of Engineering, Bangalore.',
+      publicationDate: new Date('2024-12-06'),
+      isFeatured: true,
+      author: 'VTU Consortium'
     }
   ];
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
