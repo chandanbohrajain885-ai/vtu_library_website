@@ -140,45 +140,7 @@ export default function AboutPage() {
 
           {/* Consortia Section */}
           <div className="mt-16">
-            <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-lg p-8 shadow-lg">
-              <h3 className="font-heading text-3xl font-bold mb-8 text-center">Consortia Partnerships</h3>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="font-heading text-xl font-semibold mb-4">National Consortia</h4>
-                  <ul className="font-paragraph space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>INDEST-AICTE Consortium</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>UGC-INFONET Digital Library Consortium</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>DELNET (Developing Library Network)</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-heading text-xl font-semibold mb-4">International Partnerships</h4>
-                  <ul className="font-paragraph space-y-2">
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>IEEE Digital Library</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>Springer Nature Consortium</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                      <span>Elsevier ScienceDirect</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+
           </div>
 
           {/* Aims Section */}
