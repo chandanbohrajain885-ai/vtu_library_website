@@ -1760,81 +1760,147 @@ export default function ResourcesPage() {
                 </h1>
                 
                 {/* E-Journals Section */}
-                <div className="mb-12">
+                <div className="mb-16">
                   <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
                     E-Journals
                   </h2>
                   
-                  <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-blue-800 mb-4">
+                  <div className="border-l-4 border-blue-500 pl-8 bg-blue-50/50 p-6 rounded-r-lg shadow-sm">
+                    <h3 className="font-heading text-xl font-semibold text-blue-800 mb-6">
                       Available E-Journals
                     </h3>
-                    <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                      IEEE - IEL Online
-                      Subject Coverage: Electrical, Electronics, Computer Science, Telecommunications, and related disciplines
-                      Resources:
-                      • IEEE: 190 Journals, 1400+ Conference Proceedings (annual), 3043 Standards
-                      • IET: 82 Journals, 20+ Conference Proceedings (annual)
-                      • VDE Verlag: 20+ Conference Proceedings (annual)
-                      • Alcatel-Lucent: 1 Journal (Bell Labs Tech Journal)
-                      • Back titles from 1872 to present
+                    
+                    <div className="space-y-8">
+                      {/* IEEE - IEL Online */}
+                      <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-blue-900 mb-3">IEEE - IEL Online</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-blue-800">Subject Coverage:</span> Electrical, Electronics, Computer Science, Telecommunications, and related disciplines
+                        </p>
+                        <div className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-blue-800 block mb-2">Resources:</span>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>IEEE: 190 Journals, 1400+ Conference Proceedings (annual), 3043 Standards</li>
+                            <li>IET: 82 Journals, 20+ Conference Proceedings (annual)</li>
+                            <li>VDE Verlag: 20+ Conference Proceedings (annual)</li>
+                            <li>Alcatel-Lucent: 1 Journal (Bell Labs Tech Journal)</li>
+                            <li>Back titles from 1872 to present</li>
+                          </ul>
+                        </div>
+                      </div>
 
-                      Elsevier Science
-                      Subject Coverage: Engineering (all branches), Aerospace, Biomedical, Chemical, Civil, Computer Science, Electrical, Mechanical
-                      Resources: 288 Journals (Back Issues from 2000 to Dec 2015)
+                      {/* Elsevier Science */}
+                      <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-blue-900 mb-3">Elsevier Science</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-blue-800">Subject Coverage:</span> Engineering (all branches), Aerospace, Biomedical, Chemical, Civil, Computer Science, Electrical, Mechanical
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-blue-800">Resources:</span> 288 Journals (Back Issues from 2000 to Dec 2015)
+                        </p>
+                      </div>
 
-                      Springer e-Journals
-                      Subject Coverage: Electrical & Electronics, Mechanical, Civil, Computer Science, Chemistry, Mathematics, Physics
-                      Resources: 680 Journals (Back titles from 1997)
+                      {/* Springer e-Journals */}
+                      <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-blue-900 mb-3">Springer e-Journals</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-blue-800">Subject Coverage:</span> Electrical & Electronics, Mechanical, Civil, Computer Science, Chemistry, Mathematics, Physics
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-blue-800">Resources:</span> 680 Journals (Back titles from 1997)
+                        </p>
+                      </div>
 
-                      ASCE (American Society of Civil Engineers)
-                      Subject Coverage: Civil Engineering
-                      Resources: 35 Journals (Back file from 1983)
+                      {/* ASCE */}
+                      <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-blue-900 mb-3">ASCE (American Society of Civil Engineers)</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-blue-800">Subject Coverage:</span> Civil Engineering
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-blue-800">Resources:</span> 35 Journals (Back file from 1983)
+                        </p>
+                      </div>
 
-                      Taylor & Francis
-                      Subject Coverage: Engineering, Computer Science, Mechanical, Civil, Biotechnology, Textile, Electrical
-                      Resources: 535 Journals (Back Issues from 1997 to 2015)
+                      {/* Taylor & Francis */}
+                      <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-blue-900 mb-3">Taylor & Francis</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-blue-800">Subject Coverage:</span> Engineering, Computer Science, Mechanical, Civil, Biotechnology, Textile, Electrical
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-blue-800">Resources:</span> 535 Journals (Back Issues from 1997 to 2015)
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Database Collections Section */}
-                <div className="mb-12">
+                <div className="mb-16">
                   <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
                     Database Collections
                   </h2>
                   
-                  <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-green-800 mb-4">
+                  <div className="border-l-4 border-green-500 pl-8 bg-green-50/50 p-6 rounded-r-lg shadow-sm">
+                    <h3 className="font-heading text-xl font-semibold text-green-800 mb-6">
                       Available Database Collections
                     </h3>
-                    <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                      Proquest – Engineering and Technology Collections
-                      Subject Coverage: All Engineering disciplines and Architecture
-                      Resources: 3900 Journals (Full-text & indexed, back issues from 2000), 7800 Abstracts
+                    
+                    <div className="space-y-6">
+                      {/* Proquest Engineering */}
+                      <div className="bg-white p-6 rounded-lg border border-green-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-green-900 mb-3">Proquest – Engineering and Technology Collections</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-green-800">Subject Coverage:</span> All Engineering disciplines and Architecture
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-green-800">Resources:</span> 3900 Journals (Full-text & indexed, back issues from 2000), 7800 Abstracts
+                        </p>
+                      </div>
 
-                      Proquest – ABI Inform Global
-                      Subject Coverage: Business Administration
-                      Resources: 2900 Journals (Full-text & indexed, back issues from 2000), 10300 Abstracts
+                      {/* Proquest ABI */}
+                      <div className="bg-white p-6 rounded-lg border border-green-200 shadow-sm">
+                        <h4 className="font-heading text-lg font-bold text-green-900 mb-3">Proquest – ABI Inform Global</h4>
+                        <p className="font-paragraph text-gray-700 mb-3">
+                          <span className="font-semibold text-green-800">Subject Coverage:</span> Business Administration
+                        </p>
+                        <p className="font-paragraph text-gray-700">
+                          <span className="font-semibold text-green-800">Resources:</span> 2900 Journals (Full-text & indexed, back issues from 2000), 10300 Abstracts
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Digital Library & Cloud Access Section */}
-                <div className="mb-12">
+                <div className="mb-16">
                   <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
                     Digital Library & Cloud Access
                   </h2>
                   
-                  <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-purple-800 mb-4">
+                  <div className="border-l-4 border-purple-500 pl-8 bg-purple-50/50 p-6 rounded-r-lg shadow-sm">
+                    <h3 className="font-heading text-xl font-semibold text-purple-800 mb-6">
                       Digital Library Platform
                     </h3>
-                    <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                      K-Nimbus: Digital Library Platform Remote Access Solution
-                      Subject Coverage: All Subjects
-                      Resources: 12K+ Open Access resources (Journals, e-Books, e-Theses, Educational videos)
-                      Features: Cloud-based 24/7 access, Admin control for librarians, Usage reports, Secure full-text content access
+                    
+                    <div className="bg-white p-6 rounded-lg border border-purple-200 shadow-sm">
+                      <h4 className="font-heading text-lg font-bold text-purple-900 mb-3">K-Nimbus: Digital Library Platform Remote Access Solution</h4>
+                      <p className="font-paragraph text-gray-700 mb-3">
+                        <span className="font-semibold text-purple-800">Subject Coverage:</span> All Subjects
+                      </p>
+                      <p className="font-paragraph text-gray-700 mb-3">
+                        <span className="font-semibold text-purple-800">Resources:</span> 12K+ Open Access resources (Journals, e-Books, e-Theses, Educational videos)
+                      </p>
+                      <div className="font-paragraph text-gray-700">
+                        <span className="font-semibold text-purple-800 block mb-2">Features:</span>
+                        <ul className="list-disc list-inside space-y-1 ml-4">
+                          <li>Cloud-based 24/7 access</li>
+                          <li>Admin control for librarians</li>
+                          <li>Usage reports</li>
+                          <li>Secure full-text content access</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
