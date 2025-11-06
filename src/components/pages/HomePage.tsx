@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
+import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
 
 export default function HomePage() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -55,6 +56,7 @@ export default function HomePage() {
     }
   ];
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (action: () => void, requiredRole?: string) => {
@@ -319,6 +321,9 @@ export default function HomePage() {
                   <Button onClick={() => setIsLoginModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
                     Register
                   </Button>
+                  <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6">
+                    Super Executive
+                  </Button>
                 </>
               )}
             </div>
@@ -527,6 +532,12 @@ export default function HomePage() {
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
+      />
+      
+      {/* Super Executive Modal */}
+      <SuperExecutiveModal 
+        isOpen={isSuperExecutiveModalOpen} 
+        onClose={() => setIsSuperExecutiveModalOpen(false)} 
       />
     </div>
   );
