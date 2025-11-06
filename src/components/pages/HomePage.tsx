@@ -334,7 +334,7 @@ export default function HomePage() {
       </header>
       {/* Hero Section with Library Background */}
       <section className="relative bg-gray-900 text-white py-20" style={{
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_99252604bb974a358c5f83d03aa2dd0e~mv2.png?originWidth=1600&originHeight=768')",
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://static.wixstatic.com/media/e79745_f1f2f11701d146d6a943e596a621793d~mv2.png?originWidth=1152&originHeight=768')",
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>
