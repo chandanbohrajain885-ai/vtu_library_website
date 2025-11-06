@@ -1414,7 +1414,12 @@ export default function ResourcesPage() {
                         IEEE - IEL Online
                       </h3>
                       <p className="font-paragraph text-gray-700">
-                        Comprehensive collection of scientific journals covering engineering, computer science, and allied disciplines
+                        •	Subject Coverage: Electrical, Electronics, Computer Science, Telecommunications, and related fields
+                      </p>
+                      <p className="font-paragraph text-gray-700">
+                        •	Resources: IEEE Journals (190), Conference Proceedings 
+                        (1400+ annually), Standards (3043), IET Journals (82), 
+                        Alcatel-Lucent Bell Labs Journal, VDE Verlag Conference Proceedings (20+ annually)
                       </p>
                     </div>
                     
