@@ -1372,11 +1372,8 @@ export default function ResourcesPage() {
     );
   }
 
-  // Render styled content for 2017-18
+  // Render styled content for 2017-18 with hardcoded data
   if (is2017Year) {
-    // Find the 2017-18 data from CMS
-    const year2017Data = eResourcesData.find(item => item.title === '2017-18');
-    
     return (
       <div className="min-h-screen bg-background">
         {/* Header Navigation */}
@@ -1424,170 +1421,47 @@ export default function ResourcesPage() {
           <div className="max-w-[120rem] mx-auto px-6">
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="prose prose-lg max-w-none">
-                <h1 className="font-heading text-4xl font-bold text-primary text-center mb-12">
-                  VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2017-18
-                </h1>
-                
-                {/* E-Journals Section */}
-                {year2017Data && year2017Data.eJournals && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      E-Journals
-                    </h2>
-                    
-                    <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-blue-800 mb-4">
-                        Available E-Journals
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data.eJournals}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <div className="font-paragraph text-gray-800 leading-relaxed whitespace-pre-line text-base">
+{`VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2017-18
 
-                {/* E-Books Section */}
-                {year2017Data && year2017Data.eBooks && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      E-Books
-                    </h2>
-                    
-                    <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-green-800 mb-4">
-                        Available E-Books
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data.eBooks}
-                      </div>
-                    </div>
-                  </div>
-                )}
+IEEE - IEL Online
+Subject Coverage: Electrical, Electronics, Computer Science, Telecommunications, and related disciplines
+Resources:
+IEEE: 190 Journals, 1400+ Conference Proceedings (annual), 3043 Standards
+IET: 82 Journals, 20+ Conference Proceedings (annual)
+VDE Verlag: 20+ Conference Proceedings (annual)
+Alcatel-Lucent: 1 Journal (Bell Labs Tech Journal)
+Back titles from 1872 to present
 
-                {/* Language Labs & E-Learning Section */}
-                {year2017Data && year2017Data.languageLabsAndElearning && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      Language Labs & E-Learning
-                    </h2>
-                    
-                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-4">
-                        Available Platforms
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data.languageLabsAndElearning}
-                      </div>
-                    </div>
-                  </div>
-                )}
+Elsevier Science
+Subject Coverage: Engineering (all branches), Aerospace, Biomedical, Chemical, Civil, Computer Science, Electrical, Mechanical
+Resources: 288 Journals (Back Issues from 2000 to Dec 2015)
 
-                {/* Plagiarism Detection Software Section */}
-                {year2017Data && year2017Data.plagiarismDetectionSoftware && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      Plagiarism Detection Software
-                    </h2>
-                    
-                    <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-red-800 mb-4">
-                        Available Software
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data.plagiarismDetectionSoftware}
-                      </div>
-                    </div>
-                  </div>
-                )}
+Springer e-Journals
+Subject Coverage: Electrical & Electronics, Mechanical, Civil, Computer Science, Chemistry, Mathematics, Physics
+Resources: 680 Journals (Back titles from 1997)
 
-                {/* Resource List Section */}
-                {year2017Data && year2017Data.resourceList && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      Additional Resources
-                    </h2>
-                    
-                    <div className="border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-orange-800 mb-4">
-                        Resource List
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data.resourceList}
-                      </div>
-                    </div>
-                  </div>
-                )}
+ASCE (American Society of Civil Engineers)
+Subject Coverage: Civil Engineering
+Resources: 35 Journals (Back file from 1983)
 
-                {/* Additional Text Field Section */}
-                {year2017Data && year2017Data['1'] && (
-                  <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                      Additional Information
-                    </h2>
-                    
-                    <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-teal-800 mb-4">
-                        Supplementary Details
-                      </h3>
-                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
-                        {year2017Data['1']}
-                      </div>
-                    </div>
-                  </div>
-                )}
+Taylor & Francis
+Subject Coverage: Engineering, Computer Science, Mechanical, Civil, Biotechnology, Textile, Electrical
+Resources: 535 Journals (Back Issues from 1997 to 2015)
 
-                {/* Debug Information - Show all available fields */}
-                {year2017Data && (
-                  <div className="mb-12 bg-gray-50 p-6 rounded-lg">
-                    <h2 className="font-heading text-2xl font-bold text-gray-800 mb-6">
-                      Data Verification Summary
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.eJournals ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">E-Journals: {year2017Data.eJournals ? 'Available' : 'Not Available'}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.eBooks ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">E-Books: {year2017Data.eBooks ? 'Available' : 'Not Available'}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.languageLabsAndElearning ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">Language Labs: {year2017Data.languageLabsAndElearning ? 'Available' : 'Not Available'}</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.plagiarismDetectionSoftware ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">Plagiarism Software: {year2017Data.plagiarismDetectionSoftware ? 'Available' : 'Not Available'}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.resourceList ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">Resource List: {year2017Data.resourceList ? 'Available' : 'Not Available'}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data['1'] ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                          <span className="font-paragraph text-gray-700">Additional Info: {year2017Data['1'] ? 'Available' : 'Not Available'}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+Proquest – Engineering and Technology Collections
+Subject Coverage: All Engineering disciplines and Architecture
+Resources: 3900 Journals (Full-text & indexed, back issues from 2000), 7800 Abstracts
 
-                {/* Loading state */}
-                {isLoading && (
-                  <div className="text-center py-8">
-                    <p className="font-paragraph text-gray-600">Loading E-Resources data...</p>
-                  </div>
-                )}
+Proquest – ABI Inform Global
+Subject Coverage: Business Administration
+Resources: 2900 Journals (Full-text & indexed, back issues from 2000), 10300 Abstracts
 
-                {/* No data state */}
-                {!isLoading && !year2017Data && (
-                  <div className="text-center py-8">
-                    <p className="font-paragraph text-gray-600">No E-Resources data available for 2017-18.</p>
-                  </div>
-                )}
+K-Nimbus: Digital Library Platform Remote Access Solution
+Subject Coverage: All Subjects
+Resources: 12K+ Open Access resources (Journals, e-Books, e-Theses, Educational videos)
+Features: Cloud-based 24/7 access, Admin control for librarians, Usage reports, Secure full-text content access`}
+                </div>
               </div>
             </div>
           </div>
