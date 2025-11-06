@@ -1411,10 +1411,10 @@ export default function ResourcesPage() {
                   <div className="space-y-6">
                     <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
                       <h3 className="font-heading text-xl font-semibold text-blue-800 mb-2">
-                        Elsevier
+                        IEEE - IEL Online
                       </h3>
                       <p className="font-paragraph text-gray-700">
-                        IEEE - IEL Online
+                        Comprehensive collection of scientific journals covering engineering, computer science, and allied disciplines
                       </p>
                     </div>
                     
