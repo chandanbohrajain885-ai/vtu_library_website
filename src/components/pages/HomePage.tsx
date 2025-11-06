@@ -198,9 +198,9 @@ export default function HomePage() {
             {/* All Navigation Options in Single Line */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">
                 About Us
-              </Button>
+              </button>
               <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                 Member Colleges
               </Button>
