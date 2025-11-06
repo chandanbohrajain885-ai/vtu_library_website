@@ -60,15 +60,11 @@ export default function AboutPage() {
               <div className="bg-white rounded-lg p-8 shadow-lg">
                 <h3 className="font-heading text-2xl font-bold text-gray-800 mb-6">University Background</h3>
                 <div className="space-y-4">
-                  <p className="font-paragraph text-gray-700 leading-relaxed">
-                    Visvesvaraya Technological University (VTU), established in 1998, stands as one of 
-                    India's largest technological universities, serving over 200 engineering colleges 
-                    across Karnataka state.
-                  </p>
+                  <p className="font-paragraph text-gray-700 leading-relaxed">{"Visvesvaraya Technological University (VTU), established in 1998, stands as one of India's largest technological universities, serving over 210  colleges across Karnataka state."}</p>
                   <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="text-center p-4 bg-primary/5 rounded-lg">
-                      <div className="font-heading text-3xl font-bold text-primary">200+</div>
-                      <div className="font-paragraph text-sm text-gray-600">Engineering Colleges</div>
+                      <div className="font-heading text-3xl font-bold text-primary">{"210"}</div>
+                      <div className="font-paragraph text-sm text-gray-600">{"Colleges"}</div>
                     </div>
                     <div className="text-center p-4 bg-secondary/5 rounded-lg">
                       <div className="font-heading text-3xl font-bold text-secondary">500K+</div>
