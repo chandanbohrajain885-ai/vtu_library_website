@@ -1421,46 +1421,123 @@ export default function ResourcesPage() {
           <div className="max-w-[120rem] mx-auto px-6">
             <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="prose prose-lg max-w-none">
-                <div className="font-paragraph text-gray-800 leading-relaxed whitespace-pre-line text-base">
-{`VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2017-18
-
-IEEE - IEL Online
-Subject Coverage: Electrical, Electronics, Computer Science, Telecommunications, and related disciplines
-Resources:
-IEEE: 190 Journals, 1400+ Conference Proceedings (annual), 3043 Standards
-IET: 82 Journals, 20+ Conference Proceedings (annual)
-VDE Verlag: 20+ Conference Proceedings (annual)
-Alcatel-Lucent: 1 Journal (Bell Labs Tech Journal)
-Back titles from 1872 to present
-
-Elsevier Science
-Subject Coverage: Engineering (all branches), Aerospace, Biomedical, Chemical, Civil, Computer Science, Electrical, Mechanical
-Resources: 288 Journals (Back Issues from 2000 to Dec 2015)
-
-Springer e-Journals
-Subject Coverage: Electrical & Electronics, Mechanical, Civil, Computer Science, Chemistry, Mathematics, Physics
-Resources: 680 Journals (Back titles from 1997)
-
-ASCE (American Society of Civil Engineers)
-Subject Coverage: Civil Engineering
-Resources: 35 Journals (Back file from 1983)
-
-Taylor & Francis
-Subject Coverage: Engineering, Computer Science, Mechanical, Civil, Biotechnology, Textile, Electrical
-Resources: 535 Journals (Back Issues from 1997 to 2015)
-
-Proquest – Engineering and Technology Collections
-Subject Coverage: All Engineering disciplines and Architecture
-Resources: 3900 Journals (Full-text & indexed, back issues from 2000), 7800 Abstracts
-
-Proquest – ABI Inform Global
-Subject Coverage: Business Administration
-Resources: 2900 Journals (Full-text & indexed, back issues from 2000), 10300 Abstracts
-
-K-Nimbus: Digital Library Platform Remote Access Solution
-Subject Coverage: All Subjects
-Resources: 12K+ Open Access resources (Journals, e-Books, e-Theses, Educational videos)
-Features: Cloud-based 24/7 access, Admin control for librarians, Usage reports, Secure full-text content access`}
+                <h1 className="font-heading text-4xl font-bold text-primary text-center mb-12">
+                  VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2017-18
+                </h1>
+                
+                {/* E-Journals Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    E-Journals
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-blue-800 mb-3">
+                        IEEE - IEL Online
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Electrical, Electronics, Computer Science, Telecommunications, and related disciplines</p>
+                        <div>
+                          <p><strong>Resources:</strong></p>
+                          <ul className="list-disc list-inside ml-4 space-y-1">
+                            <li>IEEE: 190 Journals, 1400+ Conference Proceedings (annual), 3043 Standards</li>
+                            <li>IET: 82 Journals, 20+ Conference Proceedings (annual)</li>
+                            <li>VDE Verlag: 20+ Conference Proceedings (annual)</li>
+                            <li>Alcatel-Lucent: 1 Journal (Bell Labs Tech Journal)</li>
+                            <li>Back titles from 1872 to present</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-green-800 mb-3">
+                        Elsevier Science
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Engineering (all branches), Aerospace, Biomedical, Chemical, Civil, Computer Science, Electrical, Mechanical</p>
+                        <p><strong>Resources:</strong> 288 Journals (Back Issues from 2000 to Dec 2015)</p>
+                      </div>
+                    </div>
+                    
+                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-3">
+                        Springer e-Journals
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Electrical & Electronics, Mechanical, Civil, Computer Science, Chemistry, Mathematics, Physics</p>
+                        <p><strong>Resources:</strong> 680 Journals (Back titles from 1997)</p>
+                      </div>
+                    </div>
+                    
+                    <div className="border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-orange-800 mb-3">
+                        ASCE (American Society of Civil Engineers)
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Civil Engineering</p>
+                        <p><strong>Resources:</strong> 35 Journals (Back file from 1983)</p>
+                      </div>
+                    </div>
+                    
+                    <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-teal-800 mb-3">
+                        Taylor & Francis
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Engineering, Computer Science, Mechanical, Civil, Biotechnology, Textile, Electrical</p>
+                        <p><strong>Resources:</strong> 535 Journals (Back Issues from 1997 to 2015)</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Database Collections Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    Database Collections
+                  </h2>
+                  
+                  <div className="space-y-6">
+                    <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-red-800 mb-3">
+                        Proquest – Engineering and Technology Collections
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> All Engineering disciplines and Architecture</p>
+                        <p><strong>Resources:</strong> 3900 Journals (Full-text & indexed, back issues from 2000), 7800 Abstracts</p>
+                      </div>
+                    </div>
+                    
+                    <div className="border-l-4 border-indigo-500 pl-6 bg-indigo-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-indigo-800 mb-3">
+                        Proquest – ABI Inform Global
+                      </h3>
+                      <div className="font-paragraph text-gray-700 space-y-2">
+                        <p><strong>Subject Coverage:</strong> Business Administration</p>
+                        <p><strong>Resources:</strong> 2900 Journals (Full-text & indexed, back issues from 2000), 10300 Abstracts</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Digital Library & Cloud Access Section */}
+                <div className="mb-12">
+                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                    Digital Library & Cloud Access
+                  </h2>
+                  
+                  <div className="border-l-4 border-violet-500 pl-6 bg-violet-50/50 p-4 rounded-r-lg">
+                    <h3 className="font-heading text-xl font-semibold text-violet-800 mb-3">
+                      K-Nimbus: Digital Library Platform Remote Access Solution
+                    </h3>
+                    <div className="font-paragraph text-gray-700 space-y-2">
+                      <p><strong>Subject Coverage:</strong> All Subjects</p>
+                      <p><strong>Resources:</strong> 12K+ Open Access resources (Journals, e-Books, e-Theses, Educational videos)</p>
+                      <p><strong>Features:</strong> Cloud-based 24/7 access, Admin control for librarians, Usage reports, Secure full-text content access</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
