@@ -11,9 +11,11 @@ import { AlertCircle } from 'lucide-react';
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  requiredRole?: string;
+  message?: string;
 }
 
-export function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModalProps) {
   const { login } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
   const [loginData, setLoginData] = useState({ username: '', password: '', role: '' });
@@ -72,7 +74,14 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-center">Access VTU Consortium Portal</DialogTitle>
+          <DialogTitle className="text-center">
+            {message || 'Access VTU Consortium Portal'}
+          </DialogTitle>
+          {requiredRole && (
+            <p className="text-center text-sm text-gray-600 mt-2">
+              This section requires {requiredRole} access. Please sign in with appropriate credentials.
+            </p>
+          )}
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

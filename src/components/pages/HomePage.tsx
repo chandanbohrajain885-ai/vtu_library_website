@@ -73,12 +73,42 @@ export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleProtectedAction = (action: () => void) => {
+  const handleProtectedAction = (action: () => void, requiredRole?: string) => {
     if (!isAuthenticated) {
       setIsLoginModalOpen(true);
       return;
     }
+    
+    // Check role-based access
+    if (requiredRole && user?.role !== 'superadmin') {
+      if (requiredRole === 'librarian' && user?.role !== 'librarian') {
+        setIsLoginModalOpen(true);
+        return;
+      }
+      if (requiredRole === 'publisher' && user?.role !== 'publisher') {
+        setIsLoginModalOpen(true);
+        return;
+      }
+    }
+    
     action();
+  };
+
+  const handleLibrarianCorner = () => {
+    if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'librarian')) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    navigate('/guide');
+  };
+
+  const handlePublisherCorner = () => {
+    if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'publisher')) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    // Navigate to publisher corner page (we'll create this)
+    navigate('/publisher');
   };
 
   useEffect(() => {
@@ -168,7 +198,7 @@ export default function HomePage() {
             {/* All Navigation Options in Single Line */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                 About Us
               </Button>
               <DropdownMenu>
@@ -178,73 +208,74 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2025-26'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2025-26')}>
                     2025-26
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2024-25'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2024-25')}>
                     2024-25
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2023-24'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2023-24')}>
                     2023-24
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2022-23'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2022-23')}>
                     2022-23
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2021-22'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2021-22')}>
                     2021-22
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2020-21'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2020-21')}>
                     2020-21
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2019-20'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2019-20')}>
                     2019-20
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2018-19'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2018-19')}>
                     2018-19
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2017-18'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2017-18')}>
                     2017-18
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2016-17'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2016-17')}>
                     2016-17
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2015-16'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2015-16')}>
                     2015-16
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => navigate('/resources/2014-15'))}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2014-15')}>
                     2014-15
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={() => handleProtectedAction(() => navigate('/news'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
+              <button onClick={() => navigate('/news')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                     Links <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => {})}>
+                  <DropdownMenuItem className="cursor-pointer">
                     VTU Link's
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleProtectedAction(() => {})}>
+                  <DropdownMenuItem className="cursor-pointer">
                     Others link's
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={() => handleProtectedAction(() => navigate('/journals'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
+              <button onClick={() => navigate('/journals')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                 Committee
               </Button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                 Training
               </Button>
-              <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">User Guide</button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal" onClick={() => handleProtectedAction(() => {})}>
+              <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">User Guide</button>
+              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
                 Gallery
               </Button>
-            <button onClick={() => handleProtectedAction(() => navigate('/guide'))} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{"Librarian-Corner"}</button>
-              </div>
+              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Librarian Corner</button>
+              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Publisher's Corner</button>
+            </div>
             
             {/* Login and Register Buttons */}
             <div className="flex items-center space-x-4">
@@ -292,11 +323,9 @@ export default function HomePage() {
               <Input
                   placeholder="Search for books, journals, or specific topics you are interested in..."
                   className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
-                  onClick={() => handleProtectedAction(() => {})}
                 />
               <Button 
                 className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid"
-                onClick={() => handleProtectedAction(() => {})}
               >
               <Search className="h-5 w-5" />
             </Button>

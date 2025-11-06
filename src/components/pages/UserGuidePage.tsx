@@ -8,14 +8,19 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Image } from '@/components/ui/image';
-import { Search, BookOpen, HelpCircle, User, Calendar, ArrowRight } from 'lucide-react';
+import { Search, BookOpen, HelpCircle, User, Calendar, ArrowRight, Edit, Plus } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthContext';
 
 export default function UserGuidePage() {
+  const { user } = useAuth();
   const [articles, setArticles] = useState<UserGuideArticles[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<UserGuideArticles[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Check if user is superadmin or librarian for edit buttons
+  const canEdit = user?.role === 'superadmin' || user?.role === 'librarian';
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -107,9 +112,17 @@ export default function UserGuidePage() {
       <section className="bg-primary/5 py-16">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center space-y-4">
-            <h1 className="font-heading text-5xl font-bold text-primary">
-              USER GUIDE
-            </h1>
+            <div className="flex items-center justify-center space-x-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                USER GUIDE
+              </h1>
+              {canEdit && (
+                <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+              )}
+            </div>
             <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
               Comprehensive guides and tutorials to help you navigate and make the most 
               of our digital library platform and academic resources.
@@ -222,19 +235,27 @@ export default function UserGuidePage() {
             <p className="font-paragraph text-sm text-primary/60">
               Showing {filteredArticles.length} of {articles.length} guides
             </p>
-            {(searchTerm || selectedCategory !== 'all') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                }}
-                className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                Clear Filters
-              </Button>
-            )}
+            <div className="flex items-center space-x-2">
+              {(searchTerm || selectedCategory !== 'all') && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('all');
+                  }}
+                  className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  Clear Filters
+                </Button>
+              )}
+              {canEdit && (
+                <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Guide
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -279,7 +300,19 @@ export default function UserGuidePage() {
                           {categoryArticles.map((article) => (
                             <AccordionItem key={article._id} value={article._id} className="border border-primary/20 rounded-lg px-6">
                               <AccordionTrigger className="font-heading text-lg text-primary hover:text-secondary">
-                                {article.title}
+                                <div className="flex items-center justify-between w-full pr-4">
+                                  <span>{article.title}</span>
+                                  {canEdit && (
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="text-primary border-primary hover:bg-primary hover:text-white"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <Edit className="h-3 w-3" />
+                                    </Button>
+                                  )}
+                                </div>
                               </AccordionTrigger>
                               <AccordionContent className="space-y-4">
                                 <div className="flex items-center space-x-4 text-sm text-primary/60">

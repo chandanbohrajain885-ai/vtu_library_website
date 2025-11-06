@@ -8,6 +8,7 @@ import JournalsPage from '@/components/pages/JournalsPage';
 import NewsPage from '@/components/pages/NewsPage';
 import UserGuidePage from '@/components/pages/UserGuidePage';
 import AdminDashboard from '@/components/pages/AdminDashboard';
+import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
 
 // Layout component that includes ScrollToTop
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: <AdminDashboard />,
+      },
+      {
+        path: "publisher",
+        element: <PublisherCornerPage />,
       },
       {
         path: "*",

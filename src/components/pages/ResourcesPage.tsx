@@ -2,15 +2,20 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Download, ExternalLink, FileText, Globe, Database, Users, ArrowLeft } from 'lucide-react';
+import { BookOpen, Download, ExternalLink, FileText, Globe, Database, Users, ArrowLeft, Edit, Plus } from 'lucide-react';
 import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { EResources } from '@/entities';
+import { useAuth } from '@/components/auth/AuthContext';
 
 export default function ResourcesPage() {
   const { year } = useParams();
+  const { user } = useAuth();
   const [eResourcesData, setEResourcesData] = useState<EResources[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Check if user is superadmin for edit buttons
+  const canEdit = user?.role === 'superadmin';
   
   // Check if this is the 2025-26 year (under progress)
   const isUnderProgress = year === '2025-26';
@@ -158,9 +163,17 @@ export default function ResourcesPage() {
         <section className="bg-primary/5 py-16">
           <div className="max-w-[120rem] mx-auto px-6">
             <div className="text-center space-y-4">
-              <h1 className="font-heading text-5xl font-bold text-primary">
-                E-RESOURCES - {year}
-              </h1>
+              <div className="flex items-center justify-center space-x-4">
+                <h1 className="font-heading text-5xl font-bold text-primary">
+                  E-RESOURCES - {year}
+                </h1>
+                {canEdit && (
+                  <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                )}
+              </div>
               <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
                 Comprehensive digital resources for the {year} academic year
               </p>
@@ -176,13 +189,29 @@ export default function ResourcesPage() {
             <div className="mb-16">
               <div className="bg-white rounded-lg shadow-lg p-8">
                 <div className="prose prose-lg max-w-none">
-                  <h1 className="font-heading text-4xl font-bold text-primary text-center mb-8">
-                    VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2024-25
-                  </h1>
+                  <div className="flex items-center justify-between mb-8">
+                    <h1 className="font-heading text-4xl font-bold text-primary text-center flex-1">
+                      VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2024-25
+                    </h1>
+                    {canEdit && (
+                      <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white ml-4">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Resource
+                      </Button>
+                    )}
+                  </div>
                   
                   {/* E-Journals Section */}
                   <div className="mb-12">
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-6">E-Journals</h2>
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="font-heading text-3xl font-bold text-primary">E-Journals</h2>
+                      {canEdit && (
+                        <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Section
+                        </Button>
+                      )}
+                    </div>
                     
                     <div className="space-y-6">
                       <div className="border-l-4 border-blue-500 pl-6">
