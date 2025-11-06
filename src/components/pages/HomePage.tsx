@@ -277,7 +277,11 @@ export default function HomePage() {
               </DropdownMenu>
               <button onClick={() => navigate('/news')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Downloads</button>
               <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                onClick={() => window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank')}
+              >
                 Gallary
               </Button>
               <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Librarian Corner</button>
