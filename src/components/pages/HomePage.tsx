@@ -196,9 +196,24 @@ export default function HomePage() {
               >
                 Member Colleges
               </Button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                Committee
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+                    Committee <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Governing Council
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Steering Committee
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Nodal Officer Committee
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
