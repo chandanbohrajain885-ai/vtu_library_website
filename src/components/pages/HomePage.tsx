@@ -203,13 +203,22 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={() => window.open('https://drive.google.com/drive/folders/1XdCgDWRtO_PK9yN-M5Fi5ud4OH25gWfT?usp=sharing', '_blank')}
+                  >
                     Governing Council
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={() => window.open('https://drive.google.com/drive/folders/19GgIpBfrtg6zljHwXeiBSgxTO6BxObAD?usp=sharing', '_blank')}
+                  >
                     Steering Committee
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={() => window.open('https://drive.google.com/drive/folders/1iFtaga_Q13SCfjkO-vwrbYcwikSP0s2r?usp=sharing', '_blank')}
+                  >
                     Nodal Officer Committee
                   </DropdownMenuItem>
                 </DropdownMenuContent>
