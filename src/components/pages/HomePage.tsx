@@ -373,11 +373,9 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                    {news.isFeatured && (
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        Featured
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="bg-green-500 text-white">
+                      Coming Soon
+                    </Badge>
                   </div>
                   <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
                     {news.title || 'News Title'}
@@ -385,7 +383,8 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
-                    {news.content?.substring(0, 120) || 'News content...'}...
+                    <span className="text-gray-500">Venue: </span>
+                    <span className="font-bold text-primary">{news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
@@ -419,11 +418,9 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                    {news.isFeatured && (
-                      <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-                        Featured
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="bg-green-500 text-white">
+                      Coming Soon
+                    </Badge>
                   </div>
                   <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
                     {news.title || 'News Title'}
@@ -431,7 +428,8 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
-                    {news.content?.substring(0, 120) || 'News content...'}...
+                    <span className="text-gray-500">Venue: </span>
+                    <span className="font-bold text-primary">{news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
