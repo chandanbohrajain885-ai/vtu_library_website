@@ -397,6 +397,7 @@ export default function HomePage() {
                       variant="outline" 
                       size="sm" 
                       className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank')}
                     >
                       Read More
                     </Button>
@@ -442,6 +443,7 @@ export default function HomePage() {
                       variant="outline" 
                       size="sm" 
                       className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank')}
                     >
                       Read More
                     </Button>
