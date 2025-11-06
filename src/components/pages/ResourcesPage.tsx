@@ -43,6 +43,9 @@ export default function ResourcesPage() {
   
   // Check if this is the 2017-18 year (styled content)
   const is2017Year = year === '2017-18';
+  
+  // Check if this is the 2016-17 year (styled content)
+  const is2016Year = year === '2016-17';
 
   // Fetch E-Resources data from CMS
   useEffect(() => {
@@ -50,6 +53,11 @@ export default function ResourcesPage() {
       try {
         const response = await BaseCrudService.getAll<EResources>('E-Resources');
         setEResourcesData(response.items);
+        console.log('All E-Resources data:', response.items);
+        
+        // Check specifically for 2016-17 data
+        const year2016Data = response.items.find(item => item.title === '2016-17');
+        console.log('2016-17 data:', year2016Data);
       } catch (error) {
         console.error('Error fetching E-Resources data:', error);
       } finally {
@@ -1677,6 +1685,208 @@ export default function ResourcesPage() {
                 {!isLoading && !year2018Data && (
                   <div className="text-center py-8">
                     <p className="font-paragraph text-gray-600">No E-Resources data available for 2018-19.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Render styled content for 2016-17
+  if (is2016Year) {
+    // Find the 2016-17 data from CMS
+    const year2016Data = eResourcesData.find(item => item.title === '2016-17');
+    
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
+              <Button 
+                onClick={() => window.location.href = '/'}
+                variant="outline" 
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                E-RESOURCES - {year}
+              </h1>
+              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+                Academic Year {year} Resources
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* E-Resources Content Section */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="prose prose-lg max-w-none">
+                <h1 className="font-heading text-4xl font-bold text-primary text-center mb-12">
+                  VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2016-17
+                </h1>
+                
+                {/* Display all CMS data sections if available */}
+                {year2016Data && (
+                  <div className="space-y-12">
+                    
+                    {/* E-Journals Section */}
+                    {year2016Data.eJournals && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          E-Journals
+                        </h2>
+                        
+                        <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-blue-800 mb-4">
+                            Available E-Journals
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data.eJournals}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* E-Books Section */}
+                    {year2016Data.eBooks && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          E-Books
+                        </h2>
+                        
+                        <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-green-800 mb-4">
+                            Available E-Books
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data.eBooks}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Language Labs & E-Learning Section */}
+                    {year2016Data.languageLabsAndElearning && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          Language Labs & E-Learning
+                        </h2>
+                        
+                        <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-purple-800 mb-4">
+                            Language & Learning Platforms
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data.languageLabsAndElearning}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Plagiarism Detection Software Section */}
+                    {year2016Data.plagiarismDetectionSoftware && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          Plagiarism Detection Software
+                        </h2>
+                        
+                        <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-red-800 mb-4">
+                            Plagiarism Detection Tools
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data.plagiarismDetectionSoftware}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Resource List Section */}
+                    {year2016Data.resourceList && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          Additional Resources
+                        </h2>
+                        
+                        <div className="border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-orange-800 mb-4">
+                            Resource List
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data.resourceList}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Additional Text Field (if exists) */}
+                    {year2016Data['1'] && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                          Additional Information
+                        </h2>
+                        
+                        <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
+                          <h3 className="font-heading text-xl font-semibold text-teal-800 mb-4">
+                            Additional Details
+                          </h3>
+                          <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                            {year2016Data['1']}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Loading state */}
+                {isLoading && (
+                  <div className="text-center py-8">
+                    <p className="font-paragraph text-gray-600">Loading E-Resources data...</p>
+                  </div>
+                )}
+
+                {/* No data state */}
+                {!isLoading && !year2016Data && (
+                  <div className="text-center py-8">
+                    <p className="font-paragraph text-gray-600">No E-Resources data available for 2016-17.</p>
                   </div>
                 )}
               </div>
