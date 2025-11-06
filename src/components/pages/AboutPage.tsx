@@ -15,7 +15,6 @@ export default function AboutPage() {
           </div>
         </div>
       </header>
-
       {/* About Us Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -221,80 +220,12 @@ export default function AboutPage() {
 
           {/* Benefits Section */}
           <div className="mt-16">
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <h3 className="font-heading text-3xl font-bold text-gray-800 mb-8 text-center">Key Benefits</h3>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="font-heading text-xl font-semibold text-primary mb-4">For Students</h4>
-                  <ul className="font-paragraph text-gray-700 space-y-3">
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                      <span>Access to premium academic databases and journals</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                      <span>24/7 digital library access from anywhere</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                      <span>Research support and training programs</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                      <span>Inter-library loan facilities</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-heading text-xl font-semibold text-secondary mb-4">For Faculty & Researchers</h4>
-                  <ul className="font-paragraph text-gray-700 space-y-3">
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
-                      <span>Comprehensive research database access</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
-                      <span>Collaborative research opportunities</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
-                      <span>Publication and citation support</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
-                      <span>Professional development resources</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+
           </div>
 
           {/* Governance Section */}
           <div className="mt-16">
-            <div className="bg-gray-800 text-white rounded-lg p-8 shadow-lg">
-              <h3 className="font-heading text-3xl font-bold mb-8 text-center">Governance Structure</h3>
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <h4 className="font-heading text-xl font-semibold mb-4">Governing Council</h4>
-                  <p className="font-paragraph text-gray-300">
-                    Strategic oversight and policy formulation for consortium operations and development
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className="font-heading text-xl font-semibold mb-4">Executive Committee</h4>
-                  <p className="font-paragraph text-gray-300">
-                    Operational management and implementation of consortium initiatives and programs
-                  </p>
-                </div>
-                <div className="text-center">
-                  <h4 className="font-heading text-xl font-semibold mb-4">Technical Committee</h4>
-                  <p className="font-paragraph text-gray-300">
-                    Technical support, system maintenance, and digital infrastructure management
-                  </p>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
