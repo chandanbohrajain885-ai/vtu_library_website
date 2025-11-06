@@ -4,9 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Download, ExternalLink, FileText, Globe, Database, Users, ArrowLeft } from 'lucide-react';
 import { Image } from '@/components/ui/image';
+import { BaseCrudService } from '@/integrations';
+import { EResources } from '@/entities';
 
 export default function ResourcesPage() {
   const { year } = useParams();
+  const [eResourcesData, setEResourcesData] = useState<EResources[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Check if this is the 2025-26 year (under progress)
   const isUnderProgress = year === '2025-26';
@@ -31,6 +35,22 @@ export default function ResourcesPage() {
   
   // Check if this is the 2018-19 year (styled content)
   const is2018Year = year === '2018-19';
+
+  // Fetch E-Resources data from CMS
+  useEffect(() => {
+    const fetchEResourcesData = async () => {
+      try {
+        const response = await BaseCrudService.getAll<EResources>('E-Resources');
+        setEResourcesData(response.items);
+      } catch (error) {
+        console.error('Error fetching E-Resources data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEResourcesData();
+  }, []);
 
   // Render under progress page for 2025-26
   if (isUnderProgress) {
@@ -1351,6 +1371,9 @@ export default function ResourcesPage() {
 
   // Render styled content for 2018-19
   if (is2018Year) {
+    // Find the 2018-19 data from CMS
+    const year2018Data = eResourcesData.find(item => item.title === '2018-19');
+    
     return (
       <div className="min-h-screen bg-background">
         {/* Header Navigation */}
@@ -1402,161 +1425,42 @@ export default function ResourcesPage() {
                   VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2018-19
                 </h1>
                 
-                {/* E-Journals Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    E-Journals
-                  </h2>
-                  
-                  <div className="space-y-6">
+                {/* Display CMS Data if available */}
+                {year2018Data && year2018Data.resourceList && (
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                      Resource List
+                    </h2>
+                    
                     <div className="border-l-4 border-blue-500 pl-6 bg-blue-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-blue-800 mb-2">
-                        IEEE - IEL Online
+                      <h3 className="font-heading text-xl font-semibold text-blue-800 mb-4">
+                        Available Resources
                       </h3>
-                      <p className="font-paragraph text-gray-700">
-                        •	Subject Coverage: Electrical, Electronics, Computer Science, Telecommunications, and related fields
-                      </p>
-                      <p className="font-paragraph text-gray-700">
-                        •	Resources: IEEE Journals (190), Conference Proceedings 
-                        (1400+ annually), Standards (3043), IET Journals (82), 
-                        Alcatel-Lucent Bell Labs Journal, VDE Verlag Conference Proceedings (20+ annually)
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-green-500 pl-6 bg-green-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-green-800 mb-2">
-                        Springer Nature
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Leading publisher of scientific journals in engineering, technology, and applied sciences
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-orange-500 pl-6 bg-orange-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-orange-800 mb-2">
-                        Taylor & Francis
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Academic journals covering engineering, technology, and multidisciplinary research areas
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-purple-500 pl-6 bg-purple-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-purple-800 mb-2">
-                        ICE
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Institution of Civil Engineers journals providing access to civil engineering research and practice
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-teal-800 mb-2">
-                        Emerald
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Specialized journals in management, business, and social sciences for comprehensive academic research
-                      </p>
+                      <div className="font-paragraph text-gray-700 leading-relaxed">
+                        {year2018Data.resourceList.split(', ').map((resource, index) => (
+                          <div key={index} className="mb-2 flex items-start">
+                            <span className="text-blue-600 mr-2">•</span>
+                            <span>{resource.trim()}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                {/* E-Books Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    E-Books
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-red-500 pl-6 bg-red-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-red-800 mb-2">
-                        Elsevier e-books
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Comprehensive collection of engineering and science e-books from Elsevier publications
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-pink-500 pl-6 bg-pink-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-pink-800 mb-2">
-                        Taylor & Francis e-books
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Academic e-books covering engineering, technology, and multidisciplinary subjects
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-yellow-500 pl-6 bg-yellow-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-yellow-800 mb-2">
-                        McGraw Hill Education
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Engineering, Computer Science, Mathematics, Physics, Chemistry, and Management e-books
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-indigo-500 pl-6 bg-indigo-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-indigo-800 mb-2">
-                        New Age International
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Educational e-books covering various engineering and technical subjects
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-cyan-500 pl-6 bg-cyan-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-cyan-800 mb-2">
-                        Packt Publishing
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Technology and programming e-books for software development and IT professionals
-                      </p>
-                    </div>
+                )}
+
+                {/* Loading state */}
+                {isLoading && (
+                  <div className="text-center py-8">
+                    <p className="font-paragraph text-gray-600">Loading E-Resources data...</p>
                   </div>
-                </div>
-                
-                {/* Digital Library & Cloud Access Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    Digital Library & Cloud Access
-                  </h2>
-                  
-                  <div className="border-l-4 border-violet-500 pl-6 bg-violet-50/50 p-4 rounded-r-lg">
-                    <h3 className="font-heading text-xl font-semibold text-violet-800 mb-2">
-                      Knimbus
-                    </h3>
-                    <p className="font-paragraph text-gray-700">
-                      Cloud-based digital library platform providing federated search and remote access to academic resources
-                    </p>
+                )}
+
+                {/* No data state */}
+                {!isLoading && !year2018Data && (
+                  <div className="text-center py-8">
+                    <p className="font-paragraph text-gray-600">No E-Resources data available for 2018-19.</p>
                   </div>
-                </div>
-                
-                {/* Plagiarism Detection & Academic Tools Section */}
-                <div className="mb-12">
-                  <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
-                    Plagiarism Detection & Academic Tools
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-emerald-500 pl-6 bg-emerald-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-emerald-800 mb-2">
-                        Turnitin
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Industry-leading plagiarism detection software for academic integrity and originality checking
-                      </p>
-                    </div>
-                    
-                    <div className="border-l-4 border-lime-500 pl-6 bg-lime-50/50 p-4 rounded-r-lg">
-                      <h3 className="font-heading text-xl font-semibold text-lime-800 mb-2">
-                        NetAnalytiks' Sententia
-                      </h3>
-                      <p className="font-paragraph text-gray-700">
-                        Advanced writing analysis and grammar enhancement tool for academic writing improvement
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
