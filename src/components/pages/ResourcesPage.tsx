@@ -1518,6 +1518,63 @@ export default function ResourcesPage() {
                   </div>
                 )}
 
+                {/* Additional Text Field Section */}
+                {year2017Data && year2017Data['1'] && (
+                  <div className="mb-12">
+                    <h2 className="font-heading text-3xl font-bold text-primary mb-8 border-b-2 border-primary/20 pb-2">
+                      Additional Information
+                    </h2>
+                    
+                    <div className="border-l-4 border-teal-500 pl-6 bg-teal-50/50 p-4 rounded-r-lg">
+                      <h3 className="font-heading text-xl font-semibold text-teal-800 mb-4">
+                        Supplementary Details
+                      </h3>
+                      <div className="font-paragraph text-gray-700 leading-relaxed whitespace-pre-line">
+                        {year2017Data['1']}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Debug Information - Show all available fields */}
+                {year2017Data && (
+                  <div className="mb-12 bg-gray-50 p-6 rounded-lg">
+                    <h2 className="font-heading text-2xl font-bold text-gray-800 mb-6">
+                      Data Verification Summary
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.eJournals ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">E-Journals: {year2017Data.eJournals ? 'Available' : 'Not Available'}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.eBooks ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">E-Books: {year2017Data.eBooks ? 'Available' : 'Not Available'}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.languageLabsAndElearning ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">Language Labs: {year2017Data.languageLabsAndElearning ? 'Available' : 'Not Available'}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.plagiarismDetectionSoftware ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">Plagiarism Software: {year2017Data.plagiarismDetectionSoftware ? 'Available' : 'Not Available'}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data.resourceList ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">Resource List: {year2017Data.resourceList ? 'Available' : 'Not Available'}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className={`w-3 h-3 rounded-full mr-3 ${year2017Data['1'] ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                          <span className="font-paragraph text-gray-700">Additional Info: {year2017Data['1'] ? 'Available' : 'Not Available'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Loading state */}
                 {isLoading && (
                   <div className="text-center py-8">
