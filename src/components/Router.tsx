@@ -9,6 +9,7 @@ import NewsPage from '@/components/pages/NewsPage';
 import UserGuidePage from '@/components/pages/UserGuidePage';
 import AdminDashboard from '@/components/pages/AdminDashboard';
 import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
+import AboutPage from '@/components/pages/AboutPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
 
 // Layout component that includes ScrollToTop
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "guide",
         element: <UserGuidePage />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
       },
       {
         path: "admin",
