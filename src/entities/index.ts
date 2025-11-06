@@ -14,6 +14,8 @@ export interface EResources {
   /** @wixFieldType text */
   plagiarismDetectionSoftware?: string;
   /** @wixFieldType text */
+  resourceList?: string;
+  /** @wixFieldType text */
   eBooks?: string;
   /** @wixFieldType text */
   languageLabsAndElearning?: string;
@@ -23,8 +25,6 @@ export interface EResources {
   title?: string;
   /** @wixFieldType text */
   1?: string;
-  /** @wixFieldType text */
-  resourceList?: string;
 }
 
 
