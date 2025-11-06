@@ -240,7 +240,11 @@ export default function HomePage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
+              >
                 Training
               </Button>
               <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">User Guide</button>
