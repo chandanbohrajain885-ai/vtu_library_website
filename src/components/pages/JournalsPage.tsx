@@ -21,9 +21,10 @@ export default function JournalsPage() {
         const response = await BaseCrudService.getAll<EResources>('eresources');
         // Filter for journal-type resources
         const journalResources = response.items.filter(resource => 
-          resource.category?.toLowerCase().includes('journal') ||
-          resource.category?.toLowerCase().includes('article') ||
-          resource.category?.toLowerCase().includes('paper')
+          resource.eJournals ||
+          resource.title?.toLowerCase().includes('journal') ||
+          resource.title?.toLowerCase().includes('article') ||
+          resource.title?.toLowerCase().includes('paper')
         );
         setJournals(journalResources);
         setFilteredJournals(journalResources);
@@ -40,9 +41,9 @@ export default function JournalsPage() {
   useEffect(() => {
     if (searchTerm) {
       const filtered = journals.filter(journal =>
-        journal.resourceTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        journal.author?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        journal.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        journal.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        journal.eJournals?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        journal.resourceList?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredJournals(filtered);
     } else {
@@ -175,31 +176,31 @@ export default function JournalsPage() {
                           Featured Journal
                         </Badge>
                         <h2 className="font-heading text-3xl font-bold text-primary">
-                          {filteredJournals[0].resourceTitle}
+                          {filteredJournals[0].title || 'Untitled Journal'}
                         </h2>
                         <p className="font-paragraph text-lg text-primary/70">
-                          By {filteredJournals[0].author}
+                          {filteredJournals[0].eJournals && `Category: ${filteredJournals[0].eJournals}`}
                         </p>
-                        {filteredJournals[0].publicationDate && (
+                        {filteredJournals[0]._createdDate && (
                           <div className="flex items-center space-x-2 text-primary/60">
                             <Calendar className="h-4 w-4" />
                             <span className="font-paragraph text-sm">
-                              Published {new Date(filteredJournals[0].publicationDate).toLocaleDateString()}
+                              Added {new Date(filteredJournals[0]._createdDate).toLocaleDateString()}
                             </span>
                           </div>
                         )}
                       </div>
                       
                       <p className="font-paragraph text-primary/80">
-                        {filteredJournals[0].description}
+                        {filteredJournals[0].resourceList || 'No description available.'}
                       </p>
                       
                       <div className="flex flex-col sm:flex-row gap-4">
                         <Button 
                           className="bg-secondary hover:bg-secondary/90"
                           onClick={() => {
-                            if (filteredJournals[0].resourceLink) {
-                              window.open(filteredJournals[0].resourceLink, '_blank');
+                            if (filteredJournals[0].resourceList) {
+                              window.open(filteredJournals[0].resourceList, '_blank');
                             }
                           }}
                         >
@@ -215,20 +216,9 @@ export default function JournalsPage() {
                     </div>
                     
                     <div className="relative">
-                      {filteredJournals[0].coverImage ? (
-                        <div className="aspect-[3/4] overflow-hidden rounded-lg shadow-lg">
-                          <Image
-                            src={filteredJournals[0].coverImage}
-                            alt={filteredJournals[0].resourceTitle || 'Journal cover'}
-                            className="w-full h-full object-cover"
-                            width={400}
-                          />
-                        </div>
-                      ) : (
-                        <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg shadow-lg flex items-center justify-center">
-                          <BookOpen className="h-24 w-24 text-primary/40" />
-                        </div>
-                      )}
+                      <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg shadow-lg flex items-center justify-center">
+                        <BookOpen className="h-24 w-24 text-primary/40" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -244,30 +234,19 @@ export default function JournalsPage() {
                   {filteredJournals.map((journal) => (
                     <Card key={journal._id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                       <CardHeader className="pb-3">
-                        {journal.coverImage ? (
-                          <div className="aspect-[3/4] mb-4 overflow-hidden rounded-lg">
-                            <Image
-                              src={journal.coverImage}
-                              alt={journal.resourceTitle || 'Journal cover'}
-                              className="w-full h-full object-cover"
-                              width={250}
-                            />
-                          </div>
-                        ) : (
-                          <div className="aspect-[3/4] mb-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
-                            <BookOpen className="h-16 w-16 text-primary/30" />
-                          </div>
-                        )}
+                        <div className="aspect-[3/4] mb-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
+                          <BookOpen className="h-16 w-16 text-primary/30" />
+                        </div>
                         
                         <div className="space-y-2">
                           <Badge variant="secondary" className="bg-secondary/10 text-secondary w-fit">
-                            {journal.category}
+                            {journal.eJournals || 'Journal'}
                           </Badge>
                           <CardTitle className="font-heading text-lg text-primary line-clamp-2 leading-tight">
-                            {journal.resourceTitle}
+                            {journal.title || 'Untitled Journal'}
                           </CardTitle>
                           <CardDescription className="font-paragraph text-sm">
-                            By {journal.author}
+                            E-Journal Resource
                           </CardDescription>
                         </div>
                       </CardHeader>
@@ -275,14 +254,14 @@ export default function JournalsPage() {
                       <CardContent className="pt-0">
                         <div className="space-y-4">
                           <p className="font-paragraph text-sm text-primary/70 line-clamp-3">
-                            {journal.description}
+                            {journal.resourceList || 'No description available.'}
                           </p>
                           
-                          {journal.publicationDate && (
+                          {journal._createdDate && (
                             <div className="flex items-center space-x-2 text-primary/50">
                               <Calendar className="h-3 w-3" />
                               <span className="font-paragraph text-xs">
-                                {new Date(journal.publicationDate).toLocaleDateString()}
+                                {new Date(journal._createdDate).toLocaleDateString()}
                               </span>
                             </div>
                           )}
@@ -291,8 +270,8 @@ export default function JournalsPage() {
                             <Button 
                               className="w-full bg-primary hover:bg-primary/90"
                               onClick={() => {
-                                if (journal.resourceLink) {
-                                  window.open(journal.resourceLink, '_blank');
+                                if (journal.resourceList) {
+                                  window.open(journal.resourceList, '_blank');
                                 }
                               }}
                             >
