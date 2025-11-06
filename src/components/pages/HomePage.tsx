@@ -24,32 +24,32 @@ export default function HomePage() {
     {
       _id: 'training-1',
       title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'Join us for a comprehensive training program on VTU Consortium e-resources. Learn how to effectively utilize digital libraries, research databases, and academic journals for your research and academic needs. Venue: Government Engineering College, Ramanagara.',
-      publicationDate: new Date('2024-11-15'),
+      content: 'National Institute Of Engineering (NIE), Mysore',
+      publicationDate: new Date('2025-11-10'),
       isFeatured: true,
       author: 'VTU Consortium'
     },
     {
       _id: 'training-2',
       title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'Comprehensive training session on accessing and utilizing VTU Consortium e-resources including IEEE, Springer, Elsevier, and other premium databases. Enhance your research capabilities with expert guidance. Venue: BMS College of Engineering, Bangalore.',
-      publicationDate: new Date('2024-11-22'),
+      content: 'VTU Reginal Centre, Bangalore',
+      publicationDate: new Date('2025-11-11'),
       isFeatured: true,
       author: 'VTU Consortium'
     },
     {
       _id: 'training-3',
       title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'Discover the full potential of VTU Consortium e-resources in this hands-on training program. Learn advanced search techniques, citation management, and research methodology using digital resources. Venue: RV College of Engineering, Bangalore.',
-      publicationDate: new Date('2024-11-29'),
+      content: 'PDA College of Engineering, Kalaburagi',
+      publicationDate: new Date('2025-11-17'),
       isFeatured: true,
       author: 'VTU Consortium'
     },
     {
       _id: 'training-4',
       title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'Master the art of digital research with our specialized training on VTU Consortium e-resources. Explore vast collections of academic journals, conference papers, and research databases. Venue: Dayananda Sagar College of Engineering, Bangalore.',
-      publicationDate: new Date('2024-12-06'),
+      content: 'VTU Reginal Centre, Belagavi',
+      publicationDate: new Date('2025-11-24'),
       isFeatured: true,
       author: 'VTU Consortium'
     }
