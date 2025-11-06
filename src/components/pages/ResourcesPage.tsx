@@ -1414,7 +1414,7 @@ export default function ResourcesPage() {
                         Elsevier
                       </h3>
                       <p className="font-paragraph text-gray-700">
-                        Comprehensive collection of scientific journals covering engineering, computer science, and allied disciplines
+                        IEEE - IEL Online
                       </p>
                     </div>
                     
