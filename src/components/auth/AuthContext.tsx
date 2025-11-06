@@ -13,6 +13,7 @@ export interface RegistrationRequest {
   id: string;
   username: string;
   email: string;
+  password: string;
   role: 'admin' | 'librarian' | 'publisher';
   requestedPermissions: string[];
   requestDate: Date;
@@ -83,12 +84,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>(defaultUsers);
   const [registrationRequests, setRegistrationRequests] = useState<RegistrationRequest[]>([]);
+  const [userPasswords, setUserPasswords] = useState<Record<string, string>>(defaultPasswords);
 
   useEffect(() => {
     // Check for stored auth
     const storedUser = localStorage.getItem('vtu_auth_user');
     const storedUsers = localStorage.getItem('vtu_auth_users');
     const storedRequests = localStorage.getItem('vtu_registration_requests');
+    const storedPasswords = localStorage.getItem('vtu_user_passwords');
     
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -101,22 +104,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (storedRequests) {
       setRegistrationRequests(JSON.parse(storedRequests));
     }
+    
+    if (storedPasswords) {
+      setUserPasswords(JSON.parse(storedPasswords));
+    }
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // Check default passwords first
-    if (defaultPasswords[username] === password) {
-      const foundUser = users.find(u => u.username === username);
-      if (foundUser) {
-        setUser(foundUser);
-        localStorage.setItem('vtu_auth_user', JSON.stringify(foundUser));
-        return true;
-      }
-    }
-    
-    // Check custom users (they use the same password as their username for simplicity)
+    // Check if user exists and password matches
     const foundUser = users.find(u => u.username === username);
-    if (foundUser && password === username) {
+    if (foundUser && userPasswords[username] === password) {
       setUser(foundUser);
       localStorage.setItem('vtu_auth_user', JSON.stringify(foundUser));
       return true;
@@ -193,6 +190,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const updatedUsers = [...users, newUser];
     setUsers(updatedUsers);
     localStorage.setItem('vtu_auth_users', JSON.stringify(updatedUsers));
+
+    // Store the password for the new user
+    const updatedPasswords = { ...userPasswords, [request.username]: request.password };
+    setUserPasswords(updatedPasswords);
+    localStorage.setItem('vtu_user_passwords', JSON.stringify(updatedPasswords));
 
     // Update request status
     const updatedRequests = registrationRequests.map(r => 

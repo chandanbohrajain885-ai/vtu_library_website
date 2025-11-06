@@ -31,6 +31,7 @@ export function RegistrationModal({ isOpen, onClose }: RegistrationModalProps) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    password: '',
     role: 'admin' as 'admin' | 'librarian' | 'publisher',
     requestedPermissions: [] as string[]
   });
@@ -43,8 +44,14 @@ export function RegistrationModal({ isOpen, onClose }: RegistrationModalProps) {
     setError('');
 
     // Validate form
-    if (!formData.username || !formData.email) {
+    if (!formData.username || !formData.email || !formData.password) {
       setError('Please fill in all required fields.');
+      return;
+    }
+
+    // Validate password strength
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
       return;
     }
 
@@ -63,6 +70,7 @@ export function RegistrationModal({ isOpen, onClose }: RegistrationModalProps) {
         setFormData({
           username: '',
           email: '',
+          password: '',
           role: 'admin',
           requestedPermissions: []
         });
@@ -86,6 +94,7 @@ export function RegistrationModal({ isOpen, onClose }: RegistrationModalProps) {
       setFormData({
         username: '',
         email: '',
+        password: '',
         role: 'admin',
         requestedPermissions: []
       });
@@ -146,6 +155,19 @@ export function RegistrationModal({ isOpen, onClose }: RegistrationModalProps) {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="Enter your email address"
               required
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="password">Password *</Label>
+            <Input
+              id="password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="Enter your password (min. 6 characters)"
+              required
+              minLength={6}
             />
           </div>
           
