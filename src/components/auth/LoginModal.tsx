@@ -111,14 +111,6 @@ export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModa
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
-
-        <div className="text-xs text-gray-600 space-y-1">
-          <p><strong>Demo Credentials:</strong></p>
-          <p>Super Admin: superadmin / superadmin</p>
-          <p>Admin: admin / admin</p>
-          <p>Librarian: librarian / librarian</p>
-          <p>Publisher: publisher / publisher</p>
-        </div>
       </DialogContent>
     </Dialog>
   );
