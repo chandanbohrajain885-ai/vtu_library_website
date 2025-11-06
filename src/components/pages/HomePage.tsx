@@ -201,7 +201,11 @@ export default function HomePage() {
               <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">
                 About Us
               </button>
-              <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
+              >
                 Member Colleges
               </Button>
               <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
