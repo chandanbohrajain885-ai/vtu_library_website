@@ -876,7 +876,7 @@ export default function HomePage() {
                         </Button>
                       )}
                       {news.author && (
-                        <span className="text-xs text-gray-500 truncate max-w-[100px]">
+                        <span className="text-xs text-gray-500">
                           By {news.author}
                         </span>
                       )}
@@ -946,7 +946,7 @@ export default function HomePage() {
                         </Button>
                       )}
                       {news.author && (
-                        <span className="text-xs text-gray-500 truncate max-w-[100px]">
+                        <span className="text-xs text-gray-500">
                           By {news.author}
                         </span>
                       )}
