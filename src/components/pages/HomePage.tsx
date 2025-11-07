@@ -280,46 +280,49 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Auto-scroll effect for news cards with smooth infinite scrolling
+  // Continuous infinite scroll effect for news cards - seamless endless loop
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
-    const scrollWidth = scrollContainer.scrollWidth;
-    const clientWidth = scrollContainer.clientWidth;
-    
-    // Only enable auto-scroll if content overflows
-    if (scrollWidth <= clientWidth) return;
-
     let scrollPosition = 0;
-    const scrollSpeed = 0.5; // Slower, smoother scrolling
+    const scrollSpeed = 1; // Consistent scrolling speed
     let animationId: number;
+    let isPaused = false;
     
     const scroll = () => {
-      scrollPosition += scrollSpeed;
-      
-      // Calculate the width of original content (without duplicates)
-      const originalContentWidth = scrollWidth / 2; // Since we duplicate the content
-      
-      // Reset position smoothly when we've scrolled through original content
-      if (scrollPosition >= originalContentWidth) {
-        scrollPosition = 0;
+      if (!isPaused) {
+        scrollPosition += scrollSpeed;
+        
+        // Get current measurements
+        const scrollWidth = scrollContainer.scrollWidth;
+        const clientWidth = scrollContainer.clientWidth;
+        
+        // Calculate the width of one set of content (original, not duplicated)
+        const singleSetWidth = scrollWidth / 2;
+        
+        // When we've scrolled past one complete set, seamlessly reset to beginning
+        // This creates the illusion of infinite scrolling
+        if (scrollPosition >= singleSetWidth) {
+          scrollPosition = scrollPosition - singleSetWidth;
+        }
+        
+        scrollContainer.scrollLeft = scrollPosition;
       }
       
-      scrollContainer.scrollLeft = scrollPosition;
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Start the animation
+    // Start the continuous animation
     animationId = requestAnimationFrame(scroll);
 
-    // Pause scrolling on hover
+    // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {
-      cancelAnimationFrame(animationId);
+      isPaused = true;
     };
     
     const handleMouseLeave = () => {
-      animationId = requestAnimationFrame(scroll);
+      isPaused = false;
     };
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
@@ -803,14 +806,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Single Row of Auto-Scrolling News Cards */}
+          {/* Continuous Infinite Scrolling News Cards - Right to Left */}
           <div 
             ref={newsScrollContainerRef}
             className="flex gap-6 overflow-x-hidden relative"
             style={{ 
-              scrollBehavior: 'auto', // Remove smooth scroll behavior for manual control
-              maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)', // Fade edges
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
+              scrollBehavior: 'auto',
+              maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
             }}
           >
             {/* Original news cards */}
