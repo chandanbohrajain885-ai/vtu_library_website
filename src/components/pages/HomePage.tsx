@@ -408,7 +408,7 @@ export default function HomePage() {
                   )}
                   <DropdownMenuItem 
                     className="cursor-pointer"
-                    onClick={() => window.open('https://drive.google.com/drive/folders/1XdCgDWRtO_PK9yN-M5Fi5ud4OH25gWfT?usp=sharing', '_blank')}
+                    onClick={() => window.open('https://docs.google.com/document/d/1VZwrLtfwp031ua2a_h0ShK0YyZGyYMHM/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
                   >{"Governing Council Committee"}</DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
