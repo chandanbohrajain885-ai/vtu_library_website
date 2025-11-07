@@ -554,7 +554,9 @@ export default function HomePage() {
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>
-        <div className="max-w-[120rem] mx-auto px-6 text-center">
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative max-w-[120rem] mx-auto px-6 text-center">
           <div className="space-y-6">
             <h1 className="font-heading text-5xl lg:text-6xl font-bold">{"Welcome to VTU Consortium"}</h1>
             <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{"Symbolizes the connection between learning resources and learners."}</p>
@@ -565,9 +567,10 @@ export default function HomePage() {
                 <Input
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="Search for E-Resources, News, User Guides, Committee info, Downloads, Training, Gallery, ONOS, Member Colleges..."
+                  placeholder="🔍 Search E-Resources by year/provider/subject, Committee info, Downloads, Training, Gallery, ONOS, Member Colleges, News & Events..."
                   className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
                   onFocus={() => searchQuery && setShowSearchResults(true)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
                 />
                 <Button 
                   onClick={handleSearchSubmit}
