@@ -48,6 +48,8 @@ export interface NewsandEvents {
   author?: string;
   /** @wixFieldType url */
   externalLink?: string;
+  /** @wixFieldType text */
+  venue?: string;
 }
 
 
