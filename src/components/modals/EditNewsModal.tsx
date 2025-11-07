@@ -20,7 +20,6 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    venue: '',
     author: '',
     externalLink: '',
     isFeatured: false,
@@ -46,7 +45,6 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
         setFormData({
           title: newsItem.title || '',
           content: newsItem.content || '',
-          venue: newsItem.venue || '',
           author: newsItem.author || '',
           externalLink: newsItem.externalLink || '',
           isFeatured: newsItem.isFeatured || false,
@@ -73,7 +71,6 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
         _id: newsId,
         title: formData.title,
         content: formData.content,
-        venue: formData.venue || undefined,
         author: formData.author || 'VTU Consortium',
         externalLink: formData.externalLink || undefined,
         isFeatured: formData.isFeatured,
@@ -162,22 +159,9 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
                 id="content"
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Enter news content..."
+                placeholder="Enter news content or venue details..."
                 required
                 rows={4}
-                className="mt-1"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="venue" className="text-sm font-medium">
-                Venue
-              </Label>
-              <Input
-                id="venue"
-                value={formData.venue}
-                onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                placeholder="Enter venue details..."
                 className="mt-1"
               />
             </div>
