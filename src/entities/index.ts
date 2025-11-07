@@ -39,6 +39,8 @@ export interface NewsandEvents {
   /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
+  venue?: string;
+  /** @wixFieldType text */
   content?: string;
   /** @wixFieldType datetime */
   publicationDate?: Date | string;
@@ -48,8 +50,6 @@ export interface NewsandEvents {
   author?: string;
   /** @wixFieldType url */
   externalLink?: string;
-  /** @wixFieldType text */
-  venue?: string;
 }
 
 
