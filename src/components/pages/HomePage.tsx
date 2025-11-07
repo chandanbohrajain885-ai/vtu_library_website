@@ -265,9 +265,82 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
+  // Function to replace all news items with the new training programs
+  const replaceAllNews = async () => {
+    try {
+      console.log('Starting news replacement...');
+      
+      // Step 1: Get all existing news items
+      const existingNews = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
+      console.log(`Found ${existingNews.items.length} existing news items to remove`);
+      
+      // Step 2: Delete all existing news items
+      for (const item of existingNews.items) {
+        await BaseCrudService.delete('newsandnotifications', item._id);
+        console.log(`Deleted news item: ${item._id}`);
+      }
+      
+      // Step 3: Add the 4 new training program announcements
+      const newNewsItems: Partial<NewsandEvents>[] = [
+        {
+          _id: crypto.randomUUID(),
+          title: 'One Day Training Programs On VTU Consortium e-resources',
+          venue: 'National Institute of Engineering (NIE), Mysore',
+          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
+          publicationDate: new Date('2025-11-10'),
+          isFeatured: true,
+          author: 'VTU Consortium'
+        },
+        {
+          _id: crypto.randomUUID(),
+          title: 'One Day Training Programs On VTU Consortium e-resources',
+          venue: 'VTU Regional Centre, Bangalore',
+          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
+          publicationDate: new Date('2025-11-11'),
+          isFeatured: true,
+          author: 'VTU Consortium'
+        },
+        {
+          _id: crypto.randomUUID(),
+          title: 'One Day Training Programs On VTU Consortium e-resources',
+          venue: 'PDA College of Engineering, Kalaburagi',
+          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
+          publicationDate: new Date('2025-11-17'),
+          isFeatured: true,
+          author: 'VTU Consortium'
+        },
+        {
+          _id: crypto.randomUUID(),
+          title: 'One Day Training Programs On VTU Consortium e-resources',
+          venue: 'VTU Regional Centre, Belagavi',
+          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
+          publicationDate: new Date('2025-11-24'),
+          isFeatured: true,
+          author: 'VTU Consortium'
+        }
+      ];
+      
+      // Step 4: Create each new news item
+      for (const newsItem of newNewsItems) {
+        await BaseCrudService.create('newsandnotifications', newsItem as any);
+        console.log(`Created news item: ${newsItem.title} - ${newsItem.venue}`);
+      }
+      
+      console.log('News replacement completed successfully!');
+      return true;
+    } catch (error) {
+      console.error('Error replacing news:', error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // First, replace all news items with the new training programs
+        await replaceAllNews();
+        
+        // Then fetch all data including the new news items
         const [resourcesResponse, newsResponse, guidesResponse] = await Promise.all([
           BaseCrudService.getAll<EResources>('E-Resources'),
           BaseCrudService.getAll<NewsandEvents>('newsandnotifications'),
