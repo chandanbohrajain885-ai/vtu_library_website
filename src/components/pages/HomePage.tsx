@@ -217,41 +217,6 @@ export default function HomePage() {
       handleSearchResultClick(searchResults[0]);
     }
   };
-  // Demo news data for fallback when CMS has no data
-  const demoNewsData: NewsandEvents[] = [
-    {
-      _id: 'training-1',
-      title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'National Institute Of Engineering (NIE), Mysore',
-      publicationDate: new Date('2025-11-10'),
-      isFeatured: true,
-      author: 'VTU Consortium'
-    },
-    {
-      _id: 'training-2',
-      title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'VTU Reginal Centre, Bangalore',
-      publicationDate: new Date('2025-11-11'),
-      isFeatured: true,
-      author: 'VTU Consortium'
-    },
-    {
-      _id: 'training-3',
-      title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'PDA College of Engineering, Kalaburagi',
-      publicationDate: new Date('2025-11-17'),
-      isFeatured: true,
-      author: 'VTU Consortium'
-    },
-    {
-      _id: 'training-4',
-      title: 'One Day Training Programs on VTU Consortium e-resources',
-      content: 'VTU Reginal Centre, Belagavi',
-      publicationDate: new Date('2025-11-24'),
-      isFeatured: true,
-      author: 'VTU Consortium'
-    }
-  ];
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
@@ -311,17 +276,10 @@ export default function HomePage() {
 
         setFeaturedResources(resourcesResponse.items.slice(0, 3));
         setUserGuides(guidesResponse.items);
-        
-        // Use CMS data if available, otherwise fallback to demo data
-        if (newsResponse.items.length > 0) {
-          setLatestNews(newsResponse.items);
-        } else {
-          setLatestNews(demoNewsData);
-        }
+        setLatestNews(newsResponse.items);
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Fallback to demo data on error
-        setLatestNews(demoNewsData);
+        setLatestNews([]);
       } finally {
         setIsLoading(false);
       }
@@ -341,13 +299,7 @@ export default function HomePage() {
 
       setFeaturedResources(resourcesResponse.items.slice(0, 3));
       setUserGuides(guidesResponse.items);
-      
-      // Use CMS data if available, otherwise fallback to demo data
-      if (newsResponse.items.length > 0) {
-        setLatestNews(newsResponse.items);
-      } else {
-        setLatestNews(demoNewsData);
-      }
+      setLatestNews(newsResponse.items);
     } catch (error) {
       console.error('Error refreshing data:', error);
     }
@@ -1031,6 +983,35 @@ export default function HomePage() {
       <SuperExecutiveModal 
         isOpen={isSuperExecutiveModalOpen} 
         onClose={() => setIsSuperExecutiveModalOpen(false)} 
+      />
+
+      {/* Add News Modal */}
+      <AddNewsModal 
+        isOpen={isAddNewsModalOpen} 
+        onClose={() => setIsAddNewsModalOpen(false)} 
+        onSuccess={refreshData}
+      />
+
+      {/* Edit News Modal */}
+      <EditNewsModal 
+        isOpen={isEditNewsModalOpen} 
+        onClose={() => setIsEditNewsModalOpen(false)} 
+        newsId={editingNewsId}
+        onSuccess={refreshData}
+      />
+
+      {/* Add E-Resource Modal */}
+      <AddEResourceModal 
+        isOpen={isAddEResourceModalOpen} 
+        onClose={() => setIsAddEResourceModalOpen(false)} 
+        onSuccess={refreshData}
+      />
+
+      {/* Add User Guide Modal */}
+      <AddUserGuideModal 
+        isOpen={isAddUserGuideModalOpen} 
+        onClose={() => setIsAddUserGuideModalOpen(false)} 
+        onSuccess={refreshData}
       />
     </div>
   );
