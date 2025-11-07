@@ -9,18 +9,6 @@ export interface User {
   createdAt?: Date;
 }
 
-export interface RegistrationRequest {
-  id: string;
-  username: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'librarian' | 'publisher';
-  requestedPermissions: string[];
-  requestDate: Date;
-  status: 'pending' | 'approved' | 'rejected';
-  reason?: string;
-}
-
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -30,10 +18,6 @@ interface AuthContextType {
   createUser: (userData: Omit<User, 'id' | 'createdAt'>) => void;
   updateUserPermissions: (userId: string, permissions: string[]) => void;
   deleteUser: (userId: string) => void;
-  registrationRequests: RegistrationRequest[];
-  submitRegistrationRequest: (request: Omit<RegistrationRequest, 'id' | 'requestDate' | 'status'>) => void;
-  approveRegistrationRequest: (requestId: string) => void;
-  rejectRegistrationRequest: (requestId: string, reason?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,15 +67,11 @@ const defaultPasswords: Record<string, string> = {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>(defaultUsers);
-  const [registrationRequests, setRegistrationRequests] = useState<RegistrationRequest[]>([]);
-  const [userPasswords, setUserPasswords] = useState<Record<string, string>>(defaultPasswords);
 
   useEffect(() => {
     // Check for stored auth
     const storedUser = localStorage.getItem('vtu_auth_user');
     const storedUsers = localStorage.getItem('vtu_auth_users');
-    const storedRequests = localStorage.getItem('vtu_registration_requests');
-    const storedPasswords = localStorage.getItem('vtu_user_passwords');
     
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -100,20 +80,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (storedUsers) {
       setUsers(JSON.parse(storedUsers));
     }
-    
-    if (storedRequests) {
-      setRegistrationRequests(JSON.parse(storedRequests));
-    }
-    
-    if (storedPasswords) {
-      setUserPasswords(JSON.parse(storedPasswords));
-    }
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // Check if user exists and password matches
+    // Check default passwords first
+    if (defaultPasswords[username] === password) {
+      const foundUser = users.find(u => u.username === username);
+      if (foundUser) {
+        setUser(foundUser);
+        localStorage.setItem('vtu_auth_user', JSON.stringify(foundUser));
+        return true;
+      }
+    }
+    
+    // Check custom users (they use the same password as their username for simplicity)
     const foundUser = users.find(u => u.username === username);
-    if (foundUser && userPasswords[username] === password) {
+    if (foundUser && password === username) {
       setUser(foundUser);
       localStorage.setItem('vtu_auth_user', JSON.stringify(foundUser));
       return true;
@@ -160,58 +142,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('vtu_auth_users', JSON.stringify(updatedUsers));
   };
 
-  const submitRegistrationRequest = (request: Omit<RegistrationRequest, 'id' | 'requestDate' | 'status'>) => {
-    const newRequest: RegistrationRequest = {
-      ...request,
-      id: Date.now().toString(),
-      requestDate: new Date(),
-      status: 'pending'
-    };
-    
-    const updatedRequests = [...registrationRequests, newRequest];
-    setRegistrationRequests(updatedRequests);
-    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
-  };
-
-  const approveRegistrationRequest = (requestId: string) => {
-    const request = registrationRequests.find(r => r.id === requestId);
-    if (!request) return;
-
-    // Create the user account
-    const newUser: User = {
-      id: Date.now().toString(),
-      username: request.username,
-      role: request.role,
-      permissions: request.requestedPermissions,
-      createdBy: 'superadmin',
-      createdAt: new Date()
-    };
-
-    const updatedUsers = [...users, newUser];
-    setUsers(updatedUsers);
-    localStorage.setItem('vtu_auth_users', JSON.stringify(updatedUsers));
-
-    // Store the password for the new user
-    const updatedPasswords = { ...userPasswords, [request.username]: request.password };
-    setUserPasswords(updatedPasswords);
-    localStorage.setItem('vtu_user_passwords', JSON.stringify(updatedPasswords));
-
-    // Update request status
-    const updatedRequests = registrationRequests.map(r => 
-      r.id === requestId ? { ...r, status: 'approved' as const } : r
-    );
-    setRegistrationRequests(updatedRequests);
-    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
-  };
-
-  const rejectRegistrationRequest = (requestId: string, reason?: string) => {
-    const updatedRequests = registrationRequests.map(r => 
-      r.id === requestId ? { ...r, status: 'rejected' as const, reason } : r
-    );
-    setRegistrationRequests(updatedRequests);
-    localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
-  };
-
   return (
     <AuthContext.Provider value={{
       user,
@@ -221,11 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       users,
       createUser,
       updateUserPermissions,
-      deleteUser,
-      registrationRequests,
-      submitRegistrationRequest,
-      approveRegistrationRequest,
-      rejectRegistrationRequest
+      deleteUser
     }}>
       {children}
     </AuthContext.Provider>

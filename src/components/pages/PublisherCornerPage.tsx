@@ -174,7 +174,7 @@ export default function PublisherCornerPage() {
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center space-y-4">
             <h1 className="font-heading text-5xl font-bold text-primary">
-              Publisher's Corner - Publisher
+              Publisher's Corner
             </h1>
             <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
               Manage and publish academic resources, research papers, and educational materials

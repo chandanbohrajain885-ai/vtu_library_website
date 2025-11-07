@@ -114,7 +114,7 @@ export default function UserGuidePage() {
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center space-x-4">
               <h1 className="font-heading text-5xl font-bold text-primary">
-                USER GUIDE - Librarian/Nodal Officer
+                USER GUIDE
               </h1>
               {canEdit && (
                 <Button variant="outline" size="sm" className="text-primary border-primary hover:bg-primary hover:text-white">

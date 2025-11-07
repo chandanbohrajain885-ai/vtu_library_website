@@ -39,8 +39,6 @@ export interface NewsandEvents {
   /** @wixFieldType text */
   title?: string;
   /** @wixFieldType text */
-  venue?: string;
-  /** @wixFieldType text */
   content?: string;
   /** @wixFieldType datetime */
   publicationDate?: Date | string;

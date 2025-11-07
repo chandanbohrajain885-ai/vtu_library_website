@@ -79,6 +79,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -141,6 +148,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -346,6 +360,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -561,6 +582,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -713,6 +741,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -928,6 +963,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -1180,6 +1222,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -1371,6 +1420,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -1553,6 +1609,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -1654,6 +1717,13 @@ export default function ResourcesPage() {
               <Link to="/" className="font-heading text-2xl font-bold">
                 VTU Consortium
               </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <span className="text-orange-200 font-semibold">E-Resources</span>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+              </div>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
@@ -1863,6 +1933,13 @@ export default function ResourcesPage() {
             <Link to="/" className="font-heading text-2xl font-bold">
               VTU Consortium
             </Link>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+              <span className="text-orange-200 font-semibold">E-Resources</span>
+              <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+              <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+              <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+            </div>
             <Button 
               onClick={() => window.location.href = '/'}
               variant="outline" 

@@ -209,15 +209,6 @@ export default function NewsPage() {
                               {item.content}
                             </p>
                             
-                            {item.venue && (
-                              <div className="bg-primary/5 p-3 rounded-lg">
-                                <p className="font-paragraph text-sm">
-                                  <span className="font-bold text-primary">Venue: </span>
-                                  <span className="text-primary/80">{item.venue}</span>
-                                </p>
-                              </div>
-                            )}
-                            
                             <div className="flex flex-col sm:flex-row gap-3">
                               <Button className="bg-secondary hover:bg-secondary/90">
                                 Read Full Article
@@ -271,16 +262,6 @@ export default function NewsPage() {
                               <p className="font-paragraph text-sm text-primary/70 line-clamp-3">
                                 {item.content}
                               </p>
-                              
-                              {item.venue && (
-                                <div className="bg-primary/5 p-2 rounded">
-                                  <p className="font-paragraph text-xs">
-                                    <span className="font-bold text-primary">Venue: </span>
-                                    <span className="text-primary/70">{item.venue}</span>
-                                  </p>
-                                </div>
-                              )}
-                              
                               <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary hover:text-primary-foreground">
                                 Read More
                               </Button>
@@ -332,15 +313,6 @@ export default function NewsPage() {
                             <p className="font-paragraph text-sm text-primary/70 line-clamp-4">
                               {item.content}
                             </p>
-                            
-                            {item.venue && (
-                              <div className="bg-primary/5 p-3 rounded-lg">
-                                <p className="font-paragraph text-sm">
-                                  <span className="font-bold text-primary">Venue: </span>
-                                  <span className="text-primary/80">{item.venue}</span>
-                                </p>
-                              </div>
-                            )}
                             
                             <div className="flex flex-col gap-2">
                               <Button variant="outline" className="w-full text-primary border-primary hover:bg-primary hover:text-primary-foreground">
