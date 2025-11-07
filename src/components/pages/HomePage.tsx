@@ -412,13 +412,13 @@ export default function HomePage() {
                   >{"Governing Council Committee"}</DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
-                    onClick={() => window.open('https://drive.google.com/drive/folders/19GgIpBfrtg6zljHwXeiBSgxTO6BxObAD?usp=sharing', '_blank')}
+                    onClick={() => window.open('https://docs.google.com/document/d/1EwTGjZy69q6dzS7gm-o0pBm_JqMHczzm/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
                   >
                     Steering Committee
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
-                    onClick={() => window.open('https://drive.google.com/drive/folders/1iFtaga_Q13SCfjkO-vwrbYcwikSP0s2r?usp=sharing', '_blank')}
+                    onClick={() => window.open('https://docs.google.com/spreadsheets/d/1tt8o4Gff8nQy69034R2nlNF7OEDd1QXj/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
                   >
                     Nodal Officer Committee
                   </DropdownMenuItem>
