@@ -280,32 +280,56 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Auto-scroll effect for news cards
+  // Auto-scroll effect for news cards with smooth infinite scrolling
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
-    if (!scrollContainer) return;
+    if (!scrollContainer || latestNews.length === 0) return;
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;
     
-    if (scrollWidth <= clientWidth) return; // No need to scroll if content fits
+    // Only enable auto-scroll if content overflows
+    if (scrollWidth <= clientWidth) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 1; // pixels per frame
+    const scrollSpeed = 0.5; // Slower, smoother scrolling
+    let animationId: number;
     
     const scroll = () => {
       scrollPosition += scrollSpeed;
       
-      if (scrollPosition >= scrollWidth - clientWidth) {
-        scrollPosition = 0; // Reset to start
+      // Calculate the width of original content (without duplicates)
+      const originalContentWidth = scrollWidth / 2; // Since we duplicate the content
+      
+      // Reset position smoothly when we've scrolled through original content
+      if (scrollPosition >= originalContentWidth) {
+        scrollPosition = 0;
       }
       
       scrollContainer.scrollLeft = scrollPosition;
+      animationId = requestAnimationFrame(scroll);
     };
 
-    const intervalId = setInterval(scroll, 50); // 50ms interval for smooth scrolling
+    // Start the animation
+    animationId = requestAnimationFrame(scroll);
 
-    return () => clearInterval(intervalId);
+    // Pause scrolling on hover
+    const handleMouseEnter = () => {
+      cancelAnimationFrame(animationId);
+    };
+    
+    const handleMouseLeave = () => {
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, [latestNews]);
 
   if (isLoading) {
@@ -782,11 +806,16 @@ export default function HomePage() {
           {/* Single Row of Auto-Scrolling News Cards */}
           <div 
             ref={newsScrollContainerRef}
-            className="flex gap-6 overflow-x-hidden"
-            style={{ scrollBehavior: 'smooth' }}
+            className="flex gap-6 overflow-x-hidden relative"
+            style={{ 
+              scrollBehavior: 'auto', // Remove smooth scroll behavior for manual control
+              maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)', // Fade edges
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)'
+            }}
           >
+            {/* Original news cards */}
             {latestNews.map((news, index) => (
-              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] flex-shrink-0 bg-white shadow-md">
+              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[380px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
@@ -803,21 +832,27 @@ export default function HomePage() {
                       Coming Soon
                     </Badge>
                   </div>
-                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
+                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3">
                     <span className="font-bold text-green-600">Venue: </span>
-                    <span className="font-bold text-green-600">{news.content || 'News content...'}</span>
+                    <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
                       variant="outline" 
                       size="sm" 
                       className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
-                      onClick={() => window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank')}
+                      onClick={() => {
+                        if (news.externalLink) {
+                          window.open(news.externalLink, '_blank');
+                        } else {
+                          window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                        }
+                      }}
                     >
                       Read More
                     </Button>
@@ -838,7 +873,7 @@ export default function HomePage() {
                         </Button>
                       )}
                       {news.author && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 truncate max-w-[100px]">
                           By {news.author}
                         </span>
                       )}
@@ -847,9 +882,10 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             ))}
-            {/* Duplicate cards for seamless scrolling */}
+            
+            {/* Duplicate cards for seamless infinite scrolling */}
             {latestNews.map((news, index) => (
-              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] flex-shrink-0 bg-white shadow-md">
+              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[380px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
@@ -866,21 +902,27 @@ export default function HomePage() {
                       Coming Soon
                     </Badge>
                   </div>
-                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight">
+                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed">
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3">
                     <span className="font-bold text-green-600">Venue: </span>
-                    <span className="font-bold text-green-600">{news.content || 'News content...'}</span>
+                    <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                   </p>
                   <div className="flex items-center justify-between">
                     <Button 
                       variant="outline" 
                       size="sm" 
                       className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
-                      onClick={() => window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank')}
+                      onClick={() => {
+                        if (news.externalLink) {
+                          window.open(news.externalLink, '_blank');
+                        } else {
+                          window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                        }
+                      }}
                     >
                       Read More
                     </Button>
@@ -901,7 +943,7 @@ export default function HomePage() {
                         </Button>
                       )}
                       {news.author && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 truncate max-w-[100px]">
                           By {news.author}
                         </span>
                       )}
