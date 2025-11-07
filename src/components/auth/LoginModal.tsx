@@ -3,20 +3,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from './AuthContext';
 import { AlertCircle } from 'lucide-react';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  requiredRole?: string;
   message?: string;
 }
 
-export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, message }: LoginModalProps) {
   const { login } = useAuth();
-  const [loginData, setLoginData] = useState({ username: '', password: '', role: '' });
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,7 +27,7 @@ export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModa
       const success = await login(loginData.username, loginData.password);
       if (success) {
         onClose();
-        setLoginData({ username: '', password: '', role: '' });
+        setLoginData({ username: '', password: '' });
       } else {
         setError('Invalid username or password');
       }
@@ -43,7 +41,7 @@ export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModa
   const handleClose = () => {
     onClose();
     setError('');
-    setLoginData({ username: '', password: '', role: '' });
+    setLoginData({ username: '', password: '' });
   };
 
   return (
@@ -53,29 +51,9 @@ export function LoginModal({ isOpen, onClose, requiredRole, message }: LoginModa
           <DialogTitle className="text-center">
             {message || 'Access VTU Consortium Portal'}
           </DialogTitle>
-          {requiredRole && (
-            <p className="text-center text-sm text-gray-600 mt-2">
-              This section requires {requiredRole} access. Please sign in with appropriate credentials.
-            </p>
-          )}
         </DialogHeader>
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="login-role">Role</Label>
-            <Select value={loginData.role} onValueChange={(value) => setLoginData(prev => ({ ...prev, role: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select your role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="superadmin">Super Admin</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="librarian">Librarian/Nodal-officer</SelectItem>
-                <SelectItem value="publisher">Publisher</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="login-username">Username</Label>
             <Input
