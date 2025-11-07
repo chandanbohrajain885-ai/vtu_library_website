@@ -285,7 +285,7 @@ export default function HomePage() {
         {
           _id: crypto.randomUUID(),
           title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'National Institute of Engineering ( NIE ), Mysore',
+          venue: 'National Institute of Engineering (NIE), Mysore',
           content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
           publicationDate: new Date('2025-11-10'),
           isFeatured: true,
@@ -312,7 +312,7 @@ export default function HomePage() {
         {
           _id: crypto.randomUUID(),
           title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'VTU Reginal Centre, Belagavi',
+          venue: 'VTU Regional Centre, Belagavi',
           content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
           publicationDate: new Date('2025-11-24'),
           isFeatured: true,
