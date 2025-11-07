@@ -13,6 +13,10 @@ import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
 import { RegistrationModal } from '@/components/auth/RegistrationModal';
+import { AddNewsModal } from '@/components/modals/AddNewsModal';
+import { EditNewsModal } from '@/components/modals/EditNewsModal';
+import { AddEResourceModal } from '@/components/modals/AddEResourceModal';
+import { AddUserGuideModal } from '@/components/modals/AddUserGuideModal';
 
 // Search result interface
 interface SearchResult {
@@ -251,6 +255,11 @@ export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+  const [isAddNewsModalOpen, setIsAddNewsModalOpen] = useState(false);
+  const [isEditNewsModalOpen, setIsEditNewsModalOpen] = useState(false);
+  const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
+  const [isAddEResourceModalOpen, setIsAddEResourceModalOpen] = useState(false);
+  const [isAddUserGuideModalOpen, setIsAddUserGuideModalOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (action: () => void, requiredRole?: string) => {
@@ -303,10 +312,16 @@ export default function HomePage() {
         setFeaturedResources(resourcesResponse.items.slice(0, 3));
         setUserGuides(guidesResponse.items);
         
-        // Always use demo data to ensure news cards are visible
-        setLatestNews(demoNewsData);
+        // Use CMS data if available, otherwise fallback to demo data
+        if (newsResponse.items.length > 0) {
+          setLatestNews(newsResponse.items);
+        } else {
+          setLatestNews(demoNewsData);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
+        // Fallback to demo data on error
+        setLatestNews(demoNewsData);
       } finally {
         setIsLoading(false);
       }
@@ -314,6 +329,34 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
+  // Function to refresh data after CRUD operations
+  const refreshData = async () => {
+    try {
+      const [resourcesResponse, newsResponse, guidesResponse] = await Promise.all([
+        BaseCrudService.getAll<EResources>('E-Resources'),
+        BaseCrudService.getAll<NewsandEvents>('newsandnotifications'),
+        BaseCrudService.getAll<UserGuideArticles>('userguidearticles')
+      ]);
+
+      setFeaturedResources(resourcesResponse.items.slice(0, 3));
+      setUserGuides(guidesResponse.items);
+      
+      // Use CMS data if available, otherwise fallback to demo data
+      if (newsResponse.items.length > 0) {
+        setLatestNews(newsResponse.items);
+      } else {
+        setLatestNews(demoNewsData);
+      }
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  };
+
+  const handleEditNews = (newsId: string) => {
+    setEditingNewsId(newsId);
+    setIsEditNewsModalOpen(true);
+  };
 
   // Auto-scroll effect for news cards
   useEffect(() => {
@@ -442,7 +485,10 @@ export default function HomePage() {
                   {/* Admin Controls for E-Resources */}
                   {isAuthenticated && (user?.role === 'superadmin') && (
                     <>
-                      <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
+                      <DropdownMenuItem 
+                        className="cursor-pointer bg-green-50 text-green-700 font-medium"
+                        onClick={() => setIsAddEResourceModalOpen(true)}
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Add E-Resource
                       </DropdownMenuItem>
@@ -528,7 +574,10 @@ export default function HomePage() {
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
-                      <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
+                      <button 
+                        onClick={() => setIsAddUserGuideModalOpen(true)}
+                        className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm"
+                      >
                         <Plus className="h-3 w-3 mr-2" />
                         Add Guide
                       </button>
@@ -786,10 +835,7 @@ export default function HomePage() {
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="flex items-center space-x-2">
                     <Button
-                      onClick={() => {
-                        // TODO: Open add news modal
-                        console.log('Add news clicked');
-                      }}
+                      onClick={() => setIsAddNewsModalOpen(true)}
                       className="bg-green-600 hover:bg-green-700 text-white"
                       size="sm"
                     >
