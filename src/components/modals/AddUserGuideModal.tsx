@@ -4,17 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { BaseCrudService } from '@/integrations';
+import { LiveCrudService } from '@/hooks/use-live-data';
 import { UserGuideArticles } from '@/entities';
 import { Plus, X } from 'lucide-react';
 
 interface AddUserGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
-export function AddUserGuideModal({ isOpen, onClose, onSuccess }: AddUserGuideModalProps) {
+export function AddUserGuideModal({ isOpen, onClose }: AddUserGuideModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -57,7 +56,7 @@ export function AddUserGuideModal({ isOpen, onClose, onSuccess }: AddUserGuideMo
         lastUpdated: new Date()
       };
 
-      await BaseCrudService.create('userguidearticles', {
+      await LiveCrudService.create('userguidearticles', {
         ...userGuide,
         _id: crypto.randomUUID()
       });
@@ -72,7 +71,6 @@ export function AddUserGuideModal({ isOpen, onClose, onSuccess }: AddUserGuideMo
         featuredImage: ''
       });
 
-      onSuccess();
       onClose();
     } catch (error) {
       console.error('Error creating user guide:', error);

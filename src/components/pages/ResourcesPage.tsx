@@ -4,15 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Download, ExternalLink, FileText, Globe, Database, Users, ArrowLeft, Edit, Plus } from 'lucide-react';
 import { Image } from '@/components/ui/image';
-import { BaseCrudService } from '@/integrations';
+import { useLiveData } from '@/hooks/use-live-data';
 import { EResources } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
 
 export default function ResourcesPage() {
   const { year } = useParams();
   const { user } = useAuth();
-  const [eResourcesData, setEResourcesData] = useState<EResources[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: eResourcesData, isLoading } = useLiveData<EResources>('E-Resources');
   
   // Check if user is superadmin for edit buttons
   const canEdit = user?.role === 'superadmin';
@@ -48,25 +47,7 @@ export default function ResourcesPage() {
   const is2016Year = year === '2016-17';
 
   // Fetch E-Resources data from CMS
-  useEffect(() => {
-    const fetchEResourcesData = async () => {
-      try {
-        const response = await BaseCrudService.getAll<EResources>('E-Resources');
-        setEResourcesData(response.items);
-        console.log('All E-Resources data:', response.items);
-        
-        // Check specifically for 2016-17 data
-        const year2016Data = response.items.find(item => item.title === '2016-17');
-        console.log('2016-17 data:', year2016Data);
-      } catch (error) {
-        console.error('Error fetching E-Resources data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEResourcesData();
-  }, []);
+  // Remove the useEffect since we're using useLiveData now
 
   // Render under progress page for 2025-26
   if (isUnderProgress) {

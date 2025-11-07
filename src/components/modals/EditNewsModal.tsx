@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { LiveCrudService } from '@/hooks/use-live-data';
 import { BaseCrudService } from '@/integrations';
 import { NewsandEvents } from '@/entities';
 import { Edit, X, Trash2 } from 'lucide-react';
@@ -12,11 +13,10 @@ import { Edit, X, Trash2 } from 'lucide-react';
 interface EditNewsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
   newsId: string | null;
 }
 
-export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsModalProps) {
+export function EditNewsModal({ isOpen, onClose, newsId }: EditNewsModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -67,7 +67,7 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
 
     setIsSubmitting(true);
     try {
-      await BaseCrudService.update('newsandnotifications', {
+      await LiveCrudService.update('newsandnotifications', {
         _id: newsId,
         title: formData.title,
         content: formData.content,
@@ -77,7 +77,6 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
         publicationDate: new Date(formData.publicationDate)
       });
 
-      onSuccess();
       onClose();
     } catch (error) {
       console.error('Error updating news item:', error);
@@ -96,8 +95,7 @@ export function EditNewsModal({ isOpen, onClose, onSuccess, newsId }: EditNewsMo
 
     setIsDeleting(true);
     try {
-      await BaseCrudService.delete('newsandnotifications', newsId);
-      onSuccess();
+      await LiveCrudService.delete('newsandnotifications', newsId);
       onClose();
     } catch (error) {
       console.error('Error deleting news item:', error);

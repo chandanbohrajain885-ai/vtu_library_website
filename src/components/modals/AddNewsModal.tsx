@@ -5,17 +5,16 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { BaseCrudService } from '@/integrations';
+import { LiveCrudService } from '@/hooks/use-live-data';
 import { NewsandEvents } from '@/entities';
 import { Plus, X } from 'lucide-react';
 
 interface AddNewsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
-export function AddNewsModal({ isOpen, onClose, onSuccess }: AddNewsModalProps) {
+export function AddNewsModal({ isOpen, onClose }: AddNewsModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -40,7 +39,7 @@ export function AddNewsModal({ isOpen, onClose, onSuccess }: AddNewsModalProps) 
         publicationDate: new Date(formData.publicationDate)
       };
 
-      await BaseCrudService.create('newsandnotifications', {
+      await LiveCrudService.create('newsandnotifications', {
         ...newsItem,
         _id: crypto.randomUUID()
       });
@@ -55,7 +54,6 @@ export function AddNewsModal({ isOpen, onClose, onSuccess }: AddNewsModalProps) 
         publicationDate: new Date().toISOString().split('T')[0]
       });
 
-      onSuccess();
       onClose();
     } catch (error) {
       console.error('Error creating news item:', error);

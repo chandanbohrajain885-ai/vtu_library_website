@@ -4,17 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { BaseCrudService } from '@/integrations';
+import { LiveCrudService } from '@/hooks/use-live-data';
 import { EResources } from '@/entities';
 import { Plus, X } from 'lucide-react';
 
 interface AddEResourceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
-export function AddEResourceModal({ isOpen, onClose, onSuccess }: AddEResourceModalProps) {
+export function AddEResourceModal({ isOpen, onClose }: AddEResourceModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     eJournals: '',
@@ -39,7 +38,7 @@ export function AddEResourceModal({ isOpen, onClose, onSuccess }: AddEResourceMo
         resourceList: formData.resourceList || undefined
       };
 
-      await BaseCrudService.create('E-Resources', {
+      await LiveCrudService.create('E-Resources', {
         ...eResource,
         _id: crypto.randomUUID()
       });
@@ -54,7 +53,6 @@ export function AddEResourceModal({ isOpen, onClose, onSuccess }: AddEResourceMo
         resourceList: ''
       });
 
-      onSuccess();
       onClose();
     } catch (error) {
       console.error('Error creating E-Resource:', error);

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { EResources, NewsandEvents, UserGuideArticles } from '@/entities';
+import { useLiveData } from '@/hooks/use-live-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -34,10 +35,24 @@ interface SearchResult {
 export default function HomePage() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const [featuredResources, setFeaturedResources] = useState<EResources[]>([]);
-  const [latestNews, setLatestNews] = useState<NewsandEvents[]>([]);
-  const [userGuides, setUserGuides] = useState<UserGuideArticles[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Use live data hooks for real-time updates
+  const { 
+    data: featuredResources, 
+    isLoading: resourcesLoading 
+  } = useLiveData<EResources>('E-Resources');
+  
+  const { 
+    data: latestNews, 
+    isLoading: newsLoading 
+  } = useLiveData<NewsandEvents>('newsandnotifications');
+  
+  const { 
+    data: userGuides, 
+    isLoading: guidesLoading 
+  } = useLiveData<UserGuideArticles>('userguidearticles');
+  
+  const isLoading = resourcesLoading || newsLoading || guidesLoading;
   
   // Search functionality
   const [searchQuery, setSearchQuery] = useState('');
@@ -263,124 +278,6 @@ export default function HomePage() {
     }
     // Navigate to publisher corner page (we'll create this)
     navigate('/publisher');
-  };
-
-  // Function to replace all news items with the new training programs
-  const replaceAllNews = async () => {
-    try {
-      console.log('Starting news replacement...');
-      
-      // Step 1: Get all existing news items
-      const existingNews = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
-      console.log(`Found ${existingNews.items.length} existing news items to remove`);
-      
-      // Step 2: Delete all existing news items
-      for (const item of existingNews.items) {
-        await BaseCrudService.delete('newsandnotifications', item._id);
-        console.log(`Deleted news item: ${item._id}`);
-      }
-      
-      // Step 3: Add the 4 new training program announcements with exact user data
-      const newNewsItems: Partial<NewsandEvents>[] = [
-        {
-          _id: crypto.randomUUID(),
-          title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'National Institute of Engineering (NIE), Mysore',
-          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
-          publicationDate: new Date('2025-11-10'),
-          isFeatured: true,
-          author: 'VTU Consortium'
-        },
-        {
-          _id: crypto.randomUUID(),
-          title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'VTU Regional Centre, Bangalore',
-          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
-          publicationDate: new Date('2025-11-11'),
-          isFeatured: true,
-          author: 'VTU Consortium'
-        },
-        {
-          _id: crypto.randomUUID(),
-          title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'PDA College of Engineering, Kalaburagi',
-          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
-          publicationDate: new Date('2025-11-17'),
-          isFeatured: true,
-          author: 'VTU Consortium'
-        },
-        {
-          _id: crypto.randomUUID(),
-          title: 'One Day Training Programs On VTU Consortium e-resources',
-          venue: 'VTU Regional Centre, Belagavi',
-          content: 'Join us for a comprehensive training program on VTU Consortium e-resources.',
-          publicationDate: new Date('2025-11-24'),
-          isFeatured: true,
-          author: 'VTU Consortium'
-        }
-      ];
-      
-      // Step 4: Create each new news item
-      for (const newsItem of newNewsItems) {
-        await BaseCrudService.create('newsandnotifications', newsItem as any);
-        console.log(`Created news item: ${newsItem.title} - ${newsItem.venue}`);
-      }
-      
-      console.log('News replacement completed successfully!');
-      return true;
-    } catch (error) {
-      console.error('Error replacing news:', error);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // First, replace all news items with the new training programs
-        await replaceAllNews();
-        
-        // Then fetch all data including the new news items
-        const [resourcesResponse, newsResponse, guidesResponse] = await Promise.all([
-          BaseCrudService.getAll<EResources>('E-Resources'),
-          BaseCrudService.getAll<NewsandEvents>('newsandnotifications'),
-          BaseCrudService.getAll<UserGuideArticles>('userguidearticles')
-        ]);
-
-        setFeaturedResources(resourcesResponse.items.slice(0, 3));
-        setUserGuides(guidesResponse.items);
-        setLatestNews(newsResponse.items);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLatestNews([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Function to refresh data after CRUD operations
-  const refreshData = async () => {
-    try {
-      const [resourcesResponse, newsResponse, guidesResponse] = await Promise.all([
-        BaseCrudService.getAll<EResources>('E-Resources'),
-        BaseCrudService.getAll<NewsandEvents>('newsandnotifications'),
-        BaseCrudService.getAll<UserGuideArticles>('userguidearticles')
-      ]);
-
-      setFeaturedResources(resourcesResponse.items.slice(0, 3));
-      setUserGuides(guidesResponse.items);
-      setLatestNews(newsResponse.items);
-    } catch (error) {
-      console.error('Error refreshing data:', error);
-    }
-  };
-
-  const handleEditNews = (newsId: string) => {
-    setEditingNewsId(newsId);
-    setIsEditNewsModalOpen(true);
   };
 
   // Auto-scroll effect for news cards
@@ -1096,7 +993,6 @@ export default function HomePage() {
       <AddNewsModal 
         isOpen={isAddNewsModalOpen} 
         onClose={() => setIsAddNewsModalOpen(false)} 
-        onSuccess={refreshData}
       />
 
       {/* Edit News Modal */}
@@ -1104,21 +1000,18 @@ export default function HomePage() {
         isOpen={isEditNewsModalOpen} 
         onClose={() => setIsEditNewsModalOpen(false)} 
         newsId={editingNewsId}
-        onSuccess={refreshData}
       />
 
       {/* Add E-Resource Modal */}
       <AddEResourceModal 
         isOpen={isAddEResourceModalOpen} 
         onClose={() => setIsAddEResourceModalOpen(false)} 
-        onSuccess={refreshData}
       />
 
       {/* Add User Guide Modal */}
       <AddUserGuideModal 
         isOpen={isAddUserGuideModalOpen} 
         onClose={() => setIsAddUserGuideModalOpen(false)} 
-        onSuccess={refreshData}
       />
     </div>
   );

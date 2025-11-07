@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BaseCrudService } from '@/integrations';
+import { useLiveData } from '@/hooks/use-live-data';
 import { UserGuideArticles } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,34 +13,21 @@ import { useAuth } from '@/components/auth/AuthContext';
 
 export default function UserGuidePage() {
   const { user } = useAuth();
-  const [articles, setArticles] = useState<UserGuideArticles[]>([]);
+  const { data: articles, isLoading } = useLiveData<UserGuideArticles>('userguidearticles');
   const [filteredArticles, setFilteredArticles] = useState<UserGuideArticles[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
   
   // Check if user is superadmin or librarian for edit buttons
   const canEdit = user?.role === 'superadmin' || user?.role === 'librarian';
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await BaseCrudService.getAll<UserGuideArticles>('userguidearticles');
-        // Sort by last updated (newest first)
-        const sortedArticles = response.items.sort((a, b) => 
-          new Date(b.lastUpdated || 0).getTime() - new Date(a.lastUpdated || 0).getTime()
-        );
-        setArticles(sortedArticles);
-        setFilteredArticles(sortedArticles);
-      } catch (error) {
-        console.error('Error fetching user guide articles:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchArticles();
-  }, []);
+    // Sort by last updated (newest first) and set filtered articles
+    const sortedArticles = [...articles].sort((a, b) => 
+      new Date(b.lastUpdated || 0).getTime() - new Date(a.lastUpdated || 0).getTime()
+    );
+    setFilteredArticles(sortedArticles);
+  }, [articles]);
 
   useEffect(() => {
     let filtered = articles;

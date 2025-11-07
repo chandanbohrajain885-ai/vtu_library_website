@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BaseCrudService } from '@/integrations';
+import { useLiveData } from '@/hooks/use-live-data';
 import { NewsandEvents } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,41 +9,34 @@ import { Input } from '@/components/ui/input';
 import { Newspaper, Calendar, User, Search, ExternalLink, Star } from 'lucide-react';
 
 export default function NewsPage() {
-  const [news, setNews] = useState<NewsandEvents[]>([]);
+  const { data: news, isLoading } = useLiveData<NewsandEvents>('newsandnotifications');
   const [filteredNews, setFilteredNews] = useState<NewsandEvents[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
-        // Sort by publication date (newest first)
-        const sortedNews = response.items.sort((a, b) => 
-          new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime()
-        );
-        setNews(sortedNews);
-        setFilteredNews(sortedNews);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
+    // Sort by publication date (newest first) and set filtered news
+    const sortedNews = [...news].sort((a, b) => 
+      new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime()
+    );
+    setFilteredNews(sortedNews);
+  }, [news]);
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = news.filter(item =>
+      const sortedNews = [...news].sort((a, b) => 
+        new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime()
+      );
+      const filtered = sortedNews.filter(item =>
         item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.content?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.author?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredNews(filtered);
     } else {
-      setFilteredNews(news);
+      const sortedNews = [...news].sort((a, b) => 
+        new Date(b.publicationDate || 0).getTime() - new Date(a.publicationDate || 0).getTime()
+      );
+      setFilteredNews(sortedNews);
     }
   }, [searchTerm, news]);
 
