@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -397,6 +397,23 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
+                  {/* Admin Controls for Committee */}
+                  {isAuthenticated && (user?.role === 'superadmin') && (
+                    <>
+                      <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Committee
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
+                        onClick={() => navigate('/admin')}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Manage Committees
+                      </DropdownMenuItem>
+                      <div className="border-t my-1"></div>
+                    </>
+                  )}
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/1XdCgDWRtO_PK9yN-M5Fi5ud4OH25gWfT?usp=sharing', '_blank')}
@@ -422,6 +439,23 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
+                  {/* Admin Controls for E-Resources */}
+                  {isAuthenticated && (user?.role === 'superadmin') && (
+                    <>
+                      <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add E-Resource
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
+                        onClick={() => navigate('/admin')}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Manage E-Resources
+                      </DropdownMenuItem>
+                      <div className="border-t my-1"></div>
+                    </>
+                  )}
                   <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/resources/2025-26')}>
                     2025-26
                   </DropdownMenuItem>
@@ -462,12 +496,56 @@ export default function HomePage() {
               </DropdownMenu>
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
                 onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
               >
                 Training
+                {/* Admin Controls for Training - Only visible to superadmin */}
+                {isAuthenticated && (user?.role === 'superadmin') && (
+                  <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
+                    <div className="flex flex-col space-y-1">
+                      <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
+                        <Plus className="h-3 w-3 mr-2" />
+                        Add Training
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/admin');
+                        }}
+                        className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
+                      >
+                        <Edit className="h-3 w-3 mr-2" />
+                        Manage Training
+                      </button>
+                    </div>
+                  </div>
+                )}
               </Button>
-              <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">User Guide</button>
+              <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer relative group">
+                User Guide
+                {/* Admin Controls for User Guide - Only visible to superadmin */}
+                {isAuthenticated && (user?.role === 'superadmin') && (
+                  <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
+                    <div className="flex flex-col space-y-1">
+                      <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
+                        <Plus className="h-3 w-3 mr-2" />
+                        Add Guide
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/admin');
+                        }}
+                        className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
+                      >
+                        <Edit className="h-3 w-3 mr-2" />
+                        Manage Guides
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
@@ -490,6 +568,23 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
+                  {/* Admin Controls for Downloads */}
+                  {isAuthenticated && (user?.role === 'superadmin') && (
+                    <>
+                      <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Download
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
+                        onClick={() => navigate('/admin')}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Manage Downloads
+                      </DropdownMenuItem>
+                      <div className="border-t my-1"></div>
+                    </>
+                  )}
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank')}
@@ -507,10 +602,31 @@ export default function HomePage() {
               <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
                 onClick={() => window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank')}
               >
                 Gallary
+                {/* Admin Controls for Gallery - Only visible to superadmin */}
+                {isAuthenticated && (user?.role === 'superadmin') && (
+                  <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
+                    <div className="flex flex-col space-y-1">
+                      <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
+                        <Plus className="h-3 w-3 mr-2" />
+                        Add Gallery Item
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/admin');
+                        }}
+                        className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
+                      >
+                        <Edit className="h-3 w-3 mr-2" />
+                        Manage Gallery
+                      </button>
+                    </div>
+                  </div>
+                )}
               </Button>
               <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Librarian Corner</button>
               <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Publisher's Corner</button>
@@ -662,7 +778,37 @@ export default function HomePage() {
       <section className="py-16 bg-white">
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-gray-800 mb-4">{"News & Events"}</h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1"></div>
+              <h2 className="font-heading text-4xl font-bold text-gray-800">{"News & Events"}</h2>
+              <div className="flex-1 flex justify-end">
+                {/* Admin Controls - Only visible to superadmin and super executive */}
+                {isAuthenticated && (user?.role === 'superadmin') && (
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      onClick={() => {
+                        // TODO: Open add news modal
+                        console.log('Add news clicked');
+                      }}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      size="sm"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add News
+                    </Button>
+                    <Button
+                      onClick={() => navigate('/admin')}
+                      variant="outline"
+                      size="sm"
+                      className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Manage All
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Single Row of Auto-Scrolling News Cards */}
