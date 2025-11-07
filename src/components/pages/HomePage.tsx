@@ -924,11 +924,28 @@ export default function HomePage() {
                     >
                       Read More
                     </Button>
-                    {news.author && (
-                      <span className="text-xs text-gray-500">
-                        By {news.author}
-                      </span>
-                    )}
+                    <div className="flex items-center space-x-2">
+                      {/* Edit Button - Only visible to superadmin */}
+                      {isAuthenticated && (user?.role === 'superadmin') && (
+                        <Button
+                          onClick={() => {
+                            setEditingNewsId(news._id);
+                            setIsEditNewsModalOpen(true);
+                          }}
+                          size="sm"
+                          variant="outline"
+                          className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                        >
+                          <Edit className="h-3 w-3 mr-1" />
+                          Edit
+                        </Button>
+                      )}
+                      {news.author && (
+                        <span className="text-xs text-gray-500">
+                          By {news.author}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -970,11 +987,28 @@ export default function HomePage() {
                     >
                       Read More
                     </Button>
-                    {news.author && (
-                      <span className="text-xs text-gray-500">
-                        By {news.author}
-                      </span>
-                    )}
+                    <div className="flex items-center space-x-2">
+                      {/* Edit Button - Only visible to superadmin */}
+                      {isAuthenticated && (user?.role === 'superadmin') && (
+                        <Button
+                          onClick={() => {
+                            setEditingNewsId(news._id);
+                            setIsEditNewsModalOpen(true);
+                          }}
+                          size="sm"
+                          variant="outline"
+                          className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                        >
+                          <Edit className="h-3 w-3 mr-1" />
+                          Edit
+                        </Button>
+                      )}
+                      {news.author && (
+                        <span className="text-xs text-gray-500">
+                          By {news.author}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
