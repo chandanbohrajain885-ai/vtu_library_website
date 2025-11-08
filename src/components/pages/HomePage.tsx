@@ -18,6 +18,7 @@ import { AddNewsModal } from '@/components/modals/AddNewsModal';
 import { EditNewsModal } from '@/components/modals/EditNewsModal';
 import { AddEResourceModal } from '@/components/modals/AddEResourceModal';
 import { AddUserGuideModal } from '@/components/modals/AddUserGuideModal';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Search result interface
 interface SearchResult {
@@ -34,6 +35,7 @@ interface SearchResult {
 
 export default function HomePage() {
   const { user, isAuthenticated, logout } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
   // Use live data hooks for real-time updates
@@ -356,12 +358,39 @@ export default function HomePage() {
                 width={50}
                 className="h-12 w-12 object-contain cursor-pointer hover:opacity-80 transition-opacity"
               />
-              <span className="font-bold text-2xl cursor-pointer hover:opacity-80 transition-opacity">{"VTU Consortium"}</span>
+              <span className="font-bold text-2xl cursor-pointer hover:opacity-80 transition-opacity">{t('header.vtuconsortium')}</span>
             </a>
+            {/* Language Switcher */}
+            <div className="flex items-center space-x-2 ml-6">
+              <Button
+                onClick={() => setLanguage('en')}
+                variant={language === 'en' ? 'default' : 'outline'}
+                size="sm"
+                className={`text-xs px-3 py-1 ${
+                  language === 'en' 
+                    ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                    : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
+                }`}
+              >
+                {t('language.english')}
+              </Button>
+              <Button
+                onClick={() => setLanguage('kn')}
+                variant={language === 'kn' ? 'default' : 'outline'}
+                size="sm"
+                className={`text-xs px-3 py-1 ${
+                  language === 'kn' 
+                    ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                    : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
+                }`}
+              >
+                {t('language.kannada')}
+              </Button>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
-            <span>Email: <a href="mailto:vtuconsortium@gmail.com" className="hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a></span>
-            <span>Phone: 08312498191</span>
+            <span>{t('header.email')}: <a href="mailto:vtuconsortium@gmail.com" className="hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a></span>
+            <span>{t('header.phone')}: 08312498191</span>
           </div>
         </div>
       </div>
@@ -371,21 +400,21 @@ export default function HomePage() {
           <nav className="flex items-center justify-between">
             {/* All Navigation Options in Single Line */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
-              <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">Home</Link>
+              <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">{t('nav.home')}</Link>
               <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">
-                About Us
+                {t('nav.about')}
               </button>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
                 onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
               >
-                Member Colleges
+                {t('nav.membercolleges')}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    Committee <ChevronDown className="ml-1 h-4 w-4" />
+                    {t('nav.committee')} <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -394,14 +423,14 @@ export default function HomePage() {
                     <>
                       <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Committee
+                        {t('admin.addcommittee')}
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
                         onClick={() => navigate('/admin')}
                       >
                         <Edit className="h-4 w-4 mr-2" />
-                        Manage Committees
+                        {t('admin.managecommittees')}
                       </DropdownMenuItem>
                       <div className="border-t my-1"></div>
                     </>
@@ -409,25 +438,25 @@ export default function HomePage() {
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://docs.google.com/document/d/1VZwrLtfwp031ua2a_h0ShK0YyZGyYMHM/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
-                  >{"Governing Council Committee"}</DropdownMenuItem>
+                  >{t('committee.governing')}</DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://docs.google.com/document/d/1EwTGjZy69q6dzS7gm-o0pBm_JqMHczzm/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
                   >
-                    Steering Committee
+                    {t('committee.steering')}
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://docs.google.com/spreadsheets/d/1tt8o4Gff8nQy69034R2nlNF7OEDd1QXj/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
                   >
-                    Nodal Officer Committee
+                    {t('committee.nodal')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    E-Resources <ChevronDown className="ml-1 h-4 w-4" />
+                    {t('nav.eresources')} <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -439,14 +468,14 @@ export default function HomePage() {
                         onClick={() => setIsAddEResourceModalOpen(true)}
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        Add E-Resource
+                        {t('admin.adderesource')}
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
                         onClick={() => navigate('/admin')}
                       >
                         <Edit className="h-4 w-4 mr-2" />
-                        Manage E-Resources
+                        {t('admin.manageeresources')}
                       </DropdownMenuItem>
                       <div className="border-t my-1"></div>
                     </>
@@ -494,14 +523,14 @@ export default function HomePage() {
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
                 onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
               >
-                Training
+                {t('nav.training')}
                 {/* Admin Controls for Training - Only visible to superadmin */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
                       <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
                         <Plus className="h-3 w-3 mr-2" />
-                        Add Training
+                        {t('admin.addtraining')}
                       </button>
                       <button 
                         onClick={(e) => {
@@ -511,14 +540,14 @@ export default function HomePage() {
                         className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
                       >
                         <Edit className="h-3 w-3 mr-2" />
-                        Manage Training
+                        {t('admin.managetraining')}
                       </button>
                     </div>
                   </div>
                 )}
               </Button>
               <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer relative group">
-                User Guide
+                {t('nav.userguide')}
                 {/* Admin Controls for User Guide - Only visible to superadmin */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
@@ -528,7 +557,7 @@ export default function HomePage() {
                         className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm"
                       >
                         <Plus className="h-3 w-3 mr-2" />
-                        Add Guide
+                        {t('admin.addguide')}
                       </button>
                       <button 
                         onClick={(e) => {
@@ -538,7 +567,7 @@ export default function HomePage() {
                         className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
                       >
                         <Edit className="h-3 w-3 mr-2" />
-                        Manage Guides
+                        {t('admin.manageguides')}
                       </button>
                     </div>
                   </div>
@@ -547,22 +576,22 @@ export default function HomePage() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    Links <ChevronDown className="ml-1 h-4 w-4" />
+                    {t('nav.links')} <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
                   <DropdownMenuItem className="cursor-pointer">
-                    VTU Link's
+                    {t('links.vtulinks')}
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
-                    Others link's
+                    {t('links.otherlinks')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    Downloads <ChevronDown className="ml-1 h-4 w-4" />
+                    {t('nav.downloads')} <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -571,14 +600,14 @@ export default function HomePage() {
                     <>
                       <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Download
+                        {t('admin.adddownload')}
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         className="cursor-pointer bg-blue-50 text-blue-700 font-medium"
                         onClick={() => navigate('/admin')}
                       >
                         <Edit className="h-4 w-4 mr-2" />
-                        Manage Downloads
+                        {t('admin.managedownloads')}
                       </DropdownMenuItem>
                       <div className="border-t my-1"></div>
                     </>
@@ -587,30 +616,30 @@ export default function HomePage() {
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank')}
                   >
-                    Circulars
+                    {t('downloads.circulars')}
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => window.open('https://drive.google.com/drive/folders/1rNz7PVvAC1k7Ch7hZ-DxVB2XGonHY4Kl?usp=sharing', '_blank')}
                   >
-                    Blank Format's
+                    {t('downloads.blankformats')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">ONOS</button>
+              <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.onos')}</button>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
                 onClick={() => window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank')}
               >
-                Gallary
+                {t('nav.gallery')}
                 {/* Admin Controls for Gallery - Only visible to superadmin */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
                       <button className="flex items-center text-green-700 hover:bg-green-50 p-2 rounded text-sm">
                         <Plus className="h-3 w-3 mr-2" />
-                        Add Gallery Item
+                        {t('admin.addgalleryitem')}
                       </button>
                       <button 
                         onClick={(e) => {
@@ -620,41 +649,41 @@ export default function HomePage() {
                         className="flex items-center text-blue-700 hover:bg-blue-50 p-2 rounded text-sm"
                       >
                         <Edit className="h-3 w-3 mr-2" />
-                        Manage Gallery
+                        {t('admin.managegallery')}
                       </button>
                     </div>
                   </div>
                 )}
               </Button>
-              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Librarian Corner</button>
-              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">Publisher's Corner</button>
+              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.librariancorner')}</button>
+              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.publishercorner')}</button>
             </div>
             
             {/* Login and Register Buttons */}
             <div className="flex items-center space-x-4">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
-                  <span className="text-white">Welcome, {user?.username}</span>
+                  <span className="text-white">{t('nav.welcome')}, {user?.username}</span>
                   {user?.role === 'superadmin' && (
                     <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4">
-                      Admin Panel
+                      {t('nav.adminpanel')}
                     </Button>
                   )}
                   <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500">
                     <LogOut className="h-4 w-4 mr-2" />
-                    Logout
+                    {t('nav.logout')}
                   </Button>
                 </div>
               ) : (
                 <>
                   <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6">
-                    Login
+                    {t('nav.login')}
                   </Button>
                   <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
-                    Register
+                    {t('nav.register')}
                   </Button>
                   <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6">
-                    Super Executive
+                    {t('nav.superexecutive')}
                   </Button>
                 </>
               )}
@@ -672,8 +701,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative max-w-[120rem] mx-auto px-6 text-center">
           <div className="space-y-6">
-            <h1 className="font-heading text-5xl lg:text-6xl font-bold">{"Welcome to VTU Consortium"}</h1>
-            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{"Symbolizes the connection between learning resources and learners."}</p>
+            <h1 className="font-heading text-5xl lg:text-6xl font-bold">{t('hero.title')}</h1>
+            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{t('hero.subtitle')}</p>
             
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-8 relative">
@@ -681,7 +710,7 @@ export default function HomePage() {
                 <Input
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  placeholder="🔍 Search E-Resources by year/provider/subject, Committee info, Downloads, Training, Gallery, ONOS, Member Colleges, News & Events..."
+                  placeholder={t('hero.searchplaceholder')}
                   className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
                   onFocus={() => searchQuery && setShowSearchResults(true)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
@@ -700,7 +729,7 @@ export default function HomePage() {
                   {isSearching ? (
                     <div className="p-4 text-center text-gray-500">
                       <Search className="h-5 w-5 animate-spin mx-auto mb-2" />
-                      Searching...
+                      {t('search.searching')}
                     </div>
                   ) : (
                     <>
@@ -751,7 +780,7 @@ export default function HomePage() {
                       {searchResults.length === 0 && searchQuery && (
                         <div className="p-4 text-center text-gray-500">
                           <FileText className="h-5 w-5 mx-auto mb-2 text-gray-400" />
-                          No results found for "{searchQuery}"
+                          {t('search.noresults')} "{searchQuery}"
                         </div>
                       )}
                     </>
@@ -778,7 +807,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1"></div>
-              <h2 className="font-heading text-4xl font-bold text-gray-800">{"News & Events"}</h2>
+              <h2 className="font-heading text-4xl font-bold text-gray-800">{t('news.title')}</h2>
               <div className="flex-1 flex justify-end">
                 {/* Admin Controls - Only visible to superadmin and super executive */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
@@ -789,7 +818,7 @@ export default function HomePage() {
                       size="sm"
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      Add News
+                      {t('news.addnews')}
                     </Button>
                     <Button
                       onClick={() => navigate('/admin')}
@@ -798,7 +827,7 @@ export default function HomePage() {
                       className="border-blue-600 text-blue-600 hover:bg-blue-50"
                     >
                       <Edit className="h-4 w-4 mr-2" />
-                      Manage All
+                      {t('news.manageall')}
                     </Button>
                   </div>
                 )}

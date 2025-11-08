@@ -11,6 +11,7 @@ import AdminDashboard from '@/components/pages/AdminDashboard';
 import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -76,10 +77,12 @@ const router = createBrowserRouter([
 
 export default function AppRouter() {
   return (
-    <AuthProvider>
-      <MemberProvider>
-        <RouterProvider router={router} />
-      </MemberProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <MemberProvider>
+          <RouterProvider router={router} />
+        </MemberProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
