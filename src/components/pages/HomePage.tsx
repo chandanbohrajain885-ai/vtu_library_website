@@ -1044,9 +1044,11 @@ export default function HomePage() {
                   href="https://www.inerasoftware.com/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors duration-300 underline decoration-orange-400 underline-offset-2 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-paragraph text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer border border-orange-400"
                 >
-                  powered by Inera Software
+                  <span className="text-xs">⚡</span>
+                  <span className="italic">powered by</span>
+                  <span className="font-bold">Inera Software</span>
                 </a>
               </div>
             </div>
