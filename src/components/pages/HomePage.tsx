@@ -1044,7 +1044,14 @@ export default function HomePage() {
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
             <p className="font-paragraph text-gray-400 text-sm">{"© 2025  VTU Consortium Portal. All Rights Reserved."}</p>
-            <p className="font-paragraph text-gray-400 text-sm">{"Powered by Inera Software"}</p>
+            <a 
+              href="https://www.inerasoftware.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+            >
+              Powered by Inera Software
+            </a>
           </div>
         </div>
       </footer>
