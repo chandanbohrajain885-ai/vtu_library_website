@@ -1044,11 +1044,10 @@ export default function HomePage() {
                   href="https://www.inerasoftware.com/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-paragraph text-sm font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer border border-orange-400"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-amber-100 hover:text-white font-paragraph text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-slate-700 hover:border-amber-200/30"
                 >
-                  <span className="text-xs">⚡</span>
-                  <span className="italic">powered by</span>
-                  <span className="font-bold">Inera Software</span>
+                  <span className="text-slate-400 font-light tracking-wide">powered by</span>
+                  <span className="text-amber-100 font-semibold tracking-wider">INERA SOFTWARE</span>
                 </a>
               </div>
             </div>
