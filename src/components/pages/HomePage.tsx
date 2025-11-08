@@ -1039,6 +1039,16 @@ export default function HomePage() {
                 <Linkedin className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
                 <Instagram className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
               </div>
+              <div className="mt-6">
+                <a 
+                  href="https://www.inerasoftware.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors duration-300 underline decoration-orange-400 underline-offset-2 cursor-pointer"
+                >
+                  powered by Inera Software
+                </a>
+              </div>
             </div>
           </div>
           
