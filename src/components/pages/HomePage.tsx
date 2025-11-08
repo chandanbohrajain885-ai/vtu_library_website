@@ -1050,7 +1050,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
             >
-              Powered by Inera Software
+              Powered by INERA SOFTWARE
             </a>
           </div>
         </div>
