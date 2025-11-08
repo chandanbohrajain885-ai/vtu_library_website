@@ -1043,7 +1043,8 @@ export default function HomePage() {
           </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p className="font-paragraph text-gray-400 text-sm">{"© 2025  VTU Consortium Portal. All Rights Reserved."}</p>
+            <p className="font-paragraph text-gray-400 text-sm" href="https://www.inerasoftware.com">{"© 2025  VTU Consortium Portal. All Rights Reserved."} {" powered by Inera Software" }</p>
+            
           </div>
         </div>
       </footer>
