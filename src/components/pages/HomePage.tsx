@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -411,52 +411,79 @@ export default function HomePage() {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-white">
+                <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-white overflow-y-auto">
                   <SheetHeader>
                     <SheetTitle className="text-primary font-heading text-xl">VTU Consortium</SheetTitle>
                     <SheetDescription className="text-gray-600">
                       Navigate through our resources and services
                     </SheetDescription>
                   </SheetHeader>
-                  <div className="mt-6 space-y-4">
+                  <div className="mt-6 space-y-3 pb-6">
                     {/* Navigation Links */}
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <Link 
                         to="/" 
-                        className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {t('nav.home')}
                       </Link>
+                      
                       <button 
                         onClick={() => {
                           navigate('/about');
                           setIsMobileMenuOpen(false);
                         }} 
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
                         {t('nav.about')}
                       </button>
+                      
                       <button 
                         onClick={() => {
                           window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
                           setIsMobileMenuOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
                         {t('nav.membercolleges')}
                       </button>
                       
                       {/* Committee Section */}
-                      <div className="px-4 py-2">
-                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.committee')}</div>
-                        <div className="pl-4 space-y-2">
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-3 flex items-center">
+                          <Users className="h-4 w-4 mr-2" />
+                          {t('nav.committee')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for Committee */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button 
+                                className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium"
+                              >
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.addcommittee')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.managecommittees')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
                           <button 
                             onClick={() => {
                               window.open('https://docs.google.com/document/d/1VZwrLtfwp031ua2a_h0ShK0YyZGyYMHM/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
                               setIsMobileMenuOpen(false);
                             }}
-                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
                           >
                             {t('committee.governing')}
                           </button>
@@ -465,7 +492,7 @@ export default function HomePage() {
                               window.open('https://docs.google.com/document/d/1EwTGjZy69q6dzS7gm-o0pBm_JqMHczzm/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
                               setIsMobileMenuOpen(false);
                             }}
-                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
                           >
                             {t('committee.steering')}
                           </button>
@@ -474,7 +501,7 @@ export default function HomePage() {
                               window.open('https://docs.google.com/spreadsheets/d/1tt8o4Gff8nQy69034R2nlNF7OEDd1QXj/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
                               setIsMobileMenuOpen(false);
                             }}
-                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
                           >
                             {t('committee.nodal')}
                           </button>
@@ -482,53 +509,212 @@ export default function HomePage() {
                       </div>
 
                       {/* E-Resources Section */}
-                      <div className="px-4 py-2">
-                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.eresources')}</div>
-                        <div className="pl-4 space-y-2 max-h-32 overflow-y-auto">
-                          {['2025-26', '2024-25', '2023-24', '2022-23', '2021-22', '2020-21', '2019-20', '2018-19', '2017-18', '2016-17', '2015-16', '2014-15'].map((year) => (
-                            <button 
-                              key={year}
-                              onClick={() => {
-                                navigate(`/resources/${year}`);
-                                setIsMobileMenuOpen(false);
-                              }}
-                              className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
-                            >
-                              {year}
-                            </button>
-                          ))}
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-3 flex items-center">
+                          <Database className="h-4 w-4 mr-2" />
+                          {t('nav.eresources')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for E-Resources */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button 
+                                onClick={() => {
+                                  setIsAddEResourceModalOpen(true);
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium"
+                              >
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.adderesource')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.manageeresources')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
+                          <div className="max-h-40 overflow-y-auto space-y-1">
+                            {['2025-26', '2024-25', '2023-24', '2022-23', '2021-22', '2020-21', '2019-20', '2018-19', '2017-18', '2016-17', '2015-16', '2014-15'].map((year) => (
+                              <button 
+                                key={year}
+                                onClick={() => {
+                                  navigate(`/resources/${year}`);
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
+                              >
+                                {year}
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
+                      {/* Training */}
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-2 flex items-center">
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          {t('nav.training')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for Training */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium">
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.addtraining')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.managetraining')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
+                          <button 
+                            onClick={() => {
+                              window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
+                          >
+                            View Training Materials
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* User Guide */}
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-2 flex items-center">
+                          <FileText className="h-4 w-4 mr-2" />
+                          {t('nav.userguide')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for User Guide */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button 
+                                onClick={() => {
+                                  setIsAddUserGuideModalOpen(true);
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium"
+                              >
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.addguide')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.manageguides')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
+                          <button 
+                            onClick={() => {
+                              navigate('/guide');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
+                          >
+                            View User Guides
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* News & Events */}
                       <button 
                         onClick={() => {
-                          window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank');
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
-                      >
-                        {t('nav.training')}
-                      </button>
-                      <button 
-                        onClick={() => {
-                          navigate('/guide');
+                          navigate('/news');
                           setIsMobileMenuOpen(false);
                         }} 
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
-                        {t('nav.userguide')}
+                        <Calendar className="h-4 w-4 mr-2 inline" />
+                        News & Events
                       </button>
+
+                      {/* Journals */}
+                      <button 
+                        onClick={() => {
+                          navigate('/journals');
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                      >
+                        <BookOpen className="h-4 w-4 mr-2 inline" />
+                        Journals
+                      </button>
+
+                      {/* Links Section */}
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-3 flex items-center">
+                          <Globe className="h-4 w-4 mr-2" />
+                          {t('nav.links')}
+                        </div>
+                        <div className="space-y-2">
+                          <button className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm">
+                            {t('links.vtulinks')}
+                          </button>
+                          <button className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm">
+                            {t('links.otherlinks')}
+                          </button>
+                        </div>
+                      </div>
                       
                       {/* Downloads Section */}
-                      <div className="px-4 py-2">
-                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.downloads')}</div>
-                        <div className="pl-4 space-y-2">
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-3 flex items-center">
+                          <Download className="h-4 w-4 mr-2" />
+                          {t('nav.downloads')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for Downloads */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium">
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.adddownload')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.managedownloads')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
                           <button 
                             onClick={() => {
                               window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank');
                               setIsMobileMenuOpen(false);
                             }}
-                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
                           >
                             {t('downloads.circulars')}
                           </button>
@@ -537,47 +723,85 @@ export default function HomePage() {
                               window.open('https://drive.google.com/drive/folders/1rNz7PVvAC1k7Ch7hZ-DxVB2XGonHY4Kl?usp=sharing', '_blank');
                               setIsMobileMenuOpen(false);
                             }}
-                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
                           >
                             {t('downloads.blankformats')}
                           </button>
                         </div>
                       </div>
 
+                      {/* ONOS */}
                       <button 
                         onClick={() => {
                           window.open('https://www.onos.gov.in/', '_blank');
                           setIsMobileMenuOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
+                        <ExternalLink className="h-4 w-4 mr-2 inline" />
                         {t('nav.onos')}
                       </button>
-                      <button 
-                        onClick={() => {
-                          window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank');
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
-                      >
-                        {t('nav.gallery')}
-                      </button>
+
+                      {/* Gallery */}
+                      <div className="border border-gray-200 rounded-md p-3">
+                        <div className="text-sm font-semibold text-primary mb-2 flex items-center">
+                          <ImageIcon className="h-4 w-4 mr-2" />
+                          {t('nav.gallery')}
+                        </div>
+                        <div className="space-y-2">
+                          {/* Admin Controls for Gallery */}
+                          {isAuthenticated && (user?.role === 'superadmin') && (
+                            <>
+                              <button className="block w-full text-left py-2 px-3 text-green-700 bg-green-50 hover:bg-green-100 rounded text-sm font-medium">
+                                <Plus className="h-3 w-3 mr-2 inline" />
+                                {t('admin.addgalleryitem')}
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  navigate('/admin');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-2 px-3 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded text-sm font-medium"
+                              >
+                                <Edit className="h-3 w-3 mr-2 inline" />
+                                {t('admin.managegallery')}
+                              </button>
+                              <div className="border-t border-gray-200 my-2"></div>
+                            </>
+                          )}
+                          <button 
+                            onClick={() => {
+                              window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm"
+                          >
+                            View Gallery
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Librarian Corner */}
                       <button 
                         onClick={() => {
                           handleLibrarianCorner();
                           setIsMobileMenuOpen(false);
                         }} 
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
+                        <User className="h-4 w-4 mr-2 inline" />
                         {t('nav.librariancorner')}
                       </button>
+
+                      {/* Publisher Corner */}
                       <button 
                         onClick={() => {
                           handlePublisherCorner();
                           setIsMobileMenuOpen(false);
                         }} 
-                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
+                        <Users className="h-4 w-4 mr-2 inline" />
                         {t('nav.publishercorner')}
                       </button>
                     </div>
