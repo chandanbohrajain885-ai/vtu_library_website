@@ -660,32 +660,32 @@ export default function HomePage() {
             </div>
             
             {/* Login and Register Buttons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
               {isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-white">{t('nav.welcome')}, {user?.username}</span>
+                <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                  <span className="text-white text-center md:text-left">{t('nav.welcome')}, {user?.username}</span>
                   {user?.role === 'superadmin' && (
-                    <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4">
+                    <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4 w-full md:w-auto">
                       {t('nav.adminpanel')}
                     </Button>
                   )}
-                  <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500">
+                  <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500 w-full md:w-auto">
                     <LogOut className="h-4 w-4 mr-2" />
                     {t('nav.logout')}
                   </Button>
                 </div>
               ) : (
-                <>
-                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6">
+                <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6 w-full md:w-auto">
                     {t('nav.login')}
                   </Button>
-                  <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
+                  <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6 w-full md:w-auto">
                     {t('nav.register')}
                   </Button>
-                  <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6">
+                  <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6 w-full md:w-auto">
                     {t('nav.superexecutive')}
                   </Button>
-                </>
+                </div>
               )}
             </div>
           </nav>
