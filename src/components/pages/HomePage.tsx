@@ -349,76 +349,111 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       {/* Top Header Bar */}
       <div className="bg-black text-white py-2">
-        <div className="max-w-[120rem] mx-auto px-6 flex justify-between items-center text-sm">
-          <div className="flex items-center space-x-4">
-            <a href="https://vtu.ac.in" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
-              <Image 
-                src="https://static.wixstatic.com/media/e79745_a590d112b3ad43e79706847a20a075d5~mv2.png"
-                alt="VTU Consortium Logo"
-                width={50}
-                className="h-12 w-12 object-contain cursor-pointer hover:opacity-80 transition-opacity"
-              />
-              <span className="font-bold text-2xl cursor-pointer hover:opacity-80 transition-opacity">{t('header.vtuconsortium')}</span>
-            </a>
-            {/* Language Switcher */}
-            <div className="flex items-center space-x-2 ml-6">
-              <Button
-                onClick={() => setLanguage('en')}
-                variant={language === 'en' ? 'default' : 'outline'}
-                size="sm"
-                className={`text-xs px-3 py-1 ${
-                  language === 'en' 
-                    ? 'bg-orange-500 text-white hover:bg-orange-600' 
-                    : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
-                }`}
-              >
-                {t('language.english')}
-              </Button>
-              <Button
-                onClick={() => setLanguage('kn')}
-                variant={language === 'kn' ? 'default' : 'outline'}
-                size="sm"
-                className={`text-xs px-3 py-1 ${
-                  language === 'kn' 
-                    ? 'bg-orange-500 text-white hover:bg-orange-600' 
-                    : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
-                }`}
-              >
-                {t('language.kannada')}
-              </Button>
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-4 text-sm">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+              <a href="https://vtu.ac.in" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
+                <Image 
+                  src="https://static.wixstatic.com/media/e79745_a590d112b3ad43e79706847a20a075d5~mv2.png"
+                  alt="VTU Consortium Logo"
+                  width={50}
+                  className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                />
+                <span className="font-bold text-lg sm:text-xl lg:text-2xl cursor-pointer hover:opacity-80 transition-opacity text-center sm:text-left">{t('header.vtuconsortium')}</span>
+              </a>
+              {/* Language Switcher */}
+              <div className="flex items-center space-x-2">
+                <Button
+                  onClick={() => setLanguage('en')}
+                  variant={language === 'en' ? 'default' : 'outline'}
+                  size="sm"
+                  className={`text-xs px-2 sm:px-3 py-1 ${
+                    language === 'en' 
+                      ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                      : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
+                  }`}
+                >
+                  {t('language.english')}
+                </Button>
+                <Button
+                  onClick={() => setLanguage('kn')}
+                  variant={language === 'kn' ? 'default' : 'outline'}
+                  size="sm"
+                  className={`text-xs px-2 sm:px-3 py-1 ${
+                    language === 'kn' 
+                      ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                      : 'bg-transparent border-white text-white hover:bg-white hover:text-black'
+                  }`}
+                >
+                  {t('language.kannada')}
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span>{t('header.email')}: <a href="mailto:vtuconsortium@gmail.com" className="hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a></span>
-            <span>{t('header.phone')}: 08312498191</span>
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+              <span className="text-xs sm:text-sm">{t('header.email')}: <a href="mailto:vtuconsortium@gmail.com" className="hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a></span>
+              <span className="text-xs sm:text-sm">{t('header.phone')}: 08312498191</span>
+            </div>
           </div>
         </div>
       </div>
       {/* Unified Navigation Bar */}
       <header className="bg-orange-500 text-white shadow-lg">
-        <div className="max-w-[120rem] mx-auto px-6 py-4 bg-primary">
-          <nav className="flex items-center justify-between">
-            {/* All Navigation Options in Single Line */}
-            <div className="hidden md:flex items-center space-x-6 flex-1 justify-center">
-              <Link to="/" className="hover:text-orange-200 transition-colors font-semibold">{t('nav.home')}</Link>
-              <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4 bg-primary">
+          <nav className="flex flex-col lg:flex-row items-center justify-between gap-4">
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden w-full flex justify-between items-center">
+              <span className="font-semibold text-lg">Menu</span>
+              <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                {isAuthenticated ? (
+                  <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <span className="text-white text-center md:text-left text-sm">{t('nav.welcome')}, {user?.username}</span>
+                    {user?.role === 'superadmin' && (
+                      <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 text-sm w-full md:w-auto">
+                        {t('nav.adminpanel')}
+                      </Button>
+                    )}
+                    <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500 w-full md:w-auto text-sm px-3 py-1">
+                      <LogOut className="h-3 w-3 mr-1" />
+                      {t('nav.logout')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
+                    <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 text-sm w-full md:w-auto">
+                      {t('nav.login')}
+                    </Button>
+                    <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 text-sm w-full md:w-auto">
+                      {t('nav.register')}
+                    </Button>
+                    <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 text-sm w-full md:w-auto">
+                      {t('nav.superexecutive')}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Desktop Navigation - All Navigation Options in Single Line */}
+            <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center flex-wrap">
+              <Link to="/" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">{t('nav.home')}</Link>
+              <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">
                 {t('nav.about')}
               </button>
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal"
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
                 onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
               >
                 {t('nav.membercolleges')}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    {t('nav.committee')} <ChevronDown className="ml-1 h-4 w-4" />
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">
+                    {t('nav.committee')} <ChevronDown className="ml-1 h-3 w-3 xl:h-4 xl:w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  {/* Admin Controls for Committee */}
+                  {/* ... keep existing code (committee dropdown content) */}
                   {isAuthenticated && (user?.role === 'superadmin') && (
                     <>
                       <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
@@ -455,12 +490,12 @@ export default function HomePage() {
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    {t('nav.eresources')} <ChevronDown className="ml-1 h-4 w-4" />
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">
+                    {t('nav.eresources')} <ChevronDown className="ml-1 h-3 w-3 xl:h-4 xl:w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
-                  {/* Admin Controls for E-Resources */}
+                <DropdownMenuContent align="start" className="w-48 max-h-80 overflow-y-auto">
+                  {/* ... keep existing code (e-resources dropdown content) */}
                   {isAuthenticated && (user?.role === 'superadmin') && (
                     <>
                       <DropdownMenuItem 
@@ -520,11 +555,11 @@ export default function HomePage() {
               </DropdownMenu>
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group text-sm xl:text-base whitespace-nowrap"
                 onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
               >
                 {t('nav.training')}
-                {/* Admin Controls for Training - Only visible to superadmin */}
+                {/* ... keep existing code (training admin controls) */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
@@ -546,9 +581,9 @@ export default function HomePage() {
                   </div>
                 )}
               </Button>
-              <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer relative group">
+              <button onClick={() => navigate('/guide')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer relative group text-sm xl:text-base whitespace-nowrap">
                 {t('nav.userguide')}
-                {/* Admin Controls for User Guide - Only visible to superadmin */}
+                {/* ... keep existing code (user guide admin controls) */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
@@ -575,8 +610,8 @@ export default function HomePage() {
               </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    {t('nav.links')} <ChevronDown className="ml-1 h-4 w-4" />
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">
+                    {t('nav.links')} <ChevronDown className="ml-1 h-3 w-3 xl:h-4 xl:w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -590,12 +625,12 @@ export default function HomePage() {
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal">
-                    {t('nav.downloads')} <ChevronDown className="ml-1 h-4 w-4" />
+                  <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">
+                    {t('nav.downloads')} <ChevronDown className="ml-1 h-3 w-3 xl:h-4 xl:w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  {/* Admin Controls for Downloads */}
+                  {/* ... keep existing code (downloads dropdown content) */}
                   {isAuthenticated && (user?.role === 'superadmin') && (
                     <>
                       <DropdownMenuItem className="cursor-pointer bg-green-50 text-green-700 font-medium">
@@ -626,14 +661,14 @@ export default function HomePage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.onos')}</button>
+              <button onClick={() => window.open('https://www.onos.gov.in/', '_blank')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.onos')}</button>
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group"
+                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal relative group text-sm xl:text-base whitespace-nowrap"
                 onClick={() => window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank')}
               >
                 {t('nav.gallery')}
-                {/* Admin Controls for Gallery - Only visible to superadmin */}
+                {/* ... keep existing code (gallery admin controls) */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
                   <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border p-2 opacity-0 group-hover:opacity-100 transition-opacity z-50 min-w-[150px]">
                     <div className="flex flex-col space-y-1">
@@ -655,34 +690,34 @@ export default function HomePage() {
                   </div>
                 )}
               </Button>
-              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.librariancorner')}</button>
-              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer">{t('nav.publishercorner')}</button>
+              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.librariancorner')}</button>
+              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.publishercorner')}</button>
             </div>
             
-            {/* Login and Register Buttons */}
-            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+            {/* Desktop Login and Register Buttons */}
+            <div className="hidden lg:flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
               {isAuthenticated ? (
                 <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                  <span className="text-white text-center md:text-left">{t('nav.welcome')}, {user?.username}</span>
+                  <span className="text-white text-center md:text-left text-sm">{t('nav.welcome')}, {user?.username}</span>
                   {user?.role === 'superadmin' && (
-                    <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4 w-full md:w-auto">
+                    <Button onClick={() => navigate('/admin')} className="bg-purple-500 hover:bg-purple-600 text-white px-4 w-full md:w-auto text-sm">
                       {t('nav.adminpanel')}
                     </Button>
                   )}
-                  <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500 w-full md:w-auto">
+                  <Button onClick={logout} variant="outline" className="text-white border-white hover:bg-white hover:text-orange-500 w-full md:w-auto text-sm">
                     <LogOut className="h-4 w-4 mr-2" />
                     {t('nav.logout')}
                   </Button>
                 </div>
               ) : (
                 <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
-                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6 w-full md:w-auto">
+                  <Button onClick={() => setIsLoginModalOpen(true)} className="bg-green-500 hover:bg-green-600 text-white px-6 w-full md:w-auto text-sm">
                     {t('nav.login')}
                   </Button>
-                  <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6 w-full md:w-auto">
+                  <Button onClick={() => setIsRegistrationModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-6 w-full md:w-auto text-sm">
                     {t('nav.register')}
                   </Button>
-                  <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6 w-full md:w-auto">
+                  <Button onClick={() => setIsSuperExecutiveModalOpen(true)} className="bg-purple-600 hover:bg-purple-700 text-white px-6 w-full md:w-auto text-sm">
                     {t('nav.superexecutive')}
                   </Button>
                 </div>
@@ -692,34 +727,35 @@ export default function HomePage() {
         </div>
       </header>
       {/* Hero Section with Library Background */}
-      <section className="relative bg-gray-900 text-white py-20" style={{
+      <section className="relative bg-gray-900 text-white py-12 sm:py-16 lg:py-20" style={{
         backgroundImage: "url('https://static.wixstatic.com/media/e79745_2317321fb2464e569d297d063f30bdef~mv2.png?originWidth=1152&originHeight=576')",
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div className="relative max-w-[120rem] mx-auto px-6 text-center">
-          <div className="space-y-6">
-            <h1 className="font-heading text-5xl lg:text-6xl font-bold">{t('hero.title')}</h1>
-            <p className="font-paragraph text-xl text-gray-200 max-w-3xl mx-auto">{t('hero.subtitle')}</p>
+        <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
+          <div className="space-y-4 sm:space-y-6">
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
+            <p className="font-paragraph text-lg sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">{t('hero.subtitle')}</p>
             
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mt-8 relative">
-              <div className="flex">
+            <div className="max-w-2xl mx-auto mt-6 sm:mt-8 relative">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
                 <Input
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder={t('hero.searchplaceholder')}
-                  className="flex-1 h-12 rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500"
+                  className="flex-1 h-12 sm:rounded-r-none text-black bg-primary-foreground border-[4px] border-[#f39c0a] border-solid placeholder:text-gray-500 text-sm sm:text-base"
                   onFocus={() => searchQuery && setShowSearchResults(true)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
                 />
                 <Button 
                   onClick={handleSearchSubmit}
-                  className="hover:bg-orange-600 h-12 px-8 rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid"
+                  className="hover:bg-orange-600 h-12 px-6 sm:px-8 sm:rounded-l-none bg-[#e79100] border-[4px] border-[#f39c0a] border-solid w-full sm:w-auto"
                 >
                   <Search className="h-5 w-5" />
+                  <span className="ml-2 sm:hidden">Search</span>
                 </Button>
               </div>
               
@@ -737,24 +773,26 @@ export default function HomePage() {
                         <div
                           key={result.id}
                           onClick={() => handleSearchResultClick(result)}
-                          className="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                          className="p-3 sm:p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-1">
+                              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-1">
                                 <h4 className="font-semibold text-gray-900 text-sm">{result.title}</h4>
-                                <Badge variant="secondary" className="text-xs">
-                                  {result.type}
-                                </Badge>
-                                {result.year && (
-                                  <Badge variant="outline" className="text-xs">
-                                    {result.year}
+                                <div className="flex items-center space-x-1">
+                                  <Badge variant="secondary" className="text-xs">
+                                    {result.type}
                                   </Badge>
-                                )}
+                                  {result.year && (
+                                    <Badge variant="outline" className="text-xs">
+                                      {result.year}
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
                               <p className="text-gray-600 text-xs line-clamp-2">{result.content}</p>
                               {(result.provider || result.subject || result.category) && (
-                                <div className="flex items-center space-x-2 mt-1">
+                                <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mt-1">
                                   {result.provider && (
                                     <span className="text-xs text-blue-600">Provider: {result.provider}</span>
                                   )}
@@ -767,7 +805,7 @@ export default function HomePage() {
                                 </div>
                               )}
                             </div>
-                            <div className="ml-2">
+                            <div className="ml-2 flex-shrink-0">
                               {result.url?.startsWith('http') ? (
                                 <ExternalLink className="h-4 w-4 text-gray-400" />
                               ) : (
@@ -802,19 +840,19 @@ export default function HomePage() {
         </div>
       </section>
       {/* Library News & Events */}
-      <section className="py-16 bg-white">
-        <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1"></div>
-              <h2 className="font-heading text-4xl font-bold text-gray-800">{t('news.title')}</h2>
-              <div className="flex-1 flex justify-end">
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="flex flex-col lg:flex-row items-center justify-between mb-4 gap-4">
+              <div className="flex-1 hidden lg:block"></div>
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-gray-800">{t('news.title')}</h2>
+              <div className="flex-1 flex justify-center lg:justify-end">
                 {/* Admin Controls - Only visible to superadmin and super executive */}
                 {isAuthenticated && (user?.role === 'superadmin') && (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
                     <Button
                       onClick={() => setIsAddNewsModalOpen(true)}
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
                       size="sm"
                     >
                       <Plus className="h-4 w-4 mr-2" />
@@ -824,7 +862,7 @@ export default function HomePage() {
                       onClick={() => navigate('/admin')}
                       variant="outline"
                       size="sm"
-                      className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                      className="border-blue-600 text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
                     >
                       <Edit className="h-4 w-4 mr-2" />
                       {t('news.manageall')}
@@ -838,7 +876,7 @@ export default function HomePage() {
           {/* Continuous Infinite Scrolling News Cards - Right to Left */}
           <div 
             ref={newsScrollContainerRef}
-            className="flex gap-6 overflow-x-hidden relative"
+            className="flex gap-4 sm:gap-6 overflow-x-hidden relative"
             style={{ 
               scrollBehavior: 'auto',
               maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
@@ -847,37 +885,37 @@ export default function HomePage() {
           >
             {/* Original news cards */}
             {latestNews.map((news, index) => (
-              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[380px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
+              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
                         {new Date(news.publicationDate || Date.now()).getDate()}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-xs sm:text-sm text-gray-500">
                         <div className="font-medium">
                           {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                         </div>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-green-500 text-white">
+                    <Badge variant="secondary" className="bg-green-500 text-white text-xs">
                       Coming Soon
                     </Badge>
                   </div>
-                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
+                  <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3">
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
                     <span className="font-bold text-green-600">Venue: </span>
                     <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
                       onClick={() => {
                         if (news.externalLink) {
                           window.open(news.externalLink, '_blank');
@@ -888,7 +926,7 @@ export default function HomePage() {
                     >
                       Read More
                     </Button>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
                       {/* Edit Button - Only visible to superadmin */}
                       {isAuthenticated && (user?.role === 'superadmin') && (
                         <Button
@@ -917,37 +955,37 @@ export default function HomePage() {
             
             {/* Duplicate cards for seamless infinite scrolling */}
             {latestNews.map((news, index) => (
-              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[380px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
+              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
                         {new Date(news.publicationDate || Date.now()).getDate()}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-xs sm:text-sm text-gray-500">
                         <div className="font-medium">
                           {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                         </div>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="bg-green-500 text-white">
+                    <Badge variant="secondary" className="bg-green-500 text-white text-xs">
                       Coming Soon
                     </Badge>
                   </div>
-                  <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
+                  <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
                     {news.title || 'News Title'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3">
+                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
                     <span className="font-bold text-green-600">Venue: </span>
                     <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors"
+                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
                       onClick={() => {
                         if (news.externalLink) {
                           window.open(news.externalLink, '_blank');
@@ -958,7 +996,7 @@ export default function HomePage() {
                     >
                       Read More
                     </Button>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
                       {/* Edit Button - Only visible to superadmin */}
                       {isAuthenticated && (user?.role === 'superadmin') && (
                         <Button

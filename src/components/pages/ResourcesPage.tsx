@@ -55,15 +55,15 @@ export default function ResourcesPage() {
       <div className="min-h-screen bg-background">
         {/* Header Navigation */}
         <header className="bg-primary text-primary-foreground shadow-lg">
-          <div className="max-w-[120rem] mx-auto px-6 py-4">
-            <nav className="flex items-center justify-between">
-              <Link to="/" className="font-heading text-2xl font-bold">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4">
+            <nav className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <Link to="/" className="font-heading text-xl sm:text-2xl font-bold">
                 VTU Consortium
               </Link>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Home
@@ -73,13 +73,13 @@ export default function ResourcesPage() {
         </header>
 
         {/* Page Header */}
-        <section className="bg-primary/5 py-16">
-          <div className="max-w-[120rem] mx-auto px-6">
+        <section className="bg-primary/5 py-12 sm:py-16">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
             <div className="text-center space-y-4">
-              <h1 className="font-heading text-5xl font-bold text-primary">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
                 E-RESOURCES - {year}
               </h1>
-              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+              <p className="font-paragraph text-lg sm:text-xl text-primary/70 max-w-3xl mx-auto">
                 Academic Year {year} Resources
               </p>
             </div>
@@ -87,21 +87,21 @@ export default function ResourcesPage() {
         </section>
 
         {/* E-Resources Images Section */}
-        <section className="py-20">
-          <div className="max-w-[120rem] mx-auto px-6">
-            <div className="space-y-8">
-              <Image src="https://static.wixstatic.com/media/e79745_a2221d77a50a463f9d8eae98662f11b3~mv2.png" alt="E-Resources Document 1" className="w-full h-auto" />
-              <Image src="https://static.wixstatic.com/media/e79745_cd0c902613df4e23b343f85ee7e82a1d~mv2.png" alt="E-Resources Document 2" className="w-full h-auto" />
-              <Image src="https://static.wixstatic.com/media/e79745_ea76daf97b114666a1719f2c0acf558d~mv2.png" alt="E-Resources Document 3" className="w-full h-auto" />
+        <section className="py-12 sm:py-16 lg:py-20">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
+            <div className="space-y-6 sm:space-y-8">
+              <Image src="https://static.wixstatic.com/media/e79745_a2221d77a50a463f9d8eae98662f11b3~mv2.png" alt="E-Resources Document 1" className="w-full h-auto rounded-lg shadow-md" />
+              <Image src="https://static.wixstatic.com/media/e79745_cd0c902613df4e23b343f85ee7e82a1d~mv2.png" alt="E-Resources Document 2" className="w-full h-auto rounded-lg shadow-md" />
+              <Image src="https://static.wixstatic.com/media/e79745_ea76daf97b114666a1719f2c0acf558d~mv2.png" alt="E-Resources Document 3" className="w-full h-auto rounded-lg shadow-md" />
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-800 text-white py-12">
-          <div className="max-w-[120rem] mx-auto px-6">
+        <footer className="bg-gray-800 text-white py-8 sm:py-12">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
             <div className="text-center">
-              <p className="font-paragraph text-gray-400">
+              <p className="font-paragraph text-gray-400 text-sm sm:text-base">
                 © 2025 VTU Consortium Portal. All Rights Reserved.
               </p>
             </div>
@@ -117,15 +117,15 @@ export default function ResourcesPage() {
       <div className="min-h-screen bg-background">
         {/* Header Navigation */}
         <header className="bg-primary text-primary-foreground shadow-lg">
-          <div className="max-w-[120rem] mx-auto px-6 py-4">
-            <nav className="flex items-center justify-between">
-              <Link to="/" className="font-heading text-2xl font-bold">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4">
+            <nav className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <Link to="/" className="font-heading text-xl sm:text-2xl font-bold">
                 VTU Consortium
               </Link>
               <Button 
                 onClick={() => window.location.href = '/'}
                 variant="outline" 
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Home
@@ -135,11 +135,11 @@ export default function ResourcesPage() {
         </header>
 
         {/* Page Header */}
-        <section className="bg-primary/5 py-16">
-          <div className="max-w-[120rem] mx-auto px-6">
+        <section className="bg-primary/5 py-12 sm:py-16">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
             <div className="text-center space-y-4">
-              <div className="flex items-center justify-center space-x-4">
-                <h1 className="font-heading text-5xl font-bold text-primary">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
                   E-RESOURCES - {year}
                 </h1>
                 {canEdit && (

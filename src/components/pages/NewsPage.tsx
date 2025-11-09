@@ -55,23 +55,23 @@ export default function NewsPage() {
     <div className="min-h-screen bg-background">
       {/* Header Navigation */}
       <header className="bg-primary text-primary-foreground shadow-lg">
-        <div className="max-w-[120rem] mx-auto px-6 py-4">
-          <nav className="flex items-center justify-between">
-            <Link to="/" className="font-heading text-2xl font-bold">
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4">
+          <nav className="flex flex-col lg:flex-row items-center justify-between gap-4">
+            <Link to="/" className="font-heading text-xl sm:text-2xl font-bold">
               Academic Library Consortium
             </Link>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="hover:text-secondary transition-colors">Home</Link>
-              <Link to="/resources" className="hover:text-secondary transition-colors">E-Resources</Link>
-              <Link to="/journals" className="hover:text-secondary transition-colors">Journals</Link>
-              <Link to="/news" className="text-secondary font-semibold">News</Link>
-              <Link to="/guide" className="hover:text-secondary transition-colors">User Guide</Link>
+            <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <Link to="/" className="hover:text-secondary transition-colors text-sm xl:text-base">Home</Link>
+              <Link to="/resources" className="hover:text-secondary transition-colors text-sm xl:text-base">E-Resources</Link>
+              <Link to="/journals" className="hover:text-secondary transition-colors text-sm xl:text-base">Journals</Link>
+              <Link to="/news" className="text-secondary font-semibold text-sm xl:text-base">News</Link>
+              <Link to="/guide" className="hover:text-secondary transition-colors text-sm xl:text-base">User Guide</Link>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
+              <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary w-full sm:w-auto">
                 Sign In
               </Button>
-              <Button className="bg-secondary hover:bg-secondary/90">
+              <Button className="bg-secondary hover:bg-secondary/90 w-full sm:w-auto">
                 Get Access
               </Button>
             </div>
@@ -80,13 +80,13 @@ export default function NewsPage() {
       </header>
 
       {/* Page Header */}
-      <section className="bg-primary/5 py-16">
-        <div className="max-w-[120rem] mx-auto px-6">
+      <section className="bg-primary/5 py-12 sm:py-16">
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
           <div className="text-center space-y-4">
-            <h1 className="font-heading text-5xl font-bold text-primary">
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
               NEWS & NOTIFICATIONS
             </h1>
-            <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+            <p className="font-paragraph text-lg sm:text-xl text-primary/70 max-w-3xl mx-auto">
               Stay informed with the latest updates, announcements, and developments 
               from the academic library consortium and research community.
             </p>
@@ -95,8 +95,8 @@ export default function NewsPage() {
       </section>
 
       {/* Search Section */}
-      <section className="py-8 border-b">
-        <div className="max-w-[120rem] mx-auto px-6">
+      <section className="py-6 sm:py-8 border-b">
+        <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex-1 max-w-md">
               <div className="relative">
