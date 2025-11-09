@@ -990,32 +990,10 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-heading text-lg font-semibold">Quick Links</h4>
-              <div className="space-y-2">
-                <Link to="/resources" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
-                  E-Resources
-                </Link>
-                <Link to="/journals" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
-                  Journals
-                </Link>
-                <Link to="/news" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
-                  Consortium
-                </Link>
-                <Link to="/guide" className="block font-paragraph text-gray-300 hover:text-orange-400 transition-colors text-sm">
-                  Notifications
-                </Link>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
+          <div className="flex justify-center">
+            <div className="text-center space-y-4">
               <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
-              <div className="space-y-2">
+              <div className="flex items-center justify-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-orange-400" />
                   <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
@@ -1028,16 +1006,6 @@ export default function HomePage() {
                   <Mail className="h-4 w-4 text-orange-400" />
                   <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
                 </div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h4 className="font-heading text-lg font-semibold">Follow Us</h4>
-              <div className="flex space-x-4">
-                <Facebook className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
-                <Twitter className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
-                <Linkedin className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
-                <Instagram className="h-5 w-5 text-gray-300 hover:text-orange-400 cursor-pointer transition-colors" />
               </div>
             </div>
           </div>
