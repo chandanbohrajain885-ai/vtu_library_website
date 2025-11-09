@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2 } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -242,6 +243,7 @@ export default function HomePage() {
   const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
   const [isAddEResourceModalOpen, setIsAddEResourceModalOpen] = useState(false);
   const [isAddUserGuideModalOpen, setIsAddUserGuideModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleProtectedAction = (action: () => void, requiredRole?: string) => {
@@ -400,9 +402,190 @@ export default function HomePage() {
       <header className="bg-orange-500 text-white shadow-lg">
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4 bg-primary">
           <nav className="flex flex-col lg:flex-row items-center justify-between gap-4">
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button and User Actions */}
             <div className="lg:hidden w-full flex justify-between items-center">
-              <span className="font-semibold text-lg">Menu</span>
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-white hover:text-orange-200 p-2">
+                    <Menu className="h-6 w-6" />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-white">
+                  <SheetHeader>
+                    <SheetTitle className="text-primary font-heading text-xl">VTU Consortium</SheetTitle>
+                    <SheetDescription className="text-gray-600">
+                      Navigate through our resources and services
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-4">
+                    {/* Navigation Links */}
+                    <div className="space-y-3">
+                      <Link 
+                        to="/" 
+                        className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {t('nav.home')}
+                      </Link>
+                      <button 
+                        onClick={() => {
+                          navigate('/about');
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.about')}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.membercolleges')}
+                      </button>
+                      
+                      {/* Committee Section */}
+                      <div className="px-4 py-2">
+                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.committee')}</div>
+                        <div className="pl-4 space-y-2">
+                          <button 
+                            onClick={() => {
+                              window.open('https://docs.google.com/document/d/1VZwrLtfwp031ua2a_h0ShK0YyZGyYMHM/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                          >
+                            {t('committee.governing')}
+                          </button>
+                          <button 
+                            onClick={() => {
+                              window.open('https://docs.google.com/document/d/1EwTGjZy69q6dzS7gm-o0pBm_JqMHczzm/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                          >
+                            {t('committee.steering')}
+                          </button>
+                          <button 
+                            onClick={() => {
+                              window.open('https://docs.google.com/spreadsheets/d/1tt8o4Gff8nQy69034R2nlNF7OEDd1QXj/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                          >
+                            {t('committee.nodal')}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* E-Resources Section */}
+                      <div className="px-4 py-2">
+                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.eresources')}</div>
+                        <div className="pl-4 space-y-2 max-h-32 overflow-y-auto">
+                          {['2025-26', '2024-25', '2023-24', '2022-23', '2021-22', '2020-21', '2019-20', '2018-19', '2017-18', '2016-17', '2015-16', '2014-15'].map((year) => (
+                            <button 
+                              key={year}
+                              onClick={() => {
+                                navigate(`/resources/${year}`);
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                            >
+                              {year}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={() => {
+                          window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank');
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.training')}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          navigate('/guide');
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.userguide')}
+                      </button>
+                      
+                      {/* Downloads Section */}
+                      <div className="px-4 py-2">
+                        <div className="text-sm font-semibold text-gray-600 mb-2">{t('nav.downloads')}</div>
+                        <div className="pl-4 space-y-2">
+                          <button 
+                            onClick={() => {
+                              window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                          >
+                            {t('downloads.circulars')}
+                          </button>
+                          <button 
+                            onClick={() => {
+                              window.open('https://drive.google.com/drive/folders/1rNz7PVvAC1k7Ch7hZ-DxVB2XGonHY4Kl?usp=sharing', '_blank');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block w-full text-left py-1 text-gray-700 hover:text-primary transition-colors text-sm"
+                          >
+                            {t('downloads.blankformats')}
+                          </button>
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={() => {
+                          window.open('https://www.onos.gov.in/', '_blank');
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.onos')}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          window.open('https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing', '_blank');
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.gallery')}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          handleLibrarianCorner();
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.librariancorner')}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          handlePublisherCorner();
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors"
+                      >
+                        {t('nav.publishercorner')}
+                      </button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              {/* Mobile User Actions */}
               <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
                 {isAuthenticated ? (
                   <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
