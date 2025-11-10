@@ -202,6 +202,43 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="max-w-[120rem] mx-auto px-6">
+          <div className="flex justify-center">
+            <div className="text-center space-y-4">
+              <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
+              <div className="flex items-center justify-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <span className="h-4 w-4 text-orange-400">📍</span>
+                  <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="h-4 w-4 text-orange-400">📞</span>
+                  <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="h-4 w-4 text-orange-400">✉️</span>
+                  <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p className="font-paragraph text-gray-400 text-sm">© 2025 VTU Consortium Portal. All Rights Reserved.</p>
+            <a 
+              href="https://www.inerasoftware.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+            >
+              Powered by INERA SOFTWARE
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

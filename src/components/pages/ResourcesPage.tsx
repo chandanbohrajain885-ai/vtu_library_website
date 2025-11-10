@@ -104,6 +104,14 @@ export default function ResourcesPage() {
               <p className="font-paragraph text-gray-400 text-sm sm:text-base">
                 © 2025 VTU Consortium Portal. All Rights Reserved.
               </p>
+              <a 
+                href="https://www.inerasoftware.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+              >
+                Powered by INERA SOFTWARE
+              </a>
             </div>
           </div>
         </footer>

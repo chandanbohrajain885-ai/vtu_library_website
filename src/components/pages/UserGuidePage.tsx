@@ -536,8 +536,16 @@ export default function UserGuidePage() {
           
           <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
             <p className="font-paragraph text-primary-foreground/60">
-              © 2024 Academic Library Consortium. All rights reserved.
+              © 2025 VTU Consortium Portal. All Rights Reserved.
             </p>
+            <a 
+              href="https://www.inerasoftware.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-paragraph text-primary-foreground/60 text-sm hover:text-secondary transition-colors cursor-pointer"
+            >
+              Powered by INERA SOFTWARE
+            </a>
           </div>
         </div>
       </footer>

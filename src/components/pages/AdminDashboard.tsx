@@ -484,6 +484,23 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-12 mt-12">
+        <div className="max-w-[120rem] mx-auto px-6">
+          <div className="text-center">
+            <p className="font-paragraph text-gray-400 text-sm">© 2025 VTU Consortium Portal. All Rights Reserved.</p>
+            <a 
+              href="https://www.inerasoftware.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+            >
+              Powered by INERA SOFTWARE
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
