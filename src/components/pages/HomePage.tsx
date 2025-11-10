@@ -751,7 +751,7 @@ export default function HomePage() {
                               </button>
                               <button 
                                 onClick={() => {
-                                  window.open('https://www.dtek.karnataka.gov.in/en', '_blank');
+                                  window.open('https://dtek.karnataka.gov.in/en', '_blank');
                                   setIsMobileMenuOpen(false);
                                 }}
                                 className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
@@ -1190,7 +1190,7 @@ export default function HomePage() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         className="cursor-pointer"
-                        onClick={() => window.open('https://www.dtek.karnataka.gov.in/en', '_blank')}
+                        onClick={() => window.open('https://dtek.karnataka.gov.in/en', '_blank')}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         DTEK
