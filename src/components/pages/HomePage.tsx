@@ -673,9 +673,59 @@ export default function HomePage() {
                           {t('nav.links')}
                         </div>
                         <div className="space-y-2">
-                          <button className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm">
-                            {t('links.vtulinks')}
-                          </button>
+                          <div className="border border-gray-200 rounded-md p-2">
+                            <div className="text-xs font-semibold text-primary mb-2 flex items-center">
+                              <ExternalLink className="h-3 w-3 mr-2" />
+                              {t('links.vtulinks')}
+                            </div>
+                            <div className="space-y-1">
+                              <button 
+                                onClick={() => {
+                                  window.open('https://vibe.wix.com/projects/bda742cd-6dcb-4f70-81bf-0818ff0da5a4/v/editor', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                E-learning
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('https://jnanashodha.vtu.ac.in/', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                Jnana Shodha
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('http://library.vtu.ac.in', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                VTU Main Library
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('http://ir.vtu.ac.in', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                University Digital Repository
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('http://Libraryvtu.blogspot.com', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                VTU Newspaper Clippings
+                              </button>
+                            </div>
+                          </div>
                           <button className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm">
                             {t('links.otherlinks')}
                           </button>
@@ -1021,10 +1071,52 @@ export default function HomePage() {
                     {t('nav.links')} <ChevronDown className="ml-1 h-3 w-3 xl:h-4 xl:w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer">
-                    {t('links.vtulinks')}
-                  </DropdownMenuItem>
+                <DropdownMenuContent align="start" className="w-64">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <DropdownMenuItem className="cursor-pointer flex items-center justify-between">
+                        {t('links.vtulinks')}
+                        <ChevronDown className="h-4 w-4" />
+                      </DropdownMenuItem>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start" className="w-56">
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://vibe.wix.com/projects/bda742cd-6dcb-4f70-81bf-0818ff0da5a4/v/editor', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        E-learning
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://jnanashodha.vtu.ac.in/', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Jnana Shodha
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('http://library.vtu.ac.in', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        VTU Main Library
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('http://ir.vtu.ac.in', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        University Digital Repository
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('http://Libraryvtu.blogspot.com', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        VTU Newspaper Clippings
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <DropdownMenuItem className="cursor-pointer">
                     {t('links.otherlinks')}
                   </DropdownMenuItem>
