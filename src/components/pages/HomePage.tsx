@@ -724,11 +724,60 @@ export default function HomePage() {
                               >
                                 VTU Newspaper Clippings
                               </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('https://www.online.vtu.ac.in/', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                Center for Online Education
+                              </button>
                             </div>
                           </div>
-                          <button className="block w-full text-left py-2 px-3 text-gray-700 hover:text-primary hover:bg-gray-50 rounded transition-colors text-sm">
-                            {t('links.otherlinks')}
-                          </button>
+                          <div className="border border-gray-200 rounded-md p-2">
+                            <div className="text-xs font-semibold text-primary mb-2">
+                              {t('links.otherlinks')}
+                            </div>
+                            <div className="space-y-1">
+                              <button 
+                                onClick={() => {
+                                  window.open('https://www.aicte-india.org/', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                AICTE
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('https://www.dtek.karnataka.gov.in/en', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                DTEK
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('https://KSHEC.karnataka.gov.in/en', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                Higher Education Council
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  window.open('https://ilaindia.co.in', '_blank');
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="block w-full text-left py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded transition-colors text-xs"
+                              >
+                                Indian Library Association
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       
@@ -1115,11 +1164,53 @@ export default function HomePage() {
                         <ExternalLink className="h-4 w-4 mr-2" />
                         VTU Newspaper Clippings
                       </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://www.online.vtu.ac.in/', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Center for Online Education
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <DropdownMenuItem className="cursor-pointer">
-                    {t('links.otherlinks')}
-                  </DropdownMenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <DropdownMenuItem className="cursor-pointer flex items-center justify-between">
+                        {t('links.otherlinks')}
+                        <ChevronDown className="h-4 w-4" />
+                      </DropdownMenuItem>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start" className="w-56">
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://www.aicte-india.org/', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        AICTE
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://www.dtek.karnataka.gov.in/en', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        DTEK
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://KSHEC.karnataka.gov.in/en', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Higher Education Council
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="cursor-pointer"
+                        onClick={() => window.open('https://ilaindia.co.in', '_blank')}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Indian Library Association
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
