@@ -408,18 +408,30 @@ export default function LibrarianCornerPage() {
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             {/* Contact Information */}
             <div>
-              <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
+              <h4 className="font-heading text-lg font-semibold mb-4">
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('global academy of technology') ? 'Location' : 'Contact Us'}
+              </h4>
               <div className="space-y-3">
-                <div>
-                  <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
-                  <p className="font-paragraph text-gray-300 text-sm">
-                    Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
-                  </p>
-                </div>
-                <div>
-                  <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
-                  <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
-                </div>
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('global academy of technology') ? (
+                  <div>
+                    <p className="font-paragraph text-gray-300 text-sm">
+                      Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
+                      <p className="font-paragraph text-gray-300 text-sm">
+                        Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
+                      <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             
