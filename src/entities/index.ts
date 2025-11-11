@@ -46,6 +46,8 @@ export interface LibrarianAccounts {
   collegeName?: string;
   /** @wixFieldType text */
   email?: string;
+  /** @wixFieldType url */
+  collegeUrl?: string;
 }
 
 

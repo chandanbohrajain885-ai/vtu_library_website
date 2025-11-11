@@ -11,6 +11,7 @@ export interface User {
   createdAt?: Date;
   collegeName?: string; // Added for librarian accounts
   librarianName?: string; // Added for librarian accounts
+  collegeUrl?: string; // Added for college website URL
 }
 
 export interface RegistrationRequest {
@@ -138,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           permissions: [],
           collegeName: foundLibrarian.collegeName,
           librarianName: foundLibrarian.librarianName,
+          collegeUrl: foundLibrarian.collegeUrl,
           createdAt: foundLibrarian._createdDate
         };
         

@@ -130,14 +130,36 @@ export default function LibrarianCornerPage() {
 
             {user?.role === 'librarian' && user?.collegeName && (
               <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-8">
-                <h2 className="font-heading text-2xl font-bold text-primary mb-2">
-                  {user.collegeName}
-                </h2>
+                {user.collegeUrl ? (
+                  <a 
+                    href={user.collegeUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="font-heading text-2xl font-bold text-primary mb-2 hover:text-secondary transition-colors cursor-pointer block"
+                  >
+                    {user.collegeName}
+                  </a>
+                ) : (
+                  <h2 className="font-heading text-2xl font-bold text-primary mb-2">
+                    {user.collegeName}
+                  </h2>
+                )}
                 {user.librarianName && (
                   <p className="text-gray-600 font-paragraph">
                     Librarian: {user.librarianName} / Nodal Officer
                   </p>
                 )}
+                
+                {/* Location Section for Global Academy of Technology */}
+                {user.collegeName?.toLowerCase().includes('global academy of technology') && (
+                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h3 className="font-heading text-lg font-semibold text-primary mb-2">Location</h3>
+                    <p className="text-gray-700 font-paragraph text-sm">
+                      Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
+                    </p>
+                  </div>
+                )}
+                
                 <p className="text-gray-600 font-paragraph mt-2">
                   Access your consortium resources and manage library services
                 </p>
