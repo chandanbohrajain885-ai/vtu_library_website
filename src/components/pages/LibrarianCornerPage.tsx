@@ -405,62 +405,46 @@ export default function LibrarianCornerPage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-8 mb-8">
-            {/* Contact Information */}
-            <div>
-              <h4 className="font-heading text-lg font-semibold mb-4">
-                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('global academy of technology') ? 'Location' : 'Contact Us'}
-              </h4>
-              <div className="space-y-3">
-                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('global academy of technology') ? (
-                  <div>
-                    <p className="font-paragraph text-gray-300 text-sm">
-                      Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">
-                        Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            
-            {/* Additional Contact */}
-            <div>
-              <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
-              <div className="space-y-3">
-                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
+          {/* Hide contact information for Global Academy of Technology and Acharya Institute of Technology librarians */}
+          {!(isAuthenticated && user?.role === 'librarian' && 
+            (user?.collegeName?.toLowerCase().includes('global academy of technology') || 
+             user?.collegeName?.toLowerCase().includes('acharya institute of technology'))) && (
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Contact Information */}
+              <div>
+                <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
+                <div className="space-y-3">
                   <div>
                     <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
-                    <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
+                    <p className="font-paragraph text-gray-300 text-sm">
+                      Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
+                    </p>
                   </div>
-                ) : (
-                  <>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
-                      <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
-                        vtuconsortium@gmail.com
-                      </a>
-                    </div>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
-                    </div>
-                  </>
-                )}
+                  <div>
+                    <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
+                    <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Additional Contact */}
+              <div>
+                <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
+                    <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
+                      vtuconsortium@gmail.com
+                    </a>
+                  </div>
+                  <div>
+                    <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
+                    <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           
           <div className="border-t border-gray-700 pt-8 text-center">
             <p className="font-paragraph text-gray-400">
