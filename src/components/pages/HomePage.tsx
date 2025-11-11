@@ -1338,7 +1338,10 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
           <div className="space-y-4 sm:space-y-6">
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
+            {/* Only show main title if not authenticated as librarian */}
+            {(!isAuthenticated || user?.role !== 'librarian') && (
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
+            )}
             
                     {/* Welcome message for authenticated users */}
                     {isAuthenticated && user && (
