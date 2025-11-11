@@ -1363,7 +1363,7 @@ export default function HomePage() {
                             </a>
                             {user.librarianName && (
                               <p className="text-gray-200 text-lg font-medium">
-                                Librarian / Nodal Officer: {user.librarianName}
+                                Librarian: {user.librarianName} / Nodal Officer
                               </p>
                             )}
                           </div>
