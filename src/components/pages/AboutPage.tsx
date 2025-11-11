@@ -2,8 +2,11 @@ import React from 'react';
 import { BookOpen, Users, Download, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/components/auth/AuthContext';
 
 export default function AboutPage() {
+  const { user, isAuthenticated } = useAuth();
+  
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -210,18 +213,27 @@ export default function AboutPage() {
             <div className="text-center space-y-4">
               <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
               <div className="flex items-center justify-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <span className="h-4 w-4 text-orange-400">📍</span>
-                  <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="h-4 w-4 text-orange-400">📞</span>
-                  <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="h-4 w-4 text-orange-400">✉️</span>
-                  <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
-                </div>
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="h-4 w-4 text-orange-400">📍</span>
+                    <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <span className="h-4 w-4 text-orange-400">📍</span>
+                      <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="h-4 w-4 text-orange-400">📞</span>
+                      <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="h-4 w-4 text-orange-400">✉️</span>
+                      <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

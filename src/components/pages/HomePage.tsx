@@ -392,7 +392,14 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-              <span className="text-xs sm:text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</span>
+              {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
+                <span className="text-xs sm:text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</span>
+              ) : (
+                <>
+                  <span className="text-xs sm:text-sm">{t('header.email')}: <a href="mailto:vtuconsortium@gmail.com" className="hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a></span>
+                  <span className="text-xs sm:text-sm">{t('header.phone')}: 08312498191</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -1672,10 +1679,27 @@ export default function HomePage() {
             <div className="text-center space-y-4">
               <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
               <div className="flex items-center justify-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 text-orange-400" />
-                  <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
-                </div>
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="h-4 w-4 text-orange-400" />
+                    <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <MapPin className="h-4 w-4 text-orange-400" />
+                      <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Phone className="h-4 w-4 text-orange-400" />
+                      <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Mail className="h-4 w-4 text-orange-400" />
+                      <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

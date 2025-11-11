@@ -405,16 +405,25 @@ export default function LibrarianCornerPage() {
             <div>
               <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
               <div className="space-y-3">
-                <div>
-                  <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
-                  <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
-                    vtuconsortium@gmail.com
-                  </a>
-                </div>
-                <div>
-                  <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
-                  <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
-                </div>
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
+                  <div>
+                    <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
+                    <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
+                      <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
+                        vtuconsortium@gmail.com
+                      </a>
+                    </div>
+                    <div>
+                      <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
+                      <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
