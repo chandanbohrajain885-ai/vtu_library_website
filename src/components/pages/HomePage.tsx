@@ -1331,19 +1331,28 @@ export default function HomePage() {
             
                     {/* Welcome message for authenticated users */}
                     {isAuthenticated && user && (
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
-                        <h2 className="font-heading text-xl font-bold text-white mb-2">
-                          {user.role === 'librarian' && user.collegeName 
-                            ? `Welcome ${user.collegeName}` 
-                            : user.role === 'superadmin' 
-                            ? 'Welcome Super Admin'
-                            : `Welcome ${user.username}`
-                          }
-                        </h2>
-                        {user.role === 'librarian' && user.librarianName && (
-                          <p className="text-gray-200 text-sm">
-                            Librarian: {user.librarianName}
-                          </p>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+                        {user.role === 'librarian' && user.collegeName ? (
+                          <div className="text-center">
+                            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                              WELCOME...
+                            </h2>
+                            <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight">
+                              {user.collegeName}
+                            </h3>
+                            {user.librarianName && (
+                              <p className="text-gray-200 text-lg font-medium">
+                                Librarian: {user.librarianName}
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
+                            {user.role === 'superadmin' 
+                              ? 'Welcome Super Admin'
+                              : `Welcome ${user.username}`
+                            }
+                          </h2>
                         )}
                       </div>
                     )}
