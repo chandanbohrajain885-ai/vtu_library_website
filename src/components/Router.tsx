@@ -9,6 +9,7 @@ import NewsPage from '@/components/pages/NewsPage';
 import UserGuidePage from '@/components/pages/UserGuidePage';
 import AdminDashboard from '@/components/pages/AdminDashboard';
 import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
+import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "publisher",
         element: <PublisherCornerPage />,
+      },
+      {
+        path: "librarian",
+        element: <LibrarianCornerPage />,
       },
       {
         path: "*",

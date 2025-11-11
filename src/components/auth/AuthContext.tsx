@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { BaseCrudService } from '@/integrations';
+import { LibrarianAccounts } from '@/entities';
 
 export interface User {
   id: string;
@@ -7,6 +9,8 @@ export interface User {
   permissions: string[];
   createdBy?: string;
   createdAt?: Date;
+  collegeName?: string; // Added for librarian accounts
+  librarianName?: string; // Added for librarian accounts
 }
 
 export interface RegistrationRequest {
@@ -111,12 +115,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // Check if user exists and password matches
-    const foundUser = users.find(u => u.username === username);
-    if (foundUser && userPasswords[username] === password) {
-      setUser(foundUser);
-      localStorage.setItem('vtu_auth_user', JSON.stringify(foundUser));
+    // First check if it's a default user (superadmin, admin, etc.)
+    const foundDefaultUser = users.find(u => u.username === username);
+    if (foundDefaultUser && userPasswords[username] === password) {
+      setUser(foundDefaultUser);
+      localStorage.setItem('vtu_auth_user', JSON.stringify(foundDefaultUser));
       return true;
+    }
+    
+    // Check if it's a librarian account from CMS
+    try {
+      const { items: librarianAccounts } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
+      const foundLibrarian = librarianAccounts.find(
+        account => account.username === username && account.password === password
+      );
+      
+      if (foundLibrarian) {
+        const librarianUser: User = {
+          id: foundLibrarian._id,
+          username: foundLibrarian.username || username,
+          role: 'librarian',
+          permissions: [],
+          collegeName: foundLibrarian.collegeName,
+          librarianName: foundLibrarian.librarianName,
+          createdAt: foundLibrarian._createdDate
+        };
+        
+        setUser(librarianUser);
+        localStorage.setItem('vtu_auth_user', JSON.stringify(librarianUser));
+        return true;
+      }
+    } catch (error) {
+      console.error('Error checking librarian accounts:', error);
     }
     
     return false;

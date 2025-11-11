@@ -29,6 +29,27 @@ export interface EResources {
 
 
 /**
+ * Collection ID: librarianaccounts
+ * Interface for LibrarianAccounts
+ */
+export interface LibrarianAccounts {
+  _id: string;
+  _createdDate?: Date;
+  _updatedDate?: Date;
+  /** @wixFieldType text */
+  username?: string;
+  /** @wixFieldType text */
+  password?: string;
+  /** @wixFieldType text */
+  librarianName?: string;
+  /** @wixFieldType text */
+  collegeName?: string;
+  /** @wixFieldType text */
+  email?: string;
+}
+
+
+/**
  * Collection ID: newsandnotifications
  * Interface for NewsandEvents
  */

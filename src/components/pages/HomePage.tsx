@@ -272,7 +272,7 @@ export default function HomePage() {
       setIsLoginModalOpen(true);
       return;
     }
-    navigate('/guide');
+    navigate('/librarian');
   };
 
   const handlePublisherCorner = () => {
@@ -1329,6 +1329,25 @@ export default function HomePage() {
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
             <p className="font-paragraph text-lg sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">{t('hero.subtitle')}</p>
             
+                    {/* Welcome message for authenticated users */}
+                    {isAuthenticated && user && (
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6">
+                        <h2 className="font-heading text-xl font-bold text-white mb-2">
+                          {user.role === 'librarian' && user.collegeName 
+                            ? `Welcome ${user.collegeName}` 
+                            : user.role === 'superadmin' 
+                            ? 'Welcome Super Admin'
+                            : `Welcome ${user.username}`
+                          }
+                        </h2>
+                        {user.role === 'librarian' && user.librarianName && (
+                          <p className="text-gray-200 text-sm">
+                            Librarian: {user.librarianName}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-6 sm:mt-8 relative">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
