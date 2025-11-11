@@ -127,9 +127,7 @@ export default function LibrarianCornerPage() {
             <h1 className="font-heading text-5xl font-bold text-primary">
               {getWelcomeMessage()}
             </h1>
-            <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-              Access and manage your library resources, guides, and consortium services
-            </p>
+
             {user?.role === 'librarian' && user?.collegeName && (
               <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-8">
                 <h2 className="font-heading text-2xl font-bold text-primary mb-2">
@@ -137,7 +135,7 @@ export default function LibrarianCornerPage() {
                 </h2>
                 {user.librarianName && (
                   <p className="text-gray-600 font-paragraph">
-                    Librarian: {user.librarianName}
+                    Librarian: {user.librarianName} / Nodal Officer
                   </p>
                 )}
                 <p className="text-gray-600 font-paragraph mt-2">
@@ -385,7 +383,43 @@ export default function LibrarianCornerPage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            {/* Contact Information */}
+            <div>
+              <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
+                  <p className="font-paragraph text-gray-300 text-sm">
+                    Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
+                  </p>
+                </div>
+                <div>
+                  <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
+                  <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Additional Contact */}
+            <div>
+              <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
+                  <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
+                    vtuconsortium@gmail.com
+                  </a>
+                </div>
+                <div>
+                  <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
+                  <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 pt-8 text-center">
             <p className="font-paragraph text-gray-400">
               © 2025 VTU Consortium Portal. All Rights Reserved.
             </p>
