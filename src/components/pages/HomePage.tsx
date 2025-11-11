@@ -642,17 +642,19 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* News & Events */}
-                      <button 
-                        onClick={() => {
-                          navigate('/news');
-                          setIsMobileMenuOpen(false);
-                        }} 
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                      >
-                        <Calendar className="h-4 w-4 mr-2 inline" />
-                        News & Events
-                      </button>
+                      {/* News & Events - Only show if not authenticated as librarian */}
+                      {(!isAuthenticated || user?.role !== 'librarian') && (
+                        <button 
+                          onClick={() => {
+                            navigate('/news');
+                            setIsMobileMenuOpen(false);
+                          }} 
+                          className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                        >
+                          <Calendar className="h-4 w-4 mr-2 inline" />
+                          News & Events
+                        </button>
+                      )}
 
                       {/* Journals */}
                       <button 
@@ -880,29 +882,33 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* Librarian Corner */}
-                      <button 
-                        onClick={() => {
-                          handleLibrarianCorner();
-                          setIsMobileMenuOpen(false);
-                        }} 
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                      >
-                        <User className="h-4 w-4 mr-2 inline" />
-                        {t('nav.librariancorner')}
-                      </button>
+                      {/* Librarian Corner - Only show if not authenticated as librarian */}
+                      {(!isAuthenticated || user?.role !== 'librarian') && (
+                        <button 
+                          onClick={() => {
+                            handleLibrarianCorner();
+                            setIsMobileMenuOpen(false);
+                          }} 
+                          className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                        >
+                          <User className="h-4 w-4 mr-2 inline" />
+                          {t('nav.librariancorner')}
+                        </button>
+                      )}
 
-                      {/* Publisher Corner */}
-                      <button 
-                        onClick={() => {
-                          handlePublisherCorner();
-                          setIsMobileMenuOpen(false);
-                        }} 
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                      >
-                        <Users className="h-4 w-4 mr-2 inline" />
-                        {t('nav.publishercorner')}
-                      </button>
+                      {/* Publisher Corner - Only show if not authenticated as librarian */}
+                      {(!isAuthenticated || user?.role !== 'librarian') && (
+                        <button 
+                          onClick={() => {
+                            handlePublisherCorner();
+                            setIsMobileMenuOpen(false);
+                          }} 
+                          className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                        >
+                          <Users className="h-4 w-4 mr-2 inline" />
+                          {t('nav.publishercorner')}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </SheetContent>
@@ -1280,8 +1286,14 @@ export default function HomePage() {
                   </div>
                 )}
               </Button>
-              <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.librariancorner')}</button>
-              <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.publishercorner')}</button>
+              {/* Librarian Corner - Only show if not authenticated as librarian */}
+              {(!isAuthenticated || user?.role !== 'librarian') && (
+                <button onClick={handleLibrarianCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.librariancorner')}</button>
+              )}
+              {/* Publisher Corner - Only show if not authenticated as librarian */}
+              {(!isAuthenticated || user?.role !== 'librarian') && (
+                <button onClick={handlePublisherCorner} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">{t('nav.publishercorner')}</button>
+              )}
             </div>
             
             {/* Desktop Login and Register Buttons */}
@@ -1327,7 +1339,6 @@ export default function HomePage() {
         <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
           <div className="space-y-4 sm:space-y-6">
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
-            <p className="font-paragraph text-lg sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">{t('hero.subtitle')}</p>
             
                     {/* Welcome message for authenticated users */}
                     {isAuthenticated && user && (
@@ -1337,12 +1348,19 @@ export default function HomePage() {
                             <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                               WELCOME...
                             </h2>
-                            <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight">
-                              {user.collegeName}
-                            </h3>
+                            <a 
+                              href="https://www.acharya.ac.in/acharya-institute-of-technology" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
+                            >
+                              <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
+                                {user.collegeName}
+                              </h3>
+                            </a>
                             {user.librarianName && (
                               <p className="text-gray-200 text-lg font-medium">
-                                Librarian: {user.librarianName}
+                                Librarian / Nodal Officer: {user.librarianName}
                               </p>
                             )}
                           </div>
@@ -1457,192 +1475,194 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* Library News & Events */}
-      <section className="py-12 sm:py-16 bg-white">
-        <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="flex flex-col lg:flex-row items-center justify-between mb-4 gap-4">
-              <div className="flex-1 hidden lg:block"></div>
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-gray-800">{t('news.title')}</h2>
-              <div className="flex-1 flex justify-center lg:justify-end">
-                {/* Admin Controls - Only visible to superadmin and super executive */}
-                {isAuthenticated && (user?.role === 'superadmin') && (
-                  <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                    <Button
-                      onClick={() => setIsAddNewsModalOpen(true)}
-                      className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
-                      size="sm"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      {t('news.addnews')}
-                    </Button>
-                    <Button
-                      onClick={() => navigate('/admin')}
-                      variant="outline"
-                      size="sm"
-                      className="border-blue-600 text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      {t('news.manageall')}
-                    </Button>
-                  </div>
-                )}
+      {/* Library News & Events - Only show if not authenticated as librarian */}
+      {(!isAuthenticated || user?.role !== 'librarian') && (
+        <section className="py-12 sm:py-16 bg-white">
+          <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="flex flex-col lg:flex-row items-center justify-between mb-4 gap-4">
+                <div className="flex-1 hidden lg:block"></div>
+                <h2 className="font-heading text-3xl sm:text-4xl font-bold text-gray-800">{t('news.title')}</h2>
+                <div className="flex-1 flex justify-center lg:justify-end">
+                  {/* Admin Controls - Only visible to superadmin and super executive */}
+                  {isAuthenticated && (user?.role === 'superadmin') && (
+                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                      <Button
+                        onClick={() => setIsAddNewsModalOpen(true)}
+                        className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
+                        size="sm"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {t('news.addnews')}
+                      </Button>
+                      <Button
+                        onClick={() => navigate('/admin')}
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-600 text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        {t('news.manageall')}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Continuous Infinite Scrolling News Cards - Right to Left */}
-          <div 
-            ref={newsScrollContainerRef}
-            className="flex gap-4 sm:gap-6 overflow-x-hidden relative"
-            style={{ 
-              scrollBehavior: 'auto',
-              maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
-            }}
-          >
-            {/* Original news cards */}
-            {latestNews.map((news, index) => (
-              <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
-                        {new Date(news.publicationDate || Date.now()).getDate()}
-                      </div>
-                      <div className="text-xs sm:text-sm text-gray-500">
-                        <div className="font-medium">
-                          {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+            {/* Continuous Infinite Scrolling News Cards - Right to Left */}
+            <div 
+              ref={newsScrollContainerRef}
+              className="flex gap-4 sm:gap-6 overflow-x-hidden relative"
+              style={{ 
+                scrollBehavior: 'auto',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
+              }}
+            >
+              {/* Original news cards */}
+              {latestNews.map((news, index) => (
+                <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                          {new Date(news.publicationDate || Date.now()).getDate()}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="font-medium">
+                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                          </div>
                         </div>
                       </div>
+                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                        Coming Soon
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                      Coming Soon
-                    </Badge>
-                  </div>
-                  <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
-                    {news.title || 'News Title'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
-                    <span className="font-bold text-green-600">Venue: </span>
-                    <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                  </p>
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
-                      onClick={() => {
-                        if (news.externalLink) {
-                          window.open(news.externalLink, '_blank');
-                        } else {
-                          window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                        }
-                      }}
-                    >
-                      Read More
-                    </Button>
-                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                      {/* Edit Button - Only visible to superadmin */}
-                      {isAuthenticated && (user?.role === 'superadmin') && (
-                        <Button
-                          onClick={() => {
-                            setEditingNewsId(news._id);
-                            setIsEditNewsModalOpen(true);
-                          }}
-                          size="sm"
-                          variant="outline"
-                          className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          Edit
-                        </Button>
-                      )}
-                      {news.author && (
-                        <span className="text-xs text-gray-500">
-                          By {news.author}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            
-            {/* Duplicate cards for seamless infinite scrolling */}
-            {latestNews.map((news, index) => (
-              <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
-                        {new Date(news.publicationDate || Date.now()).getDate()}
+                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                      {news.title || 'News Title'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                      <span className="font-bold text-green-600">Venue: </span>
+                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                        onClick={() => {
+                          if (news.externalLink) {
+                            window.open(news.externalLink, '_blank');
+                          } else {
+                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                          }
+                        }}
+                      >
+                        Read More
+                      </Button>
+                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                        {/* Edit Button - Only visible to superadmin */}
+                        {isAuthenticated && (user?.role === 'superadmin') && (
+                          <Button
+                            onClick={() => {
+                              setEditingNewsId(news._id);
+                              setIsEditNewsModalOpen(true);
+                            }}
+                            size="sm"
+                            variant="outline"
+                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                        )}
+                        {news.author && (
+                          <span className="text-xs text-gray-500">
+                            By {news.author}
+                          </span>
+                        )}
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-500">
-                        <div className="font-medium">
-                          {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* Duplicate cards for seamless infinite scrolling */}
+              {latestNews.map((news, index) => (
+                <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                          {new Date(news.publicationDate || Date.now()).getDate()}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="font-medium">
+                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                          </div>
                         </div>
                       </div>
+                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                        Coming Soon
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                      Coming Soon
-                    </Badge>
-                  </div>
-                  <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
-                    {news.title || 'News Title'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
-                    <span className="font-bold text-green-600">Venue: </span>
-                    <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                  </p>
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
-                      onClick={() => {
-                        if (news.externalLink) {
-                          window.open(news.externalLink, '_blank');
-                        } else {
-                          window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                        }
-                      }}
-                    >
-                      Read More
-                    </Button>
-                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                      {/* Edit Button - Only visible to superadmin */}
-                      {isAuthenticated && (user?.role === 'superadmin') && (
-                        <Button
-                          onClick={() => {
-                            setEditingNewsId(news._id);
-                            setIsEditNewsModalOpen(true);
-                          }}
-                          size="sm"
-                          variant="outline"
-                          className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          Edit
-                        </Button>
-                      )}
-                      {news.author && (
-                        <span className="text-xs text-gray-500">
-                          By {news.author}
-                        </span>
-                      )}
+                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                      {news.title || 'News Title'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                      <span className="font-bold text-green-600">Venue: </span>
+                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                        onClick={() => {
+                          if (news.externalLink) {
+                            window.open(news.externalLink, '_blank');
+                          } else {
+                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                          }
+                        }}
+                      >
+                        Read More
+                      </Button>
+                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                        {/* Edit Button - Only visible to superadmin */}
+                        {isAuthenticated && (user?.role === 'superadmin') && (
+                          <Button
+                            onClick={() => {
+                              setEditingNewsId(news._id);
+                              setIsEditNewsModalOpen(true);
+                            }}
+                            size="sm"
+                            variant="outline"
+                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                        )}
+                        {news.author && (
+                          <span className="text-xs text-gray-500">
+                            By {news.author}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
