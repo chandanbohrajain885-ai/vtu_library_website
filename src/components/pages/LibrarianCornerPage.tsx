@@ -61,7 +61,7 @@ export default function LibrarianCornerPage() {
     };
 
     fetchData();
-  }, [isAuthorized, navigate]);
+  }, [isAuthorized, navigate, user]);
 
   if (!isAuthorized) {
     return null;
