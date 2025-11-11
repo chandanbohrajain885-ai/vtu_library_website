@@ -1677,7 +1677,9 @@ export default function HomePage() {
         <div className="max-w-[120rem] mx-auto px-6">
           <div className="flex justify-center">
             <div className="text-center space-y-4">
-              <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
+              <h4 className="font-heading text-lg font-semibold">
+                {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? 'Location' : 'Contact Us'}
+              </h4>
               <div className="flex items-center justify-center space-x-6">
                 {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
                   <div className="flex items-center space-x-2">
