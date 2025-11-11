@@ -1338,44 +1338,42 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
           <div className="space-y-4 sm:space-y-6">
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
-            
-                    {/* Welcome message for authenticated users */}
-                    {isAuthenticated && user && (
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
-                        {user.role === 'librarian' && user.collegeName ? (
-                          <div className="text-center">
-                            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                              WELCOME...
-                            </h2>
-                            <a 
-                              href="https://www.acharya.ac.in/acharya-institute-of-technology" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
-                            >
-                              <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
-                                {user.collegeName}
-                              </h3>
-                            </a>
-                            {user.librarianName && (
-                              <p className="text-gray-200 text-lg font-medium">
-                                Librarian / Nodal Officer: {user.librarianName}
-                              </p>
-                            )}
-                          </div>
-                        ) : (
-                          <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
-                            {user.role === 'superadmin' 
-                              ? 'Welcome Super Admin'
-                              : `Welcome ${user.username}`
-                            }
-                          </h2>
-                        )}
-                      </div>
-                    )}
 
+            {/* Welcome message for authenticated users */}
             {/* Search Bar */}
+            {isAuthenticated && user && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+                {user.role === 'librarian' && user.collegeName ? (
+                  <div className="text-center">
+                    <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                      WELCOME...
+                    </h2>
+                    <a 
+                      href="https://www.acharya.ac.in/acharya-institute-of-technology" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                      <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
+                        {user.collegeName}
+                      </h3>
+                    </a>
+                    {user.librarianName && (
+                      <p className="text-gray-200 text-lg font-medium">
+                        Librarian / Nodal Officer: {user.librarianName}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
+                    {user.role === 'superadmin' 
+                      ? 'Welcome Super Admin'
+                      : `Welcome ${user.username}`
+                    }
+                  </h2>
+                )}
+              </div>
+            )}
             <div className="max-w-2xl mx-auto mt-6 sm:mt-8 relative">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
                 <Input
@@ -1462,7 +1460,6 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-
             {/* Click outside to close search results */}
             {showSearchResults && (
               <div 
@@ -1470,8 +1467,7 @@ export default function HomePage() {
                 onClick={() => setShowSearchResults(false)}
               />
             )}
-
-          {/* Quick Access Buttons - Removed */}
+            {/* Quick Access Buttons - Removed */}
           </div>
         </div>
       </section>
@@ -1714,26 +1710,22 @@ export default function HomePage() {
         isOpen={isSuperExecutiveModalOpen} 
         onClose={() => setIsSuperExecutiveModalOpen(false)} 
       />
-
       {/* Add News Modal */}
       <AddNewsModal 
         isOpen={isAddNewsModalOpen} 
         onClose={() => setIsAddNewsModalOpen(false)} 
       />
-
       {/* Edit News Modal */}
       <EditNewsModal 
         isOpen={isEditNewsModalOpen} 
         onClose={() => setIsEditNewsModalOpen(false)} 
         newsId={editingNewsId}
       />
-
       {/* Add E-Resource Modal */}
       <AddEResourceModal 
         isOpen={isAddEResourceModalOpen} 
         onClose={() => setIsAddEResourceModalOpen(false)} 
       />
-
       {/* Add User Guide Modal */}
       <AddUserGuideModal 
         isOpen={isAddUserGuideModalOpen} 
