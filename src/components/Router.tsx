@@ -11,6 +11,7 @@ import AdminDashboard from '@/components/pages/AdminDashboard';
 import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
 import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
+import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "librarian",
         element: <LibrarianCornerPage />,
+      },
+      {
+        path: "librarian-accounts-check",
+        element: <LibrarianAccountsChecker />,
       },
       {
         path: "*",
