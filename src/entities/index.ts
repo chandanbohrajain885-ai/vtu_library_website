@@ -38,6 +38,8 @@ export interface LibrarianAccounts {
   _updatedDate?: Date;
   /** @wixFieldType text */
   username?: string;
+  /** @wixFieldType url */
+  collegeUrl?: string;
   /** @wixFieldType text */
   password?: string;
   /** @wixFieldType text */
@@ -46,8 +48,6 @@ export interface LibrarianAccounts {
   collegeName?: string;
   /** @wixFieldType text */
   email?: string;
-  /** @wixFieldType url */
-  collegeUrl?: string;
 }
 
 

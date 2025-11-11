@@ -29,7 +29,7 @@ export interface RegistrationRequest {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string, isLibrarianCornerLogin?: boolean) => Promise<boolean>;
   logout: () => void;
   users: User[];
   createUser: (userData: Omit<User, 'id' | 'createdAt'>) => void;
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string, isLibrarianCornerLogin: boolean = false): Promise<boolean> => {
     // First check if it's a default user (superadmin, admin, etc.)
     const foundDefaultUser = users.find(u => u.username === username);
     if (foundDefaultUser && userPasswords[username] === password) {
@@ -132,6 +132,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
       
       if (foundLibrarian) {
+        // Restrict specific librarian accounts to only Librarian Corner login
+        const restrictedColleges = [
+          'acharya institute of technology',
+          'global academy of technology'
+        ];
+        
+        const isRestrictedAccount = restrictedColleges.some(college => 
+          foundLibrarian.collegeName?.toLowerCase().includes(college)
+        );
+        
+        // If it's a restricted account and not a Librarian Corner login, deny access
+        if (isRestrictedAccount && !isLibrarianCornerLogin) {
+          return false;
+        }
+        
         const librarianUser: User = {
           id: foundLibrarian._id,
           username: foundLibrarian.username || username,

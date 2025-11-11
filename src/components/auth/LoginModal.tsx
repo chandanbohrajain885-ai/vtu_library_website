@@ -10,9 +10,10 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   message?: string;
+  isLibrarianCornerLogin?: boolean;
 }
 
-export function LoginModal({ isOpen, onClose, message }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, message, isLibrarianCornerLogin = false }: LoginModalProps) {
   const { login } = useAuth();
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
@@ -24,12 +25,16 @@ export function LoginModal({ isOpen, onClose, message }: LoginModalProps) {
     setIsLoading(true);
 
     try {
-      const success = await login(loginData.username, loginData.password);
+      const success = await login(loginData.username, loginData.password, isLibrarianCornerLogin);
       if (success) {
         onClose();
         setLoginData({ username: '', password: '' });
       } else {
-        setError('Invalid username or password');
+        if (isLibrarianCornerLogin) {
+          setError('Invalid credentials or access denied. Only authorized librarian accounts can access this section.');
+        } else {
+          setError('Invalid username or password');
+        }
       }
     } catch (err) {
       setError('Login failed. Please try again.');

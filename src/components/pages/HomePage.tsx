@@ -236,6 +236,7 @@ export default function HomePage() {
     }
   };
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLibrarianCornerLogin, setIsLibrarianCornerLogin] = useState(false);
   const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [isAddNewsModalOpen, setIsAddNewsModalOpen] = useState(false);
@@ -248,6 +249,7 @@ export default function HomePage() {
 
   const handleProtectedAction = (action: () => void, requiredRole?: string) => {
     if (!isAuthenticated) {
+      setIsLibrarianCornerLogin(false);
       setIsLoginModalOpen(true);
       return;
     }
@@ -255,10 +257,12 @@ export default function HomePage() {
     // Check role-based access
     if (requiredRole && user?.role !== 'superadmin') {
       if (requiredRole === 'librarian' && user?.role !== 'librarian') {
+        setIsLibrarianCornerLogin(false);
         setIsLoginModalOpen(true);
         return;
       }
       if (requiredRole === 'publisher' && user?.role !== 'publisher') {
+        setIsLibrarianCornerLogin(false);
         setIsLoginModalOpen(true);
         return;
       }
@@ -269,6 +273,7 @@ export default function HomePage() {
 
   const handleLibrarianCorner = () => {
     if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'librarian')) {
+      setIsLibrarianCornerLogin(true);
       setIsLoginModalOpen(true);
       return;
     }
@@ -277,6 +282,7 @@ export default function HomePage() {
 
   const handlePublisherCorner = () => {
     if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'publisher')) {
+      setIsLibrarianCornerLogin(false);
       setIsLoginModalOpen(true);
       return;
     }
@@ -1722,7 +1728,11 @@ export default function HomePage() {
       {/* Login Modal */}
       <LoginModal 
         isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
+        onClose={() => {
+          setIsLoginModalOpen(false);
+          setIsLibrarianCornerLogin(false);
+        }}
+        isLibrarianCornerLogin={isLibrarianCornerLogin}
       />
       {/* Registration Modal */}
       <RegistrationModal 
