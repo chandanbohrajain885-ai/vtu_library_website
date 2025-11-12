@@ -18,7 +18,7 @@ interface HeyGenAIAssistantProps {
  *    - VITE_HEYGEN_AVATAR_ID=your_actual_avatar_id
  */
 export function HeyGenAIAssistant({ 
-  apiKey = "kH6vhsYvh92"
+  apiKey = "kH6vhsYvh92",
   avatarId = "Thaddeus_ProfessionalLook_public"
 }: HeyGenAIAssistantProps) {
   // Check if environment variables are configured
