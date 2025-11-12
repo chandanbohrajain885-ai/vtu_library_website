@@ -14,6 +14,7 @@ import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { HeyGenAIAssistant } from '@/components/ui/heygen-ai-assistant';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -21,6 +22,7 @@ function Layout() {
     <>
       <ScrollToTop />
       <Outlet />
+      <HeyGenAIAssistant apiKey="your-heygen-api-key" avatarId="default-avatar" />
     </>
   );
 }
