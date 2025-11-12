@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface HeyGenAIAssistantProps {
-  apiKey: string;
-  avatarId: string;
+  apiKey?: string;
+  avatarId?: string;
 }
 
 interface ChatMessage {
@@ -17,9 +17,18 @@ interface ChatMessage {
 }
 
 export function HeyGenAIAssistant({ 
-  apiKey, 
-  avatarId 
+  apiKey = import.meta.env.VITE_HEYGEN_API_KEY, 
+  avatarId = import.meta.env.VITE_HEYGEN_AVATAR_ID 
 }: HeyGenAIAssistantProps) {
+  // Check if environment variables are configured
+  const isConfigured = apiKey && avatarId;
+  
+  // Don't render the widget if not properly configured
+  if (!isConfigured) {
+    console.warn('HeyGen AI Assistant: Missing environment variables VITE_HEYGEN_API_KEY or VITE_HEYGEN_AVATAR_ID');
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +43,11 @@ export function HeyGenAIAssistant({
   const startSession = async () => {
     setIsLoading(true);
     try {
+      // Validate environment variables
+      if (!apiKey || !avatarId) {
+        throw new Error('HeyGen API key or Avatar ID not configured');
+      }
+
       console.log(`Initializing HeyGen session with API Key: ${apiKey} and Avatar: ${avatarId}`);
       
       // Initialize HeyGen streaming session with actual API
@@ -59,7 +73,7 @@ export function HeyGenAIAssistant({
       // Add error message
       const errorMessage: ChatMessage = {
         id: Date.now().toString(),
-        text: "I'm having trouble connecting right now. Please try again in a moment, or feel free to browse our resources in the meantime.",
+        text: "I'm having trouble connecting right now. Please check that the HeyGen API key and Avatar ID are properly configured in your environment variables.",
         isUser: false,
         timestamp: new Date()
       };
