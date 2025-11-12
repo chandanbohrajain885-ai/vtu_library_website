@@ -7,12 +7,23 @@ interface HeyGenAIAssistantProps {
   avatarId?: string;
 }
 
+/**
+ * HeyGen AI Assistant Widget
+ * 
+ * Configuration:
+ * 1. Copy .env.example to .env in your project root
+ * 2. Get your credentials from https://app.heygen.com/
+ * 3. Replace the placeholder values in .env:
+ *    - VITE_HEYGEN_API_KEY=your_actual_api_key
+ *    - VITE_HEYGEN_AVATAR_ID=your_actual_avatar_id
+ */
 export function HeyGenAIAssistant({ 
   apiKey = import.meta.env.VITE_HEYGEN_API_KEY, 
   avatarId = import.meta.env.VITE_HEYGEN_AVATAR_ID 
 }: HeyGenAIAssistantProps) {
   // Check if environment variables are configured
-  const isConfigured = apiKey && avatarId;
+  // Make sure to copy .env.example to .env and configure your HeyGen credentials
+  const isConfigured = apiKey && avatarId && apiKey !== 'your_heygen_api_key_here' && avatarId !== 'your_heygen_avatar_id_here';
 
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,8 +39,8 @@ export function HeyGenAIAssistant({
     setIsLoading(true);
     try {
       // Validate environment variables
-      if (!apiKey || !avatarId) {
-        throw new Error('HeyGen API key or Avatar ID not configured');
+      if (!apiKey || !avatarId || apiKey === 'your_heygen_api_key_here' || avatarId === 'your_heygen_avatar_id_here') {
+        throw new Error('HeyGen API key or Avatar ID not configured. Please copy .env.example to .env and configure your credentials.');
       }
 
       console.log(`Initializing HeyGen session with API Key: ${apiKey} and Avatar: ${avatarId}`);
@@ -164,7 +175,7 @@ export function HeyGenAIAssistant({
                 </div>
                 <h3 className="font-semibold text-gray-800 mb-2">Configuration Required</h3>
                 <p className="text-sm text-gray-600 mb-4">Please configure HeyGen API credentials</p>
-                <p className="text-xs text-gray-500">Set VITE_HEYGEN_API_KEY and VITE_HEYGEN_AVATAR_ID environment variables</p>
+                <p className="text-xs text-gray-500">Copy .env.example to .env and set VITE_HEYGEN_API_KEY and VITE_HEYGEN_AVATAR_ID</p>
               </div>
             ) : !isSessionActive ? (
               <div className="flex flex-col items-center justify-center h-full p-6 text-center">
