@@ -14,18 +14,12 @@ import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { HeyGenAIAssistant } from '@/components/ui/heygen-ai-assistant';
-
 // Layout component that includes ScrollToTop
 function Layout() {
   return (
     <>
       <ScrollToTop />
       <Outlet />
-      <HeyGenAIAssistant 
-        apiKey={import.meta.env.VITE_HEYGEN_API_KEY} 
-        avatarId={import.meta.env.VITE_HEYGEN_AVATAR_ID} 
-      />
     </>
   );
 }
