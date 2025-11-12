@@ -1681,35 +1681,27 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="max-w-[120rem] mx-auto px-6">
-          {/* Hide contact information for Global Academy of Technology (Autonomous), Bengaluru */}
-          {!(isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('global academy of technology')) && (
+          {/* Hide contact information for Global Academy of Technology (Autonomous), Bengaluru and Acharya Institute of Technology */}
+          {!(isAuthenticated && user?.role === 'librarian' && (
+            user?.collegeName?.toLowerCase().includes('global academy of technology') ||
+            user?.collegeName?.toLowerCase().includes('acharya institute of technology')
+          )) && (
             <div className="flex justify-center">
               <div className="text-center space-y-4">
-                <h4 className="font-heading text-lg font-semibold">
-                  {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? 'Location' : 'Contact Us'}
-                </h4>
+                <h4 className="font-heading text-lg font-semibold">Contact Us</h4>
                 <div className="flex items-center justify-center space-x-6">
-                  {isAuthenticated && user?.role === 'librarian' && user?.collegeName?.toLowerCase().includes('acharya institute of technology') ? (
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-orange-400" />
-                      <p className="font-paragraph text-gray-300 text-sm">Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India</p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 text-orange-400" />
-                        <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Phone className="h-4 w-4 text-orange-400" />
-                        <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Mail className="h-4 w-4 text-orange-400" />
-                        <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
-                      </div>
-                    </>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="h-4 w-4 text-orange-400" />
+                    <p className="font-paragraph text-gray-300 text-sm">VTU Main Campus, Belagavi, Karnataka</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Phone className="h-4 w-4 text-orange-400" />
+                    <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Mail className="h-4 w-4 text-orange-400" />
+                    <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">vtuconsortium@gmail.com</a>
+                  </div>
                 </div>
               </div>
             </div>
