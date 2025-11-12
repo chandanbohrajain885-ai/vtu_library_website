@@ -128,32 +128,3 @@ export interface UserGuideArticles {
   /** @wixFieldType image */
   featuredImage?: string;
 }
-
-
-/**
- * Collection ID: librarianfileuploads
- * Interface for LibrarianFileUploads
- */
-export interface LibrarianFileUploads {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType url */
-  fileUrl?: string;
-  /** @wixFieldType text */
-  uploadType?: string;
-  /** @wixFieldType text */
-  collegeName?: string;
-  /** @wixFieldType text */
-  librarianName?: string;
-  /** @wixFieldType text */
-  librarianEmail?: string;
-  /** @wixFieldType text */
-  approvalStatus?: string;
-  /** @wixFieldType datetime */
-  uploadDate?: Date | string;
-  /** @wixFieldType datetime */
-  approvalDate?: Date | string;
-  /** @wixFieldType text */
-  superAdminComments?: string;
-}

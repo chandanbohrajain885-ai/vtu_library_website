@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
-import { EResources, NewsandEvents, UserGuideArticles } from '@/entities';
+import { EResources, NewsandEvents, UserGuideArticles, LibrarianFileUploads } from '@/entities';
 import { useLiveData } from '@/hooks/use-live-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -19,6 +19,7 @@ import { AddNewsModal } from '@/components/modals/AddNewsModal';
 import { EditNewsModal } from '@/components/modals/EditNewsModal';
 import { AddEResourceModal } from '@/components/modals/AddEResourceModal';
 import { AddUserGuideModal } from '@/components/modals/AddUserGuideModal';
+import FileUploadModal from '@/components/modals/FileUploadModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Search result interface
@@ -56,6 +57,11 @@ export default function HomePage() {
   } = useLiveData<UserGuideArticles>('userguidearticles');
   
   const isLoading = resourcesLoading || newsLoading || guidesLoading;
+  
+  // File upload states
+  const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [selectedUploadType, setSelectedUploadType] = useState<string>('');
   
   // Search functionality
   const [searchQuery, setSearchQuery] = useState('');
@@ -246,6 +252,62 @@ export default function HomePage() {
   const [isAddUserGuideModalOpen, setIsAddUserGuideModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Fetch user's uploads if librarian
+  useEffect(() => {
+    const fetchUploads = async () => {
+      if (user?.role === 'librarian' && user?.collegeName) {
+        try {
+          const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+          const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
+          setUploads(filteredUploads);
+        } catch (error) {
+          console.error('Error fetching uploads:', error);
+        }
+      }
+    };
+
+    fetchUploads();
+  }, [user]);
+
+  // Upload handlers
+  const handleUploadClick = (uploadType: string) => {
+    setSelectedUploadType(uploadType);
+    setUploadModalOpen(true);
+  };
+
+  const handleUploadSuccess = () => {
+    // Refresh uploads data
+    if (user?.role === 'librarian' && user?.collegeName) {
+      BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
+        .then(({ items }) => {
+          const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
+          setUploads(filteredUploads);
+        })
+        .catch(console.error);
+    }
+  };
+
+  const getUploadStatus = (uploadType: string) => {
+    const upload = uploads.find(u => u.uploadType === uploadType);
+    if (!upload) return null;
+    return upload.approvalStatus;
+  };
+
+  const getStatusBadge = (status: string | null) => {
+    if (!status) return null;
+    
+    switch (status) {
+      case 'Pending':
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending Review</Badge>;
+      case 'Approved':
+        return <Badge variant="outline" className="text-green-600 border-green-600">Approved</Badge>;
+      case 'Rejected':
+        return <Badge variant="outline" className="text-red-600 border-red-600">Rejected</Badge>;
+      default:
+        return null;
+    }
+  };
 
   const handleProtectedAction = (action: () => void, requiredRole?: string) => {
     if (!isAuthenticated) {
@@ -1486,6 +1548,114 @@ export default function HomePage() {
               />
             )}
 
+          {/* Quick Access Buttons - Only show for authenticated librarians */}
+          {isAuthenticated && user?.role === 'librarian' && (
+            <div className="mt-12 max-w-6xl mx-auto">
+              <h3 className="text-2xl font-bold text-white text-center mb-8">File Upload Center</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Membership Status Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 bg-white/95 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Users className="h-5 w-5 text-blue-500" />
+                        <span className="text-sm">Membership Status</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Membership Status'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      Upload your college membership status documents
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Membership Status')}
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-sm"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Document
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Membership Fees Receipts Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500 bg-white/95 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CreditCard className="h-5 w-5 text-green-500" />
+                        <span className="text-sm">Membership Fees Receipts</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Membership Fees Receipts'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      Upload membership fee payment receipts and records
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Membership Fees Receipts')}
+                      className="w-full bg-green-500 hover:bg-green-600 text-sm"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Receipt
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Current Year e-Resources Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500 bg-white/95 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Database className="h-5 w-5 text-purple-500" />
+                        <span className="text-sm">Current Year e-Resources</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Current Year e-Resources'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      Upload current academic year e-resource access details
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Current Year e-Resources')}
+                      className="w-full bg-purple-500 hover:bg-purple-600 text-sm"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Resources
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Access Confirmation Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 bg-white/95 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="h-5 w-5 text-orange-500" />
+                        <span className="text-sm">Access Confirmation</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Access Confirmation'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      Upload access confirmation and verification documents
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Access Confirmation')}
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-sm"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Confirmation
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
           {/* Quick Access Buttons - Removed */}
           </div>
         </div>
@@ -1763,6 +1933,17 @@ export default function HomePage() {
       <AddUserGuideModal 
         isOpen={isAddUserGuideModalOpen} 
         onClose={() => setIsAddUserGuideModalOpen(false)} 
+      />
+
+      {/* File Upload Modal */}
+      <FileUploadModal
+        isOpen={uploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        uploadType={selectedUploadType}
+        collegeName={user?.collegeName || ''}
+        librarianName={user?.librarianName || user?.username || ''}
+        librarianEmail={user?.email || ''}
+        onUploadSuccess={handleUploadSuccess}
       />
 
       {/* HeyGen Streaming Script */}
