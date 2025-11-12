@@ -22,7 +22,7 @@ function Layout() {
     <>
       <ScrollToTop />
       <Outlet />
-      <HeyGenAIAssistant apiKey="your-heygen-api-key" avatarId="default-avatar" />
+      <HeyGenAIAssistant apiKey="kH6vhsYvh92" avatarId="Wayne - Interactive Avatar 101" />
     </>
   );
 }

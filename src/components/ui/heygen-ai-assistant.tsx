@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Mic, MicOff, Send } from 'lucide-react';
+import { MessageCircle, X, Mic, MicOff, Send, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface HeyGenAIAssistantProps {
-  apiKey?: string;
-  avatarId?: string;
+  apiKey: string;
+  avatarId: string;
 }
 
 interface ChatMessage {
@@ -17,8 +17,8 @@ interface ChatMessage {
 }
 
 export function HeyGenAIAssistant({ 
-  apiKey = "your-heygen-api-key", 
-  avatarId = "default-avatar" 
+  apiKey, 
+  avatarId 
 }: HeyGenAIAssistantProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
@@ -34,19 +34,21 @@ export function HeyGenAIAssistant({
   const startSession = async () => {
     setIsLoading(true);
     try {
-      // Initialize HeyGen streaming session
-      // This is a placeholder for the actual HeyGen API integration
-      // You would replace this with actual HeyGen SDK calls
+      console.log(`Initializing HeyGen session with API Key: ${apiKey} and Avatar: ${avatarId}`);
       
-      // Simulated session start
+      // Initialize HeyGen streaming session with actual API
+      // Note: This is a placeholder for the actual HeyGen SDK integration
+      // The actual implementation would use HeyGen's streaming API
+      
+      // For now, we'll simulate the session initialization
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       setIsSessionActive(true);
       
-      // Add welcome message
+      // Add welcome message from Wayne
       const welcomeMessage: ChatMessage = {
         id: Date.now().toString(),
-        text: "Hello! I'm your AI library assistant. I can help you find resources, answer questions about our services, and guide you through our digital library. How can I assist you today?",
+        text: `Hello! I'm Wayne, your AI library assistant. I'm here to help you navigate our digital library resources, find academic materials, and answer any questions about our services. What can I help you discover today?`,
         isUser: false,
         timestamp: new Date()
       };
@@ -54,6 +56,14 @@ export function HeyGenAIAssistant({
       
     } catch (error) {
       console.error('Failed to start HeyGen session:', error);
+      // Add error message
+      const errorMessage: ChatMessage = {
+        id: Date.now().toString(),
+        text: "I'm having trouble connecting right now. Please try again in a moment, or feel free to browse our resources in the meantime.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages([errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -115,24 +125,32 @@ export function HeyGenAIAssistant({
     }
   };
 
-  // Simulate avatar response (replace with actual HeyGen integration)
+  // Enhanced avatar response with Wayne's personality
   const simulateAvatarResponse = async (userInput: string): Promise<string> => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const input = userInput.toLowerCase();
     
-    if (input.includes('resource') || input.includes('database')) {
-      return 'I can help you access our extensive digital resources. We have e-books, academic databases, and research tools available. Would you like me to guide you to a specific type of resource?';
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      return `Hi there! I'm Wayne, and I'm excited to help you explore our library's digital resources. Whether you're looking for research materials, academic journals, or need guidance on using our systems, I'm here to assist. What brings you to the library today?`;
+    } else if (input.includes('resource') || input.includes('database')) {
+      return `Great question! Our digital resource collection is quite extensive. We have access to academic databases, e-books, research tools, and specialized software including plagiarism detection tools. I can help you find exactly what you need for your research. What subject area or type of resource are you looking for?`;
     } else if (input.includes('journal') || input.includes('publication')) {
-      return 'Our journal collection includes thousands of academic publications across various disciplines. I can help you search for specific journals or browse by subject area. What field are you researching?';
-    } else if (input.includes('guide') || input.includes('help')) {
-      return 'I\'d be happy to provide guidance! Our user guides cover everything from basic navigation to advanced research techniques. What specific area would you like help with?';
-    } else if (input.includes('news') || input.includes('event')) {
-      return 'Stay updated with our latest news and upcoming events. We regularly host workshops, seminars, and training sessions. Would you like to know about any specific type of event?';
-    } else if (input.includes('librarian') || input.includes('contact')) {
-      return 'You can connect with our professional librarians for personalized assistance. They\'re available through our Librarian Corner or you can schedule a consultation. Would you like me to help you get in touch?';
+      return `Our journal collection is one of our strongest assets! We provide access to thousands of peer-reviewed academic journals across all disciplines. I can help you search by subject, publication name, or even help you find the most relevant journals for your research topic. What field are you researching?`;
+    } else if (input.includes('guide') || input.includes('help') || input.includes('how')) {
+      return `I'd be delighted to guide you! Our comprehensive user guides cover everything from basic navigation to advanced research techniques. Whether you need help with database searches, citation management, or accessing e-books, I can walk you through it step by step. What specific area would you like help with?`;
+    } else if (input.includes('news') || input.includes('event') || input.includes('announcement')) {
+      return `Stay in the loop with our latest updates! We regularly host workshops, research seminars, training sessions, and special events. Plus, we share important announcements about new resources and services. Would you like to know about upcoming events or recent news?`;
+    } else if (input.includes('librarian') || input.includes('contact') || input.includes('staff')) {
+      return `Our professional librarians are amazing resources! They're available through our Librarian Corner for personalized research assistance, and you can schedule one-on-one consultations. They're experts at helping with complex research questions and can provide specialized subject guidance. Would you like me to connect you with a librarian?`;
+    } else if (input.includes('search') || input.includes('find')) {
+      return `I can definitely help you search more effectively! Our search tools are quite powerful once you know how to use them. You can search across all our databases simultaneously, use advanced filters, and even set up alerts for new publications in your field. What are you trying to find?`;
+    } else if (input.includes('access') || input.includes('login') || input.includes('account')) {
+      return `Access questions are common! Most of our digital resources require authentication through your institutional account. If you're having trouble accessing something, I can guide you through the login process or help you understand which resources are available to you. What specific access issue are you experiencing?`;
+    } else if (input.includes('thank') || input.includes('thanks')) {
+      return `You're very welcome! I'm here whenever you need assistance with our library services. Feel free to ask me anything about our resources, and don't hesitate to reach out to our librarians for more specialized help. Happy researching!`;
     } else {
-      return 'I\'m here to help you navigate our library services and resources. I can assist with finding materials, using our databases, understanding our services, or connecting you with librarians. What would you like to explore?';
+      return `That's an interesting question! As your AI library assistant, I'm here to help you make the most of our digital library resources. I can assist with finding materials, navigating our databases, understanding our services, or connecting you with our expert librarians. Could you tell me a bit more about what you're looking for?`;
     }
   };
 
@@ -170,7 +188,10 @@ export function HeyGenAIAssistant({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <CardTitle className="text-lg font-semibold">AI Library Assistant</CardTitle>
+                <div>
+                  <CardTitle className="text-lg font-semibold">Wayne - AI Assistant</CardTitle>
+                  <p className="text-xs text-white/80">Library Resource Expert</p>
+                </div>
               </div>
               <Button
                 onClick={toggleWidget}
@@ -188,15 +209,19 @@ export function HeyGenAIAssistant({
             <div className="relative bg-gradient-to-b from-gray-50 to-gray-100 h-48 flex items-center justify-center border-b">
               {!isSessionActive ? (
                 <div className="text-center space-y-4">
-                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                    <MessageCircle className="h-10 w-10 text-primary" />
+                  <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center mx-auto border-4 border-primary/20">
+                    <Bot className="h-12 w-12 text-primary" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-gray-800">Meet Wayne</h3>
+                    <p className="text-sm text-gray-600">Your AI Library Assistant</p>
                   </div>
                   <Button
                     onClick={startSession}
                     disabled={isLoading}
                     className="bg-primary hover:bg-primary/90 text-white px-6 py-2"
                   >
-                    {isLoading ? 'Connecting...' : 'Start Conversation'}
+                    {isLoading ? 'Connecting to Wayne...' : 'Start Conversation'}
                   </Button>
                 </div>
               ) : (
@@ -209,9 +234,9 @@ export function HeyGenAIAssistant({
                     playsInline
                   />
                   {isTalking && (
-                    <div className="absolute bottom-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs flex items-center space-x-1">
+                    <div className="absolute bottom-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-2">
                       <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                      <span>Speaking...</span>
+                      <span>Wayne is speaking...</span>
                     </div>
                   )}
                   <Button
@@ -266,7 +291,7 @@ export function HeyGenAIAssistant({
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Ask me anything about the library..."
+                      placeholder="Ask Wayne about library resources..."
                       className="flex-1 border-gray-300 focus:border-primary"
                       disabled={isTalking}
                     />
