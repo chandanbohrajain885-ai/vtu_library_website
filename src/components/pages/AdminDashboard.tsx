@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth, User, RegistrationRequest } from '@/components/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,8 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BaseCrudService } from '@/integrations';
+import { LibrarianFileUploads } from '@/entities';
 
 const availablePermissions = [
   'view_resources',
@@ -41,12 +44,32 @@ export default function AdminDashboard() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [viewingRequest, setViewingRequest] = useState<RegistrationRequest | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [pendingUploads, setPendingUploads] = useState<LibrarianFileUploads[]>([]);
+  const [viewingUpload, setViewingUpload] = useState<LibrarianFileUploads | null>(null);
+  const [approvalComments, setApprovalComments] = useState('');
   const [newUser, setNewUser] = useState({
     username: '',
     password: '',
     role: 'admin' as 'admin' | 'librarian' | 'publisher',
     permissions: [] as string[]
   });
+
+  // Fetch pending uploads on component mount
+  useEffect(() => {
+    const fetchPendingUploads = async () => {
+      try {
+        const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+        const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+        setPendingUploads(pending);
+      } catch (error) {
+        console.error('Error fetching pending uploads:', error);
+      }
+    };
+
+    if (user?.role === 'superadmin') {
+      fetchPendingUploads();
+    }
+  }, [user]);
 
   if (user?.role !== 'superadmin') {
     return (
@@ -92,9 +115,54 @@ export default function AdminDashboard() {
   };
 
   const handleRejectRequest = (requestId: string) => {
+    if (!rejectReason.trim()) return;
     rejectRegistrationRequest(requestId, rejectReason);
     setViewingRequest(null);
     setRejectReason('');
+  };
+
+  const handleApproveUpload = async (uploadId: string) => {
+    try {
+      await BaseCrudService.update('librarianfileuploads', {
+        _id: uploadId,
+        approvalStatus: 'Approved',
+        approvalDate: new Date().toISOString(),
+        superAdminComments: approvalComments
+      });
+      
+      // Refresh pending uploads
+      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      setPendingUploads(pending);
+      
+      setViewingUpload(null);
+      setApprovalComments('');
+    } catch (error) {
+      console.error('Error approving upload:', error);
+    }
+  };
+
+  const handleRejectUpload = async (uploadId: string) => {
+    if (!approvalComments.trim()) return;
+    
+    try {
+      await BaseCrudService.update('librarianfileuploads', {
+        _id: uploadId,
+        approvalStatus: 'Rejected',
+        approvalDate: new Date().toISOString(),
+        superAdminComments: approvalComments
+      });
+      
+      // Refresh pending uploads
+      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      setPendingUploads(pending);
+      
+      setViewingUpload(null);
+      setApprovalComments('');
+    } catch (error) {
+      console.error('Error rejecting upload:', error);
+    }
   };
 
   const pendingRequests = registrationRequests.filter(r => r.status === 'pending');
@@ -134,7 +202,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -180,7 +248,156 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending Uploads</CardTitle>
+              <FileText className="h-4 w-4 text-blue-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">
+                {pendingUploads.length}
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Pending File Uploads Section */}
+        {pendingUploads.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-blue-500" />
+                  Pending File Upload Approvals
+                </CardTitle>
+                <Badge variant="secondary">{pendingUploads.length} pending</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {pendingUploads.map((upload) => (
+                  <div key={upload._id} className="flex items-center justify-between p-4 border rounded-lg bg-blue-50">
+                    <div className="flex items-center space-x-4">
+                      <div>
+                        <h3 className="font-medium">{upload.uploadType}</h3>
+                        <p className="text-sm text-gray-500">{upload.collegeName}</p>
+                        <p className="text-sm text-gray-500">Librarian: {upload.librarianName}</p>
+                        <p className="text-xs text-gray-400">
+                          Uploaded: {upload.uploadDate ? new Date(upload.uploadDate).toLocaleDateString() : 'Unknown'}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="text-blue-600 border-blue-600">
+                        {upload.approvalStatus}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setViewingUpload(upload)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            Review
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>Review File Upload</DialogTitle>
+                          </DialogHeader>
+                          {viewingUpload && (
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Type</Label>
+                                  <p className="text-sm">{viewingUpload.uploadType}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">College</Label>
+                                  <p className="text-sm">{viewingUpload.collegeName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Librarian</Label>
+                                  <p className="text-sm">{viewingUpload.librarianName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Date</Label>
+                                  <p className="text-sm">
+                                    {viewingUpload.uploadDate ? new Date(viewingUpload.uploadDate).toLocaleDateString() : 'Unknown'}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <Label className="text-sm font-medium">File</Label>
+                                <div className="mt-2 p-3 border rounded-lg bg-gray-50">
+                                  <div className="flex items-center space-x-2">
+                                    <FileText className="h-4 w-4 text-blue-600" />
+                                    <span className="text-sm text-blue-800">
+                                      {viewingUpload.uploadType} Document
+                                    </span>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => window.open(viewingUpload.fileUrl, '_blank')}
+                                    >
+                                      <Download className="h-4 w-4 mr-1" />
+                                      View File
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="approvalComments">Comments</Label>
+                                <Textarea
+                                  id="approvalComments"
+                                  value={approvalComments}
+                                  onChange={(e) => setApprovalComments(e.target.value)}
+                                  placeholder="Enter comments for approval/rejection..."
+                                  rows={3}
+                                />
+                              </div>
+                              
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setViewingUpload(null);
+                                    setApprovalComments('');
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => handleRejectUpload(viewingUpload._id)}
+                                  disabled={!approvalComments.trim()}
+                                >
+                                  <XCircle className="h-4 w-4 mr-1" />
+                                  Reject
+                                </Button>
+                                <Button
+                                  onClick={() => handleApproveUpload(viewingUpload._id)}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Approve
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Registration Requests Section */}
         {pendingRequests.length > 0 && (

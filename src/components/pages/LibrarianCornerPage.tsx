@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { BaseCrudService } from '@/integrations';
-import { EResources, UserGuideArticles, NewsandEvents } from '@/entities';
+import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads } from '@/entities';
+import FileUploadModal from '@/components/modals/FileUploadModal';
 
 interface LibrarianResource {
   id: string;
@@ -27,7 +28,10 @@ export default function LibrarianCornerPage() {
   const [resources, setResources] = useState<EResources[]>([]);
   const [userGuides, setUserGuides] = useState<UserGuideArticles[]>([]);
   const [news, setNews] = useState<NewsandEvents[]>([]);
+  const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [selectedUploadType, setSelectedUploadType] = useState<string>('');
 
   // Check if user is authorized (librarian or superadmin)
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
@@ -53,6 +57,13 @@ export default function LibrarianCornerPage() {
         // Fetch News
         const { items: newsItems } = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
         setNews(newsItems);
+
+        // Fetch user's uploads if librarian
+        if (user?.role === 'librarian' && user?.collegeName) {
+          const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+          const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
+          setUploads(filteredUploads);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -85,6 +96,44 @@ export default function LibrarianCornerPage() {
       return `Welcome ${user.librarianName}`;
     } else {
       return `Welcome ${user?.username}`;
+    }
+  };
+
+  const handleUploadClick = (uploadType: string) => {
+    setSelectedUploadType(uploadType);
+    setUploadModalOpen(true);
+  };
+
+  const handleUploadSuccess = () => {
+    // Refresh uploads data
+    if (user?.role === 'librarian' && user?.collegeName) {
+      BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
+        .then(({ items }) => {
+          const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
+          setUploads(filteredUploads);
+        })
+        .catch(console.error);
+    }
+  };
+
+  const getUploadStatus = (uploadType: string) => {
+    const upload = uploads.find(u => u.uploadType === uploadType);
+    if (!upload) return null;
+    return upload.approvalStatus;
+  };
+
+  const getStatusBadge = (status: string | null) => {
+    if (!status) return null;
+    
+    switch (status) {
+      case 'Pending':
+        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending Review</Badge>;
+      case 'Approved':
+        return <Badge variant="outline" className="text-green-600 border-green-600">Approved</Badge>;
+      case 'Rejected':
+        return <Badge variant="outline" className="text-red-600 border-red-600">Rejected</Badge>;
+      default:
+        return null;
     }
   };
 
@@ -225,6 +274,111 @@ export default function LibrarianCornerPage() {
 
           {/* Quick Access Section */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {/* Show upload buttons for librarians only */}
+            {user?.role === 'librarian' && (
+              <>
+                {/* Membership Status Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Users className="h-5 w-5 text-blue-500" />
+                        <span>Membership Status</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Membership Status'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Upload your college membership status documents
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Membership Status')}
+                      className="w-full bg-blue-500 hover:bg-blue-600"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Document
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Membership Fees Receipts Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CreditCard className="h-5 w-5 text-green-500" />
+                        <span>Membership Fees Receipts</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Membership Fees Receipts'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Upload membership fee payment receipts and records
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Membership Fees Receipts')}
+                      className="w-full bg-green-500 hover:bg-green-600"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Receipt
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Current Year e-Resources Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Database className="h-5 w-5 text-purple-500" />
+                        <span>Current Year e-Resources</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Current Year e-Resources'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Upload current academic year e-resource access details
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Current Year e-Resources')}
+                      className="w-full bg-purple-500 hover:bg-purple-600"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Resources
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Access Confirmation Upload */}
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="h-5 w-5 text-orange-500" />
+                        <span>Access Confirmation</span>
+                      </div>
+                      {getStatusBadge(getUploadStatus('Access Confirmation'))}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">
+                      Upload access confirmation and verification documents
+                    </p>
+                    <Button 
+                      onClick={() => handleUploadClick('Access Confirmation')}
+                      className="w-full bg-orange-500 hover:bg-orange-600"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Confirmation
+                    </Button>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
             {/* E-Resources Access */}
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
@@ -351,6 +505,17 @@ export default function LibrarianCornerPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* File Upload Modal */}
+          <FileUploadModal
+            isOpen={uploadModalOpen}
+            onClose={() => setUploadModalOpen(false)}
+            uploadType={selectedUploadType}
+            collegeName={user?.collegeName || ''}
+            librarianName={user?.librarianName || user?.username || ''}
+            librarianEmail={user?.email || ''}
+            onUploadSuccess={handleUploadSuccess}
+          />
 
           {/* Recent Resources */}
           <div className="bg-white rounded-lg shadow-lg p-8">
