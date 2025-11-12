@@ -18,8 +18,8 @@ interface HeyGenAIAssistantProps {
  *    - VITE_HEYGEN_AVATAR_ID=your_actual_avatar_id
  */
 export function HeyGenAIAssistant({ 
-  apiKey = import.meta.env.VITE_HEYGEN_API_KEY, 
-  avatarId = import.meta.env.VITE_HEYGEN_AVATAR_ID 
+  apiKey = "kH6vhsYvh92"
+  avatarId = "Thaddeus_ProfessionalLook_public"
 }: HeyGenAIAssistantProps) {
   // Check if environment variables are configured
   // Make sure to copy .env.example to .env and configure your HeyGen credentials
