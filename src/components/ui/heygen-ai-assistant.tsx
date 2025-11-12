@@ -13,12 +13,6 @@ export function HeyGenAIAssistant({
 }: HeyGenAIAssistantProps) {
   // Check if environment variables are configured
   const isConfigured = apiKey && avatarId;
-  
-  // Don't render the widget if not properly configured
-  if (!isConfigured) {
-    console.warn('HeyGen AI Assistant: Missing environment variables VITE_HEYGEN_API_KEY or VITE_HEYGEN_AVATAR_ID');
-    return null;
-  }
 
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -163,7 +157,16 @@ export function HeyGenAIAssistant({
 
           {/* Video Container */}
           <div className="relative h-[400px] bg-gradient-to-b from-gray-50 to-gray-100">
-            {!isSessionActive ? (
+            {!isConfigured ? (
+              <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center mb-4 border-4 border-red-300">
+                  <Video className="h-10 w-10 text-red-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-2">Configuration Required</h3>
+                <p className="text-sm text-gray-600 mb-4">Please configure HeyGen API credentials</p>
+                <p className="text-xs text-gray-500">Set VITE_HEYGEN_API_KEY and VITE_HEYGEN_AVATAR_ID environment variables</p>
+              </div>
+            ) : !isSessionActive ? (
               <div className="flex flex-col items-center justify-center h-full p-6 text-center">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center mb-4 border-4 border-primary/20">
                   <Video className="h-10 w-10 text-primary" />
