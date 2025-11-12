@@ -7,11 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle, Eye } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { BaseCrudService } from '@/integrations';
 import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads } from '@/entities';
 import FileUploadModal from '@/components/modals/FileUploadModal';
+import ViewFilesModal from '@/components/modals/ViewFilesModal';
 
 interface LibrarianResource {
   id: string;
@@ -32,6 +33,8 @@ export default function LibrarianCornerPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
+  const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
+  const [selectedViewType, setSelectedViewType] = useState<string>('');
 
   // Check if user is authorized (librarian or superadmin)
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
@@ -104,6 +107,11 @@ export default function LibrarianCornerPage() {
     setUploadModalOpen(true);
   };
 
+  const handleViewFilesClick = (uploadType: string) => {
+    setSelectedViewType(uploadType);
+    setViewFilesModalOpen(true);
+  };
+
   const handleUploadSuccess = () => {
     // Refresh uploads data
     if (user?.role === 'librarian' && user?.collegeName) {
@@ -120,6 +128,10 @@ export default function LibrarianCornerPage() {
     const upload = uploads.find(u => u.uploadType === uploadType);
     if (!upload) return null;
     return upload.approvalStatus;
+  };
+
+  const getUploadedFiles = (uploadType: string) => {
+    return uploads.filter(u => u.uploadType === uploadType);
   };
 
   const getStatusBadge = (status: string | null) => {
@@ -292,13 +304,25 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload your college membership status documents
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Membership Status')}
-                      className="w-full bg-blue-500 hover:bg-blue-600"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Document
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Membership Status')}
+                        className="w-full bg-blue-500 hover:bg-blue-600"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Document
+                      </Button>
+                      {getUploadedFiles('Membership Status').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Membership Status')}
+                          variant="outline"
+                          className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Membership Status').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -317,13 +341,25 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload membership fee payment receipts and records
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Membership Fees Receipts')}
-                      className="w-full bg-green-500 hover:bg-green-600"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Receipt
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Membership Fees Receipts')}
+                        className="w-full bg-green-500 hover:bg-green-600"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Receipt
+                      </Button>
+                      {getUploadedFiles('Membership Fees Receipts').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Membership Fees Receipts')}
+                          variant="outline"
+                          className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Membership Fees Receipts').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -342,13 +378,25 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload current academic year e-resource access details
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Current Year e-Resources')}
-                      className="w-full bg-purple-500 hover:bg-purple-600"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Resources
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Current Year e-Resources')}
+                        className="w-full bg-purple-500 hover:bg-purple-600"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Resources
+                      </Button>
+                      {getUploadedFiles('Current Year e-Resources').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Current Year e-Resources')}
+                          variant="outline"
+                          className="w-full border-purple-500 text-purple-600 hover:bg-purple-50"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Current Year e-Resources').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -367,13 +415,25 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload access confirmation and verification documents
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Access Confirmation')}
-                      className="w-full bg-orange-500 hover:bg-orange-600"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Confirmation
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Access Confirmation')}
+                        className="w-full bg-orange-500 hover:bg-orange-600"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Confirmation
+                      </Button>
+                      {getUploadedFiles('Access Confirmation').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Access Confirmation')}
+                          variant="outline"
+                          className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Access Confirmation').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </>
@@ -626,6 +686,25 @@ export default function LibrarianCornerPage() {
           </div>
         </div>
       </footer>
+
+      {/* File Upload Modal */}
+      <FileUploadModal
+        isOpen={uploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        uploadType={selectedUploadType}
+        collegeName={user?.collegeName || ''}
+        librarianName={user?.librarianName || user?.username || ''}
+        librarianEmail={user?.email || ''}
+        onUploadSuccess={handleUploadSuccess}
+      />
+
+      {/* View Files Modal */}
+      <ViewFilesModal
+        isOpen={viewFilesModalOpen}
+        onClose={() => setViewFilesModalOpen(false)}
+        uploadType={selectedViewType}
+        collegeName={user?.collegeName || ''}
+      />
     </div>
   );
 }

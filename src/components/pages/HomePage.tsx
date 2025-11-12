@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle } from 'lucide-react';
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle, Eye, Clock, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -20,6 +20,7 @@ import { EditNewsModal } from '@/components/modals/EditNewsModal';
 import { AddEResourceModal } from '@/components/modals/AddEResourceModal';
 import { AddUserGuideModal } from '@/components/modals/AddUserGuideModal';
 import FileUploadModal from '@/components/modals/FileUploadModal';
+import ViewFilesModal from '@/components/modals/ViewFilesModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Search result interface
@@ -62,6 +63,8 @@ export default function HomePage() {
   const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
+  const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
+  const [selectedViewType, setSelectedViewType] = useState<string>('');
   
   // Search functionality
   const [searchQuery, setSearchQuery] = useState('');
@@ -276,6 +279,11 @@ export default function HomePage() {
     setUploadModalOpen(true);
   };
 
+  const handleViewFilesClick = (uploadType: string) => {
+    setSelectedViewType(uploadType);
+    setViewFilesModalOpen(true);
+  };
+
   const handleUploadSuccess = () => {
     // Refresh uploads data
     if (user?.role === 'librarian' && user?.collegeName) {
@@ -292,6 +300,10 @@ export default function HomePage() {
     const upload = uploads.find(u => u.uploadType === uploadType);
     if (!upload) return null;
     return upload.approvalStatus;
+  };
+
+  const getUploadedFiles = (uploadType: string) => {
+    return uploads.filter(u => u.uploadType === uploadType);
   };
 
   const getStatusBadge = (status: string | null) => {
@@ -1568,13 +1580,25 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4 text-sm">
                       Upload your college membership status documents
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Membership Status')}
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-sm"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Document
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Membership Status')}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Document
+                      </Button>
+                      {getUploadedFiles('Membership Status').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Membership Status')}
+                          variant="outline"
+                          className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 text-sm"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Membership Status').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1593,13 +1617,25 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4 text-sm">
                       Upload membership fee payment receipts and records
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Membership Fees Receipts')}
-                      className="w-full bg-green-500 hover:bg-green-600 text-sm"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Receipt
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Membership Fees Receipts')}
+                        className="w-full bg-green-500 hover:bg-green-600 text-sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Receipt
+                      </Button>
+                      {getUploadedFiles('Membership Fees Receipts').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Membership Fees Receipts')}
+                          variant="outline"
+                          className="w-full border-green-500 text-green-600 hover:bg-green-50 text-sm"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Membership Fees Receipts').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1618,13 +1654,25 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4 text-sm">
                       Upload current academic year e-resource access details
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Current Year e-Resources')}
-                      className="w-full bg-purple-500 hover:bg-purple-600 text-sm"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Resources
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Current Year e-Resources')}
+                        className="w-full bg-purple-500 hover:bg-purple-600 text-sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Resources
+                      </Button>
+                      {getUploadedFiles('Current Year e-Resources').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Current Year e-Resources')}
+                          variant="outline"
+                          className="w-full border-purple-500 text-purple-600 hover:bg-purple-50 text-sm"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Current Year e-Resources').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1643,13 +1691,25 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4 text-sm">
                       Upload access confirmation and verification documents
                     </p>
-                    <Button 
-                      onClick={() => handleUploadClick('Access Confirmation')}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-sm"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Confirmation
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        onClick={() => handleUploadClick('Access Confirmation')}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-sm"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Confirmation
+                      </Button>
+                      {getUploadedFiles('Access Confirmation').length > 0 && (
+                        <Button 
+                          onClick={() => handleViewFilesClick('Access Confirmation')}
+                          variant="outline"
+                          className="w-full border-orange-500 text-orange-600 hover:bg-orange-50 text-sm"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Uploaded Files ({getUploadedFiles('Access Confirmation').length})
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -1944,6 +2004,14 @@ export default function HomePage() {
         librarianName={user?.librarianName || user?.username || ''}
         librarianEmail={user?.email || ''}
         onUploadSuccess={handleUploadSuccess}
+      />
+
+      {/* View Files Modal */}
+      <ViewFilesModal
+        isOpen={viewFilesModalOpen}
+        onClose={() => setViewFilesModalOpen(false)}
+        uploadType={selectedViewType}
+        collegeName={user?.collegeName || ''}
       />
 
       {/* HeyGen Streaming Script */}
