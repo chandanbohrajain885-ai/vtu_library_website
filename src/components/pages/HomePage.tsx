@@ -1769,6 +1769,142 @@ export default function HomePage() {
         isOpen={isAddUserGuideModalOpen} 
         onClose={() => setIsAddUserGuideModalOpen(false)} 
       />
+
+      {/* HeyGen Streaming Script */}
+      <script 
+        dangerouslySetInnerHTML={{
+          __html: `
+            // HeyGen Streaming Avatar Widget
+            (function() {
+              // Load HeyGen streaming script
+              const script = document.createElement('script');
+              script.src = 'https://resource.heygen.ai/streaming-avatar/latest/streaming-avatar.js';
+              script.onload = function() {
+                // Create widget container
+                const widgetContainer = document.createElement('div');
+                widgetContainer.id = 'heygen-widget';
+                widgetContainer.style.cssText = \`
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  width: 400px;
+                  height: 300px;
+                  background: white;
+                  border-radius: 12px;
+                  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                  z-index: 1000;
+                  display: none;
+                  overflow: hidden;
+                \`;
+                
+                // Create floating button
+                const floatingBtn = document.createElement('button');
+                floatingBtn.innerHTML = '🎥';
+                floatingBtn.style.cssText = \`
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  width: 60px;
+                  height: 60px;
+                  border-radius: 50%;
+                  background: #f97316;
+                  color: white;
+                  border: none;
+                  font-size: 24px;
+                  cursor: pointer;
+                  z-index: 1001;
+                  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+                  transition: all 0.3s ease;
+                \`;
+                
+                floatingBtn.onmouseover = function() {
+                  this.style.transform = 'scale(1.1)';
+                };
+                floatingBtn.onmouseout = function() {
+                  this.style.transform = 'scale(1)';
+                };
+                
+                // Toggle widget
+                let isOpen = false;
+                floatingBtn.onclick = function() {
+                  isOpen = !isOpen;
+                  widgetContainer.style.display = isOpen ? 'block' : 'none';
+                  floatingBtn.style.display = isOpen ? 'none' : 'block';
+                  
+                  if (isOpen && window.StreamingAvatar) {
+                    initializeAvatar();
+                  }
+                };
+                
+                // Close button for widget
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '×';
+                closeBtn.style.cssText = \`
+                  position: absolute;
+                  top: 10px;
+                  right: 10px;
+                  width: 30px;
+                  height: 30px;
+                  border: none;
+                  background: rgba(0,0,0,0.1);
+                  border-radius: 50%;
+                  cursor: pointer;
+                  font-size: 18px;
+                  z-index: 1002;
+                \`;
+                
+                closeBtn.onclick = function() {
+                  widgetContainer.style.display = 'none';
+                  floatingBtn.style.display = 'block';
+                  isOpen = false;
+                };
+                
+                widgetContainer.appendChild(closeBtn);
+                document.body.appendChild(widgetContainer);
+                document.body.appendChild(floatingBtn);
+                
+                // Initialize avatar function
+                function initializeAvatar() {
+                  try {
+                    const avatarContainer = document.createElement('div');
+                    avatarContainer.style.cssText = 'width: 100%; height: 100%;';
+                    widgetContainer.appendChild(avatarContainer);
+                    
+                    // Initialize HeyGen StreamingAvatar
+                    const avatar = new window.StreamingAvatar({
+                      token: 'your-api-token-here', // Replace with actual token
+                      avatarId: 'your-avatar-id-here', // Replace with actual avatar ID
+                      container: avatarContainer,
+                      width: 400,
+                      height: 300,
+                      quality: 'high'
+                    });
+                    
+                    avatar.createStartAvatar().then(() => {
+                      console.log('HeyGen avatar initialized successfully');
+                      avatar.speak({
+                        text: "Hello! I'm your AI library assistant. How can I help you today?",
+                        taskType: 'talk'
+                      });
+                    }).catch(error => {
+                      console.error('Failed to initialize avatar:', error);
+                      avatarContainer.innerHTML = '<div style="padding: 20px; text-align: center;">Unable to load avatar. Please check your configuration.</div>';
+                    });
+                  } catch (error) {
+                    console.error('Avatar initialization error:', error);
+                  }
+                }
+              };
+              
+              script.onerror = function() {
+                console.error('Failed to load HeyGen streaming script');
+              };
+              
+              document.head.appendChild(script);
+            })();
+          `
+        }}
+      />
     </div>
   );
 }
