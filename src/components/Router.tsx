@@ -14,6 +14,7 @@ import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { ChatbotWidget } from '@/components/ui/chatbot-widget';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -21,6 +22,7 @@ function Layout() {
     <>
       <ScrollToTop />
       <Outlet />
+      <ChatbotWidget apiKey="kH6vhsYvh92" />
     </>
   );
 }
