@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
-import { Download, Calendar, User, FileText, ExternalLink, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthContext';
+import { Download, Calendar, User, FileText, ExternalLink, Clock, CheckCircle, XCircle, AlertCircle, Edit, Trash2 } from 'lucide-react';
 
 interface ViewFilesModalProps {
   isOpen: boolean;
@@ -15,8 +16,12 @@ interface ViewFilesModalProps {
 }
 
 export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeName }: ViewFilesModalProps) {
+  const { user } = useAuth();
   const [files, setFiles] = useState<LibrarianFileUploads[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Check if user can edit/remove files (only college librarians, not super admin)
+  const canEditFiles = user?.role === 'librarian' && user?.collegeName === collegeName;
 
   useEffect(() => {
     if (isOpen && uploadType && collegeName) {
@@ -97,6 +102,18 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
     }
   };
 
+  const handleRemoveFile = async (fileId: string) => {
+    if (!canEditFiles) return;
+    
+    try {
+      await BaseCrudService.delete('librarianfileuploads', fileId);
+      // Refresh the files list
+      fetchFiles();
+    } catch (error) {
+      console.error('Error removing file:', error);
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
@@ -104,9 +121,15 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
           <DialogTitle className="flex items-center space-x-2">
             <FileText className="h-5 w-5" />
             <span>Uploaded Files - {uploadType}</span>
+            {!canEditFiles && user?.role === 'superadmin' && (
+              <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50 ml-2">
+                Read Only
+              </Badge>
+            )}
           </DialogTitle>
           <DialogDescription>
             View all uploaded files for {uploadType} from {collegeName}
+            {!canEditFiles && user?.role === 'superadmin' && " (Super Admin view - no edit/remove access)"}
           </DialogDescription>
         </DialogHeader>
 
@@ -219,6 +242,19 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
                             >
                               <ExternalLink className="h-4 w-4 mr-2" />
                               View
+                            </Button>
+                          </>
+                        )}
+                        {canEditFiles && (
+                          <>
+                            <Button
+                              onClick={() => handleRemoveFile(file._id)}
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 border-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Remove
                             </Button>
                           </>
                         )}

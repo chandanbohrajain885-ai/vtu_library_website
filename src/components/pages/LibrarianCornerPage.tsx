@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle, Eye } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle, Eye, Building, Search } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { BaseCrudService } from '@/integrations';
-import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads } from '@/entities';
+import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads, LibrarianAccounts } from '@/entities';
 import FileUploadModal from '@/components/modals/FileUploadModal';
 import ViewFilesModal from '@/components/modals/ViewFilesModal';
 
@@ -30,6 +30,10 @@ export default function LibrarianCornerPage() {
   const [userGuides, setUserGuides] = useState<UserGuideArticles[]>([]);
   const [news, setNews] = useState<NewsandEvents[]>([]);
   const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
+  const [colleges, setColleges] = useState<LibrarianAccounts[]>([]);
+  const [selectedCollege, setSelectedCollege] = useState<LibrarianAccounts | null>(null);
+  const [collegeFiles, setCollegeFiles] = useState<LibrarianFileUploads[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
@@ -61,8 +65,12 @@ export default function LibrarianCornerPage() {
         const { items: newsItems } = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
         setNews(newsItems);
 
-        // Fetch user's uploads if librarian
-        if (user?.role === 'librarian' && user?.collegeName) {
+        // If super admin, fetch all colleges for selection
+        if (user?.role === 'superadmin') {
+          const { items: allColleges } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
+          setColleges(allColleges);
+        } else if (user?.role === 'librarian' && user?.collegeName) {
+          // Fetch user's uploads if librarian
           const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
           console.log('LibrarianCornerPage - All uploads from DB:', userUploads);
           const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
@@ -94,7 +102,7 @@ export default function LibrarianCornerPage() {
   // Get welcome message based on user type
   const getWelcomeMessage = () => {
     if (user?.role === 'superadmin') {
-      return 'Welcome Super Admin';
+      return selectedCollege ? `${selectedCollege.collegeName} - Files` : 'Registered Colleges';
     } else if (user?.role === 'librarian' && user?.collegeName) {
       return `Welcome ${user.collegeName}`;
     } else if (user?.role === 'librarian' && user?.librarianName) {
@@ -103,6 +111,43 @@ export default function LibrarianCornerPage() {
       return `Welcome ${user?.username}`;
     }
   };
+
+  const handleCollegeSelect = async (college: LibrarianAccounts) => {
+    setSelectedCollege(college);
+    try {
+      const { items: allFiles } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const collegeSpecificFiles = allFiles.filter(file => file.collegeName === college.collegeName);
+      setCollegeFiles(collegeSpecificFiles);
+    } catch (error) {
+      console.error('Error fetching college files:', error);
+    }
+  };
+
+  const handleBackToColleges = () => {
+    setSelectedCollege(null);
+    setCollegeFiles([]);
+    setSearchTerm('');
+  };
+
+  const filteredColleges = colleges.filter(college =>
+    college.collegeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    college.librarianName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getFilesByType = (uploadType: string) => {
+    return collegeFiles.filter(file => file.uploadType === uploadType);
+  };
+
+  const formatDate = (date: Date | string | undefined) => {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+
 
   const handleUploadClick = (uploadType: string) => {
     setSelectedUploadType(uploadType);
@@ -117,12 +162,23 @@ export default function LibrarianCornerPage() {
   };
 
   const handleViewApprovedFiles = (uploadType: string) => {
-    console.log('LibrarianCornerPage - handleViewApprovedFiles called with:', {
-      uploadType,
-      userCollegeName: user?.collegeName,
-      userRole: user?.role
-    });
-    navigate(`/approved-files/${encodeURIComponent(uploadType)}`);
+    if (user?.role === 'superadmin' && selectedCollege) {
+      // For super admin viewing a specific college's files
+      console.log('LibrarianCornerPage - Super admin viewing approved files:', {
+        uploadType,
+        collegeName: selectedCollege.collegeName,
+        userRole: user?.role
+      });
+      navigate(`/approved-files/${encodeURIComponent(uploadType)}?college=${encodeURIComponent(selectedCollege.collegeName || '')}`);
+    } else {
+      // For regular librarian or super admin viewing their own files
+      console.log('LibrarianCornerPage - handleViewApprovedFiles called with:', {
+        uploadType,
+        userCollegeName: user?.collegeName,
+        userRole: user?.role
+      });
+      navigate(`/approved-files/${encodeURIComponent(uploadType)}`);
+    }
   };
 
   const handleUploadSuccess = () => {
@@ -140,17 +196,26 @@ export default function LibrarianCornerPage() {
   };
 
   const getUploadStatus = (uploadType: string) => {
-    const upload = uploads.find(u => u.uploadType === uploadType);
-    if (!upload) return null;
-    return upload.approvalStatus;
+    if (user?.role === 'superadmin' && selectedCollege) {
+      const upload = collegeFiles.find(u => u.uploadType === uploadType);
+      return upload ? upload.approvalStatus : null;
+    } else {
+      const upload = uploads.find(u => u.uploadType === uploadType);
+      return upload ? upload.approvalStatus : null;
+    }
   };
 
   const getUploadedFiles = (uploadType: string) => {
-    const filtered = uploads.filter(u => u.uploadType === uploadType);
-    console.log(`LibrarianCornerPage - getUploadedFiles for ${uploadType}:`, filtered);
-    console.log(`LibrarianCornerPage - All uploads:`, uploads);
-    console.log(`LibrarianCornerPage - User college:`, user?.collegeName);
-    return filtered;
+    if (user?.role === 'superadmin' && selectedCollege) {
+      const filtered = collegeFiles.filter(u => u.uploadType === uploadType);
+      return filtered;
+    } else {
+      const filtered = uploads.filter(u => u.uploadType === uploadType);
+      console.log(`LibrarianCornerPage - getUploadedFiles for ${uploadType}:`, filtered);
+      console.log(`LibrarianCornerPage - All uploads:`, uploads);
+      console.log(`LibrarianCornerPage - User college:`, user?.collegeName);
+      return filtered;
+    }
   };
 
   const getStatusBadge = (status: string | null) => {
@@ -167,6 +232,313 @@ export default function LibrarianCornerPage() {
         return null;
     }
   };
+
+  // If super admin is viewing colleges list
+  if (user?.role === 'superadmin' && !selectedCollege) {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+                <span className="text-orange-200 font-semibold">Librarian Corner</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm">Welcome, {user?.username}</span>
+                <Button 
+                  onClick={logout}
+                  variant="outline" 
+                  className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                Registered Colleges
+              </h1>
+              <p className="font-paragraph text-gray-600 max-w-2xl mx-auto">
+                Select a college to view their uploaded files and documents
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Colleges List */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            {/* Search Bar */}
+            <div className="mb-8">
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  type="text"
+                  placeholder="Search colleges or librarians..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Colleges Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredColleges.map((college) => (
+                <Card 
+                  key={college._id} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-blue-500"
+                  onClick={() => handleCollegeSelect(college)}
+                >
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Building className="h-5 w-5 text-blue-500" />
+                      <span className="text-lg">{college.collegeName}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <User className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-600">
+                          {college.librarianName || 'N/A'}
+                        </span>
+                      </div>
+                      {college.email && (
+                        <div className="text-sm text-gray-500">
+                          {college.email}
+                        </div>
+                      )}
+                      <div className="pt-2">
+                        <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                          View Files
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {filteredColleges.length === 0 && (
+              <div className="text-center py-16">
+                <Building className="h-16 w-16 text-gray-400 mx-auto mb-6" />
+                <h3 className="font-heading text-2xl font-bold text-gray-900 mb-4">
+                  No Colleges Found
+                </h3>
+                <p className="font-paragraph text-gray-600">
+                  {searchTerm ? 'No colleges match your search criteria.' : 'No colleges are registered yet.'}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="border-t border-gray-700 pt-8 text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+              <a 
+                href="https://www.inerasoftware.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+              >
+                Powered by INERA SOFTWARE
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // If super admin is viewing a specific college's files
+  if (user?.role === 'superadmin' && selectedCollege) {
+    const uploadTypes = [
+      { name: 'Membership Status', icon: Users, color: 'blue' },
+      { name: 'Membership Fees Receipts', icon: CreditCard, color: 'green' },
+      { name: 'Current Year e-Resources', icon: Database, color: 'purple' },
+      { name: 'Access Confirmation', icon: CheckCircle, color: 'orange' }
+    ];
+
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
+                <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
+                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
+                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
+                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
+                <span className="text-orange-200 font-semibold">Librarian Corner</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm">Welcome, {user?.username}</span>
+                <Button 
+                  onClick={logout}
+                  variant="outline" 
+                  className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <Button
+                onClick={handleBackToColleges}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Colleges
+              </Button>
+            </div>
+            
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                {selectedCollege.collegeName}
+              </h1>
+              <p className="font-paragraph text-gray-600 max-w-2xl mx-auto">
+                View all files uploaded by this college (Read-only access)
+              </p>
+              <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-8">
+                <div className="flex items-center space-x-2 mb-2">
+                  <User className="h-5 w-5 text-gray-500" />
+                  <span className="font-medium">Librarian: {selectedCollege.librarianName || 'N/A'}</span>
+                </div>
+                {selectedCollege.email && (
+                  <div className="text-gray-600 text-sm">
+                    Email: {selectedCollege.email}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Files by Category */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-8">
+              {uploadTypes.map((type) => {
+                const files = getFilesByType(type.name);
+                const Icon = type.icon;
+                
+                return (
+                  <Card 
+                    key={type.name} 
+                    className={`border-l-4 border-${type.color}-500 hover:shadow-lg transition-shadow cursor-pointer`}
+                    onClick={() => handleViewApprovedFiles(type.name)}
+                  >
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Icon className={`h-5 w-5 text-${type.color}-500`} />
+                          <span>{type.name}</span>
+                        </div>
+                        <Badge variant="outline" className="text-gray-600">
+                          {files.length} files
+                        </Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <p className="text-gray-600 text-sm">
+                          Click to view all approved files for this category
+                        </p>
+                        
+                        {files.length > 0 ? (
+                          <div className="space-y-2">
+                            <div className="text-sm font-medium text-gray-700">Recent files:</div>
+                            {files.slice(0, 3).map((file, index) => (
+                              <div key={file._id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <div className="flex items-center space-x-2">
+                                  <FileText className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">File #{index + 1}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  {getStatusBadge(file.approvalStatus)}
+                                  <span className="text-xs text-gray-500">
+                                    {formatDate(file.uploadDate)}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                            {files.length > 3 && (
+                              <div className="text-xs text-gray-500 text-center">
+                                +{files.length - 3} more files
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="text-center py-4">
+                            <FileText className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                            <p className="text-sm text-gray-500">No files uploaded yet</p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="border-t border-gray-700 pt-8 text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+              <a 
+                href="https://www.inerasoftware.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+              >
+                Powered by INERA SOFTWARE
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
-import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut } from 'lucide-react';
+import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye } from 'lucide-react';
 
 export default function ApprovedFilesPage() {
   const { uploadType } = useParams<{ uploadType: string }>();
@@ -18,29 +18,36 @@ export default function ApprovedFilesPage() {
   // Check if user is authorized (librarian or superadmin)
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
 
+  // Get college name from URL params or user data
+  const urlParams = new URLSearchParams(window.location.search);
+  const collegeFromUrl = urlParams.get('college');
+  const targetCollege = collegeFromUrl || user?.collegeName;
+  const isViewingOtherCollege = user?.role === 'superadmin' && collegeFromUrl;
+
   useEffect(() => {
     if (!isAuthorized) {
       navigate('/');
       return;
     }
 
-    if (!uploadType || !user?.collegeName) {
+    if (!uploadType || !targetCollege) {
       navigate('/librarian');
       return;
     }
 
     fetchApprovedFiles();
-  }, [isAuthorized, uploadType, user?.collegeName, navigate]);
+  }, [isAuthorized, uploadType, targetCollege, navigate]);
 
   const fetchApprovedFiles = async () => {
-    if (!uploadType || !user?.collegeName) return;
+    if (!uploadType || !targetCollege) return;
 
     setLoading(true);
     try {
       console.log('ApprovedFilesPage - Fetching files for:', {
         uploadType: decodeURIComponent(uploadType),
-        collegeName: user.collegeName,
-        userRole: user.role
+        collegeName: targetCollege,
+        userRole: user?.role,
+        isViewingOtherCollege
       });
 
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
@@ -52,7 +59,7 @@ export default function ApprovedFilesPage() {
       const approvedFiles = items.filter(
         file => 
           file.uploadType === decodeURIComponent(uploadType) && 
-          file.collegeName === user.collegeName &&
+          file.collegeName === targetCollege &&
           file.approvalStatus === 'Approved'
       );
 
@@ -165,8 +172,19 @@ export default function ApprovedFilesPage() {
               {decodedUploadType}
             </h2>
             <p className="font-paragraph text-gray-600 max-w-2xl mx-auto">
-              View all approved files for {decodedUploadType} from {user?.collegeName}
+              {isViewingOtherCollege 
+                ? `View all approved files for ${decodedUploadType} from ${targetCollege} (Read-only)`
+                : `View all approved files for ${decodedUploadType} from ${targetCollege}`
+              }
             </p>
+            {isViewingOtherCollege && (
+              <div className="mt-4">
+                <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">
+                  <Eye className="h-3 w-3 mr-1" />
+                  Super Admin View - Read Only
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -181,8 +199,10 @@ export default function ApprovedFilesPage() {
                 No Approved Files
               </h3>
               <p className="font-paragraph text-gray-600 mb-8 max-w-md mx-auto">
-                There are no approved files for {decodedUploadType} from your college yet. 
-                Files need to be uploaded and approved by the Super Admin before they appear here.
+                There are no approved files for {decodedUploadType} from {targetCollege} yet. 
+                {!isViewingOtherCollege && 
+                  " Files need to be uploaded and approved by the Super Admin before they appear here."
+                }
               </p>
               <Button
                 onClick={() => navigate('/librarian')}
@@ -200,7 +220,10 @@ export default function ApprovedFilesPage() {
                     {files.length} Approved File{files.length !== 1 ? 's' : ''}
                   </h3>
                   <p className="font-paragraph text-gray-600 mt-2">
-                    All files have been reviewed and approved by the Super Admin
+                    {isViewingOtherCollege 
+                      ? `All files from ${targetCollege} have been reviewed and approved by the Super Admin`
+                      : "All files have been reviewed and approved by the Super Admin"
+                    }
                   </p>
                 </div>
                 <Button
