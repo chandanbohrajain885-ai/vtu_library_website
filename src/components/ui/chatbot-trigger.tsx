@@ -33,12 +33,9 @@ export default function ChatbotTrigger() {
 
   const handleClose = () => {
     setIsOpen(false);
-    // Auto-restore after 3 seconds to maintain persistent presence
-    setTimeout(() => {
-      setIsOpen(true);
-      setIsMinimized(true);
-      setIsFullscreen(false);
-    }, 3000);
+    setIsMinimized(false);
+    setIsFullscreen(false);
+    // Don't auto-restore when user explicitly closes - respect user choice
   };
 
   const handleToggleFullscreen = () => {
@@ -57,41 +54,57 @@ export default function ChatbotTrigger() {
             transition={{ duration: 0.3 }}
             className="fixed bottom-6 right-6 z-50"
           >
-            <Button
-              onClick={handleRestore}
-              className="w-24 h-24 rounded-full bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-blue-600 hover:via-purple-600 hover:to-primary shadow-2xl border-4 border-white group relative overflow-hidden transition-all duration-500"
-              size="lg"
-            >
-              {/* Multiple animated backgrounds */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-purple-600 animate-pulse opacity-30"></div>
-              <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.3),transparent_70%)] animate-ping opacity-40"></div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-spin opacity-20" style={{ animationDuration: '3s' }}></div>
-              
-              {/* AI Robot Avatar */}
-              <div className="relative z-10 flex flex-col items-center">
-                <Bot className="h-10 w-10 text-white group-hover:scale-110 transition-transform duration-300 animate-pulse" />
-                <div className="flex items-center space-x-1 mt-1">
-                  <Brain className="h-2 w-2 text-yellow-300 animate-pulse" />
-                  <Eye className="h-2 w-2 text-green-300 animate-bounce" />
-                  <Zap className="h-2 w-2 text-yellow-300 animate-pulse" style={{ animationDelay: '0.5s' }} />
+            <div className="relative">
+              <Button
+                onClick={handleRestore}
+                className="w-24 h-24 rounded-full bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-blue-600 hover:via-purple-600 hover:to-primary shadow-2xl border-4 border-white group relative overflow-hidden transition-all duration-500"
+                size="lg"
+              >
+                {/* Multiple animated backgrounds */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary to-purple-600 animate-pulse opacity-30"></div>
+                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.3),transparent_70%)] animate-ping opacity-40"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-spin opacity-20" style={{ animationDuration: '3s' }}></div>
+                
+                {/* AI Robot Avatar */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <Bot className="h-10 w-10 text-white group-hover:scale-110 transition-transform duration-300 animate-pulse" />
+                  <div className="flex items-center space-x-1 mt-1">
+                    <Brain className="h-2 w-2 text-yellow-300 animate-pulse" />
+                    <Eye className="h-2 w-2 text-green-300 animate-bounce" />
+                    <Zap className="h-2 w-2 text-yellow-300 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                  </div>
                 </div>
-              </div>
-              
-              {/* AI Status indicator */}
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white flex items-center justify-center animate-bounce">
-                <span className="text-xs font-bold text-white">AI</span>
-              </div>
-              
-              {/* Persistent indicator */}
-              <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center animate-pulse">
-                <span className="text-xs font-bold text-white">∞</span>
-              </div>
-              
-              {/* Voice indicator */}
-              <div className="absolute top-0 left-0 w-5 h-5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center animate-pulse">
-                <span className="text-xs font-bold text-white">🎤</span>
-              </div>
-            </Button>
+                
+                {/* AI Status indicator */}
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white flex items-center justify-center animate-bounce">
+                  <span className="text-xs font-bold text-white">AI</span>
+                </div>
+                
+                {/* Persistent indicator */}
+                <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-red-500 rounded-full border-2 border-white flex items-center justify-center animate-pulse">
+                  <span className="text-xs font-bold text-white">∞</span>
+                </div>
+                
+                {/* Voice indicator */}
+                <div className="absolute top-0 left-0 w-5 h-5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center animate-pulse">
+                  <span className="text-xs font-bold text-white">🎤</span>
+                </div>
+              </Button>
+
+              {/* Close button on minimized avatar */}
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
+                variant="ghost"
+                size="sm"
+                className="absolute -top-2 -left-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white border-2 border-white shadow-lg transition-all duration-200 flex items-center justify-center z-20"
+                title="Close AI Assistant"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
 
             {/* Enhanced persistent tooltip with AI branding */}
             <motion.div
@@ -147,6 +160,7 @@ export default function ChatbotTrigger() {
       <Chatbot
         isOpen={isOpen && !isMinimized}
         onClose={handleClose}
+        onMinimize={handleMinimize}
         isFullscreen={isFullscreen}
         onToggleFullscreen={handleToggleFullscreen}
         isPersistent={true}

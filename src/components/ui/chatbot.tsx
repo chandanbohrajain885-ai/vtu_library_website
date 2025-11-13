@@ -361,16 +361,16 @@ export default function Chatbot({ isOpen, onClose, isFullscreen = false, onToggl
                   </Button>
                 )}
                 
-                {!isPersistent && (
-                  <Button
-                    onClick={onClose}
-                    variant="ghost"
-                    size="sm"
-                    className="text-white hover:bg-white/20 transition-all duration-200"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
+                {/* Always show close button for user control */}
+                <Button
+                  onClick={onClose}
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-red-500/80 hover:bg-white/20 transition-all duration-200 border border-white/30 hover:border-red-300"
+                  title="Close AI Assistant"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </CardHeader>
