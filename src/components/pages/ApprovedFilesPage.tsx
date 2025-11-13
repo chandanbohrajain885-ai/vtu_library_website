@@ -37,8 +37,17 @@ export default function ApprovedFilesPage() {
 
     setLoading(true);
     try {
+      console.log('ApprovedFilesPage - Fetching files for:', {
+        uploadType: decodeURIComponent(uploadType),
+        collegeName: user.collegeName,
+        userRole: user.role
+      });
+
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
       
+      console.log('ApprovedFilesPage - All files:', items.length);
+      console.log('ApprovedFilesPage - Sample files:', items.slice(0, 3));
+
       // Filter for approved files of the specific type and college
       const approvedFiles = items.filter(
         file => 
@@ -46,6 +55,9 @@ export default function ApprovedFilesPage() {
           file.collegeName === user.collegeName &&
           file.approvalStatus === 'Approved'
       );
+
+      console.log('ApprovedFilesPage - Filtered approved files:', approvedFiles.length);
+      console.log('ApprovedFilesPage - Approved files:', approvedFiles);
 
       // Sort by approval date (newest first)
       approvedFiles.sort((a, b) => {
