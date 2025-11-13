@@ -223,11 +223,11 @@ export default function LibrarianCornerPage() {
     
     switch (status) {
       case 'Pending':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending Review</Badge>;
+        return <Badge variant="outline" className="text-yellow-700 border-yellow-300 bg-yellow-50 text-xs">Pending Review</Badge>;
       case 'Approved':
-        return <Badge variant="outline" className="text-green-600 border-green-600">Approved</Badge>;
+        return <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50 text-xs">Approved</Badge>;
       case 'Rejected':
-        return <Badge variant="outline" className="text-red-600 border-red-600">Rejected</Badge>;
+        return <Badge variant="outline" className="text-red-700 border-red-300 bg-red-50 text-xs">Rejected</Badge>;
       default:
         return null;
     }
@@ -236,28 +236,28 @@ export default function LibrarianCornerPage() {
   // If super admin is viewing colleges list
   if (user?.role === 'superadmin' && !selectedCollege) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gray-50">
         {/* Header Navigation */}
-        <header className="bg-primary text-primary-foreground shadow-lg">
+        <header className="bg-white shadow-sm border-b">
           <div className="max-w-[120rem] mx-auto px-6 py-4">
             <nav className="flex items-center justify-between">
-              <Link to="/" className="font-heading text-2xl font-bold">
+              <Link to="/" className="font-heading text-2xl font-bold text-primary">
                 VTU Consortium
               </Link>
               <div className="hidden md:flex items-center space-x-8">
-                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
-                <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
-                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
-                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
-                <span className="text-orange-200 font-semibold">Librarian Corner</span>
+                <Link to="/" className="text-gray-600 hover:text-primary transition-colors">Home</Link>
+                <Link to="/resources" className="text-gray-600 hover:text-primary transition-colors">E-Resources</Link>
+                <Link to="/journals" className="text-gray-600 hover:text-primary transition-colors">ONOS</Link>
+                <Link to="/news" className="text-gray-600 hover:text-primary transition-colors">Downloads</Link>
+                <Link to="/guide" className="text-gray-600 hover:text-primary transition-colors">User Guide</Link>
+                <span className="text-primary font-semibold">Librarian Corner</span>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm">Welcome, {user?.username}</span>
+                <span className="text-sm text-gray-600">Welcome, {user?.username}</span>
                 <Button 
                   onClick={logout}
                   variant="outline" 
-                  className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
@@ -268,10 +268,10 @@ export default function LibrarianCornerPage() {
         </header>
 
         {/* Page Header */}
-        <section className="bg-primary/5 py-16">
+        <section className="bg-white py-12 border-b">
           <div className="max-w-[120rem] mx-auto px-6">
             <div className="text-center space-y-4">
-              <h1 className="font-heading text-5xl font-bold text-primary">
+              <h1 className="font-heading text-4xl font-bold text-gray-900">
                 Registered Colleges
               </h1>
               <p className="font-paragraph text-gray-600 max-w-2xl mx-auto">
@@ -282,7 +282,7 @@ export default function LibrarianCornerPage() {
         </section>
 
         {/* Colleges List */}
-        <section className="py-20">
+        <section className="py-12">
           <div className="max-w-[120rem] mx-auto px-6">
             {/* Search Bar */}
             <div className="mb-8">
@@ -293,7 +293,7 @@ export default function LibrarianCornerPage() {
                   placeholder="Search colleges or librarians..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-gray-300"
                 />
               </div>
             </div>
@@ -303,17 +303,19 @@ export default function LibrarianCornerPage() {
               {filteredColleges.map((college) => (
                 <Card 
                   key={college._id} 
-                  className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-blue-500"
+                  className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group"
                   onClick={() => handleCollegeSelect(college)}
                 >
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Building className="h-5 w-5 text-blue-500" />
-                      <span className="text-lg">{college.collegeName}</span>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                        <Building className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <span className="text-lg font-semibold text-gray-900">{college.collegeName}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex items-center space-x-2">
                         <User className="h-4 w-4 text-gray-500" />
                         <span className="text-sm text-gray-600">
@@ -326,7 +328,7 @@ export default function LibrarianCornerPage() {
                         </div>
                       )}
                       <div className="pt-2">
-                        <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                           View Files
                         </Button>
                       </div>
@@ -351,17 +353,17 @@ export default function LibrarianCornerPage() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-800 text-white py-12">
+        <footer className="bg-white border-t border-gray-200 py-12">
           <div className="max-w-[120rem] mx-auto px-6">
-            <div className="border-t border-gray-700 pt-8 text-center">
-              <p className="font-paragraph text-gray-400">
+            <div className="border-t border-gray-200 pt-8 text-center">
+              <p className="font-paragraph text-gray-500">
                 © 2025 VTU Consortium Portal. All Rights Reserved.
               </p>
               <a 
                 href="https://www.inerasoftware.com/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+                className="font-paragraph text-gray-500 text-sm hover:text-primary transition-colors cursor-pointer"
               >
                 Powered by INERA SOFTWARE
               </a>
@@ -392,39 +394,39 @@ export default function LibrarianCornerPage() {
       
       switch (status) {
         case 'Pending':
-          return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Pending Review</Badge>;
+          return <Badge variant="outline" className="text-yellow-700 border-yellow-300 bg-yellow-50 text-xs">Pending Review</Badge>;
         case 'Approved':
-          return <Badge variant="outline" className="text-green-600 border-green-600">Approved</Badge>;
+          return <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50 text-xs">Approved</Badge>;
         case 'Rejected':
-          return <Badge variant="outline" className="text-red-600 border-red-600">Rejected</Badge>;
+          return <Badge variant="outline" className="text-red-700 border-red-300 bg-red-50 text-xs">Rejected</Badge>;
         default:
           return null;
       }
     };
 
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gray-50">
         {/* Header Navigation */}
-        <header className="bg-primary text-primary-foreground shadow-lg">
+        <header className="bg-white shadow-sm border-b">
           <div className="max-w-[120rem] mx-auto px-6 py-4">
             <nav className="flex items-center justify-between">
-              <Link to="/" className="font-heading text-2xl font-bold">
+              <Link to="/" className="font-heading text-2xl font-bold text-primary">
                 VTU Consortium
               </Link>
               <div className="hidden md:flex items-center space-x-8">
-                <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
-                <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-                <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
-                <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
-                <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
-                <span className="text-orange-200 font-semibold">Librarian Corner</span>
+                <Link to="/" className="text-gray-600 hover:text-primary transition-colors">Home</Link>
+                <Link to="/resources" className="text-gray-600 hover:text-primary transition-colors">E-Resources</Link>
+                <Link to="/journals" className="text-gray-600 hover:text-primary transition-colors">ONOS</Link>
+                <Link to="/news" className="text-gray-600 hover:text-primary transition-colors">Downloads</Link>
+                <Link to="/guide" className="text-gray-600 hover:text-primary transition-colors">User Guide</Link>
+                <span className="text-primary font-semibold">Librarian Corner</span>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm">Welcome, {user?.username}</span>
+                <span className="text-sm text-gray-600">Welcome, {user?.username}</span>
                 <Button 
                   onClick={logout}
                   variant="outline" 
-                  className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
@@ -441,7 +443,7 @@ export default function LibrarianCornerPage() {
             <Button
               onClick={handleBackToColleges}
               variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-white"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Colleges
@@ -449,7 +451,7 @@ export default function LibrarianCornerPage() {
           </div>
 
           {/* College Header */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-sm p-8 mb-8 border border-blue-100">
             <div className="flex items-center justify-between mb-4">
               <div>
                 {selectedCollege.collegeUrl ? (
@@ -466,18 +468,22 @@ export default function LibrarianCornerPage() {
                     {selectedCollege.collegeName}
                   </h1>
                 )}
-                {selectedCollege.librarianName && (
-                  <p className="text-gray-600 font-paragraph mt-2">
-                    Librarian: {selectedCollege.librarianName}
-                  </p>
-                )}
-                {selectedCollege.email && (
-                  <p className="text-gray-600 font-paragraph">
-                    Email: {selectedCollege.email}
-                  </p>
-                )}
+                <div className="flex flex-col md:flex-row gap-4 mt-4 text-gray-600">
+                  {selectedCollege.librarianName && (
+                    <div className="flex items-center space-x-2">
+                      <User className="h-5 w-5 text-blue-500" />
+                      <span className="font-medium">Librarian: {selectedCollege.librarianName}</span>
+                    </div>
+                  )}
+                  {selectedCollege.email && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-400">•</span>
+                      <span>Email: {selectedCollege.email}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="bg-white border border-blue-200 rounded-lg p-3">
                 <div className="flex items-center space-x-2">
                   <Eye className="h-4 w-4 text-blue-600" />
                   <span className="text-blue-800 font-medium text-sm">Super Admin View</span>
@@ -487,13 +493,15 @@ export default function LibrarianCornerPage() {
           </div>
 
           {/* Upload Status Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* Membership Status */}
-            <Card className="border-l-4 border-blue-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-5 w-5 text-blue-500" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                      <Users className="h-5 w-5 text-blue-600" />
+                    </div>
                     <span>Membership Status</span>
                   </div>
                   {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Status'))}
@@ -509,7 +517,7 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Membership Status')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
+                      className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
@@ -520,11 +528,13 @@ export default function LibrarianCornerPage() {
             </Card>
 
             {/* Membership Fees Receipts */}
-            <Card className="border-l-4 border-green-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <CreditCard className="h-5 w-5 text-green-500" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-green-50 rounded-lg">
+                      <CreditCard className="h-5 w-5 text-green-600" />
+                    </div>
                     <span>Membership Fees</span>
                   </div>
                   {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Fees Receipts'))}
@@ -540,7 +550,7 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Membership Fees Receipts')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                      className="w-full border-green-200 text-green-600 hover:bg-green-50"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
@@ -551,11 +561,13 @@ export default function LibrarianCornerPage() {
             </Card>
 
             {/* Current Year e-Resources */}
-            <Card className="border-l-4 border-purple-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Database className="h-5 w-5 text-purple-500" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-purple-50 rounded-lg">
+                      <Database className="h-5 w-5 text-purple-600" />
+                    </div>
                     <span>e-Resources</span>
                   </div>
                   {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Current Year e-Resources'))}
@@ -571,7 +583,7 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Current Year e-Resources')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-purple-500 text-purple-600 hover:bg-purple-50"
+                      className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
@@ -582,11 +594,13 @@ export default function LibrarianCornerPage() {
             </Card>
 
             {/* Access Confirmation */}
-            <Card className="border-l-4 border-orange-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-50 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-orange-600" />
+                    </div>
                     <span>Access Confirmation</span>
                   </div>
                   {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Access Confirmation'))}
@@ -602,7 +616,7 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Access Confirmation')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
+                      className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
@@ -614,13 +628,13 @@ export default function LibrarianCornerPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h2 className="font-heading text-xl font-bold text-primary mb-4">Quick Actions</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="font-heading text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid md:grid-cols-3 gap-4">
               <Button 
                 onClick={() => handleViewApprovedFiles('Membership Status')}
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-white"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 View All Approved Files
@@ -628,7 +642,7 @@ export default function LibrarianCornerPage() {
               <Button 
                 onClick={() => navigate('/admin')}
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-white"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 <Shield className="h-4 w-4 mr-2" />
                 Admin Dashboard
@@ -636,7 +650,7 @@ export default function LibrarianCornerPage() {
               <Button 
                 onClick={() => navigate('/librarian-accounts-check')}
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-white"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 <Users className="h-4 w-4 mr-2" />
                 Manage Accounts
@@ -657,28 +671,28 @@ export default function LibrarianCornerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header Navigation */}
-      <header className="bg-primary text-primary-foreground shadow-lg">
+      <header className="bg-white shadow-sm border-b">
         <div className="max-w-[120rem] mx-auto px-6 py-4">
           <nav className="flex items-center justify-between">
-            <Link to="/" className="font-heading text-2xl font-bold">
+            <Link to="/" className="font-heading text-2xl font-bold text-primary">
               VTU Consortium
             </Link>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="hover:text-orange-200 transition-colors">Home</Link>
-              <Link to="/resources" className="hover:text-orange-200 transition-colors">E-Resources</Link>
-              <Link to="/journals" className="hover:text-orange-200 transition-colors">ONOS</Link>
-              <Link to="/news" className="hover:text-orange-200 transition-colors">Downloads</Link>
-              <Link to="/guide" className="hover:text-orange-200 transition-colors">User Guide</Link>
-              <span className="text-orange-200 font-semibold">Librarian Corner</span>
+              <Link to="/" className="text-gray-600 hover:text-primary transition-colors">Home</Link>
+              <Link to="/resources" className="text-gray-600 hover:text-primary transition-colors">E-Resources</Link>
+              <Link to="/journals" className="text-gray-600 hover:text-primary transition-colors">ONOS</Link>
+              <Link to="/news" className="text-gray-600 hover:text-primary transition-colors">Downloads</Link>
+              <Link to="/guide" className="text-gray-600 hover:text-primary transition-colors">User Guide</Link>
+              <span className="text-primary font-semibold">Librarian Corner</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm">Welcome, {user?.username}</span>
+              <span className="text-sm text-gray-600">Welcome, {user?.username}</span>
               <Button 
                 onClick={logout}
                 variant="outline" 
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -689,48 +703,63 @@ export default function LibrarianCornerPage() {
       </header>
 
       {/* Page Header with Custom Welcome Message */}
-      <section className="bg-primary/5 py-16">
+      <section className="bg-white py-12 border-b">
         <div className="max-w-[120rem] mx-auto px-6">
-          <div className="text-center space-y-4">
-            <h1 className="font-heading text-5xl font-bold text-primary">
+          <div className="text-center space-y-6">
+            <h1 className="font-heading text-4xl font-bold text-gray-900">
               {getWelcomeMessage()}
             </h1>
 
             {user?.role === 'librarian' && user?.collegeName && (
-              <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-8">
-                {user.collegeUrl ? (
-                  <a 
-                    href={user.collegeUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="font-heading text-2xl font-bold text-primary mb-2 hover:text-secondary transition-colors cursor-pointer block"
-                  >
-                    {user.collegeName}
-                  </a>
-                ) : (
-                  <h2 className="font-heading text-2xl font-bold text-primary mb-2">
-                    {user.collegeName}
-                  </h2>
-                )}
-                {user.librarianName && (
-                  <p className="text-gray-600 font-paragraph">
-                    Librarian: {user.librarianName} / Nodal Officer
-                  </p>
-                )}
-                
-                {/* Location Section for Global Academy of Technology */}
-                {user.collegeName?.toLowerCase().includes('global academy of technology') && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <h3 className="font-heading text-lg font-semibold text-primary mb-2">Location</h3>
-                    <p className="text-gray-700 font-paragraph text-sm">
-                      Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
-                    </p>
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-sm p-8 max-w-4xl mx-auto border border-blue-100">
+                <div className="text-center space-y-4">
+                  {user.collegeUrl ? (
+                    <a 
+                      href={user.collegeUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="font-heading text-3xl font-bold text-primary hover:text-secondary transition-colors cursor-pointer block"
+                    >
+                      {user.collegeName}
+                    </a>
+                  ) : (
+                    <h2 className="font-heading text-3xl font-bold text-primary">
+                      {user.collegeName}
+                    </h2>
+                  )}
+                  
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-6 text-gray-600">
+                    {user.librarianName && (
+                      <div className="flex items-center space-x-2">
+                        <User className="h-5 w-5 text-blue-500" />
+                        <span className="font-medium">{user.librarianName} / Nodal Officer</span>
+                      </div>
+                    )}
+                    {user.email && (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-gray-400">•</span>
+                        <span>{user.email}</span>
+                      </div>
+                    )}
                   </div>
-                )}
-                
-                <p className="text-gray-600 font-paragraph mt-2">
-                  Access your consortium resources and manage library services
-                </p>
+                  
+                  {/* Location Section for Global Academy of Technology */}
+                  {user.collegeName?.toLowerCase().includes('global academy of technology') && (
+                    <div className="mt-6 p-4 bg-white rounded-lg border border-blue-200">
+                      <h3 className="font-heading text-lg font-semibold text-primary mb-2 flex items-center justify-center space-x-2">
+                        <Building className="h-5 w-5" />
+                        <span>Location</span>
+                      </h3>
+                      <p className="text-gray-700 font-paragraph text-sm">
+                        Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
+                      </p>
+                    </div>
+                  )}
+                  
+                  <p className="text-gray-600 font-paragraph text-lg">
+                    Access your consortium resources and manage library services
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -738,86 +767,106 @@ export default function LibrarianCornerPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="max-w-[120rem] mx-auto px-6">
           {/* Stats Cards */}
-          <div className="grid md:grid-cols-4 gap-6 mb-12">
-            <Card className="border-l-4 border-blue-500">
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-gray-600">E-Resources Available</CardTitle>
-                  <Database className="h-4 w-4 text-blue-500" />
+                  <div className="p-2 bg-blue-50 rounded-lg">
+                    <Database className="h-5 w-5 text-blue-600" />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{resources.length}</div>
+                <div className="text-3xl font-bold text-gray-900">{resources.length}</div>
+                <p className="text-xs text-gray-500 mt-1">Active resources</p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-green-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-gray-600">User Guides</CardTitle>
-                  <FileText className="h-4 w-4 text-green-500" />
+                  <div className="p-2 bg-green-50 rounded-lg">
+                    <FileText className="h-5 w-5 text-green-600" />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{userGuides.length}</div>
+                <div className="text-3xl font-bold text-gray-900">{userGuides.length}</div>
+                <p className="text-xs text-gray-500 mt-1">Help articles</p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-yellow-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-gray-600">Latest News</CardTitle>
-                  <Calendar className="h-4 w-4 text-yellow-500" />
+                  <div className="p-2 bg-yellow-50 rounded-lg">
+                    <Calendar className="h-5 w-5 text-yellow-600" />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{news.length}</div>
+                <div className="text-3xl font-bold text-gray-900">{news.length}</div>
+                <p className="text-xs text-gray-500 mt-1">News items</p>
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-purple-500">
+            <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-medium text-gray-600">Quick Access</CardTitle>
-                  <Users className="h-4 w-4 text-purple-500" />
+                  <div className="p-2 bg-purple-50 rounded-lg">
+                    <Users className="h-5 w-5 text-purple-600" />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">24/7</div>
+                <div className="text-3xl font-bold text-gray-900">24/7</div>
+                <p className="text-xs text-gray-500 mt-1">Available</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Quick Access Section */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {/* Show upload buttons for librarians only */}
-            {user?.role === 'librarian' && (
-              <>
+          {/* Upload Section for Librarians */}
+          {user?.role === 'librarian' && (
+            <div className="mb-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="font-heading text-2xl font-bold text-gray-900">File Management</h2>
+                <div className="text-sm text-gray-500">
+                  Click on any card to view approved files
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Membership Status Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Membership Status')}>
-                  <CardHeader>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Membership Status')}>
+                  <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-5 w-5 text-blue-500" />
-                        <span>Membership Status</span>
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                          <Users className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900">Membership Status</span>
+                          {getStatusBadge(getUploadStatus('Membership Status'))}
+                        </div>
                       </div>
-                      {getStatusBadge(getUploadStatus('Membership Status'))}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 text-sm mb-4">
                       Upload your college membership status documents
                     </p>
-                    <p className="text-xs text-blue-600 mb-4 italic">
-                      💡 Click anywhere on this card to view approved files
-                    </p>
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Membership Status')}
-                        className="w-full bg-blue-500 hover:bg-blue-600"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        size="sm"
                       >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Document
@@ -826,10 +875,11 @@ export default function LibrarianCornerPage() {
                         <Button 
                           onClick={() => handleViewFilesClick('Membership Status')}
                           variant="outline"
-                          className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
+                          className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
+                          size="sm"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Uploaded Files ({getUploadedFiles('Membership Status').length})
+                          View Files ({getUploadedFiles('Membership Status').length})
                         </Button>
                       )}
                     </div>
@@ -837,27 +887,29 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Membership Fees Receipts Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}>
-                  <CardHeader>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}>
+                  <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CreditCard className="h-5 w-5 text-green-500" />
-                        <span>Membership Fees Receipts</span>
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-green-50 rounded-lg group-hover:bg-green-100 transition-colors">
+                          <CreditCard className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900">Membership Fees</span>
+                          {getStatusBadge(getUploadStatus('Membership Fees Receipts'))}
+                        </div>
                       </div>
-                      {getStatusBadge(getUploadStatus('Membership Fees Receipts'))}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 text-sm mb-4">
                       Upload membership fee payment receipts and records
                     </p>
-                    <p className="text-xs text-green-600 mb-4 italic">
-                      💡 Click anywhere on this card to view approved files
-                    </p>
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Membership Fees Receipts')}
-                        className="w-full bg-green-500 hover:bg-green-600"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        size="sm"
                       >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Receipt
@@ -866,10 +918,11 @@ export default function LibrarianCornerPage() {
                         <Button 
                           onClick={() => handleViewFilesClick('Membership Fees Receipts')}
                           variant="outline"
-                          className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                          className="w-full border-green-200 text-green-600 hover:bg-green-50"
+                          size="sm"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Uploaded Files ({getUploadedFiles('Membership Fees Receipts').length})
+                          View Files ({getUploadedFiles('Membership Fees Receipts').length})
                         </Button>
                       )}
                     </div>
@@ -877,27 +930,29 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Current Year e-Resources Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Current Year e-Resources')}>
-                  <CardHeader>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Current Year e-Resources')}>
+                  <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Database className="h-5 w-5 text-purple-500" />
-                        <span>Current Year e-Resources</span>
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
+                          <Database className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900">e-Resources</span>
+                          {getStatusBadge(getUploadStatus('Current Year e-Resources'))}
+                        </div>
                       </div>
-                      {getStatusBadge(getUploadStatus('Current Year e-Resources'))}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 text-sm mb-4">
                       Upload current academic year e-resource access details
                     </p>
-                    <p className="text-xs text-purple-600 mb-4 italic">
-                      💡 Click anywhere on this card to view approved files
-                    </p>
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Current Year e-Resources')}
-                        className="w-full bg-purple-500 hover:bg-purple-600"
+                        className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                        size="sm"
                       >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Resources
@@ -906,10 +961,11 @@ export default function LibrarianCornerPage() {
                         <Button 
                           onClick={() => handleViewFilesClick('Current Year e-Resources')}
                           variant="outline"
-                          className="w-full border-purple-500 text-purple-600 hover:bg-purple-50"
+                          className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
+                          size="sm"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Uploaded Files ({getUploadedFiles('Current Year e-Resources').length})
+                          View Files ({getUploadedFiles('Current Year e-Resources').length})
                         </Button>
                       )}
                     </div>
@@ -917,27 +973,29 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Access Confirmation Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Access Confirmation')}>
-                  <CardHeader>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Access Confirmation')}>
+                  <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-5 w-5 text-orange-500" />
-                        <span>Access Confirmation</span>
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-orange-50 rounded-lg group-hover:bg-orange-100 transition-colors">
+                          <CheckCircle className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900">Access Confirmation</span>
+                          {getStatusBadge(getUploadStatus('Access Confirmation'))}
+                        </div>
                       </div>
-                      {getStatusBadge(getUploadStatus('Access Confirmation'))}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 text-sm mb-4">
                       Upload access confirmation and verification documents
                     </p>
-                    <p className="text-xs text-orange-600 mb-4 italic">
-                      💡 Click anywhere on this card to view approved files
-                    </p>
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Access Confirmation')}
-                        className="w-full bg-orange-500 hover:bg-orange-600"
+                        className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                        size="sm"
                       >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Confirmation
@@ -946,155 +1004,174 @@ export default function LibrarianCornerPage() {
                         <Button 
                           onClick={() => handleViewFilesClick('Access Confirmation')}
                           variant="outline"
-                          className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
+                          className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                          size="sm"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Uploaded Files ({getUploadedFiles('Access Confirmation').length})
+                          View Files ({getUploadedFiles('Access Confirmation').length})
                         </Button>
                       )}
                     </div>
                   </CardContent>
                 </Card>
-              </>
-            )}
+              </div>
+            </div>
+          )}
 
-            {/* E-Resources Access */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Database className="h-5 w-5 text-blue-500" />
-                  <span>E-Resources</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Access electronic journals, e-books, and digital resources by academic year
-                </p>
-                <Button 
-                  onClick={() => navigate('/resources')}
-                  className="w-full bg-blue-500 hover:bg-blue-600"
-                >
-                  Browse E-Resources
-                </Button>
-              </CardContent>
-            </Card>
+          {/* Quick Access Section */}
+          <div className="mb-12">
+            <h2 className="font-heading text-2xl font-bold text-gray-900 mb-6">Quick Access</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* E-Resources Access */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                      <Database className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">E-Resources</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    Access electronic journals, e-books, and digital resources by academic year
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/resources')}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    Browse E-Resources
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* User Guides */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <FileText className="h-5 w-5 text-green-500" />
-                  <span>User Guides</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Step-by-step guides for accessing and using consortium resources
-                </p>
-                <Button 
-                  onClick={() => navigate('/guide')}
-                  className="w-full bg-green-500 hover:bg-green-600"
-                >
-                  View Guides
-                </Button>
-              </CardContent>
-            </Card>
+              {/* User Guides */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-green-50 rounded-lg group-hover:bg-green-100 transition-colors">
+                      <FileText className="h-5 w-5 text-green-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">User Guides</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    Step-by-step guides for accessing and using consortium resources
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/guide')}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    View Guides
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Downloads */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Download className="h-5 w-5 text-purple-500" />
-                  <span>Downloads</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Download circulars, forms, and important documents
-                </p>
-                <Button 
-                  onClick={() => window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank')}
-                  className="w-full bg-purple-500 hover:bg-purple-600"
-                >
-                  Access Downloads
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Downloads */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
+                      <Download className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">Downloads</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    Download circulars, forms, and important documents
+                  </p>
+                  <Button 
+                    onClick={() => window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank')}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    Access Downloads
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Training Materials */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <BookOpen className="h-5 w-5 text-orange-500" />
-                  <span>Training</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Access training materials and workshop resources
-                </p>
-                <Button 
-                  onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
-                  className="w-full bg-orange-500 hover:bg-orange-600"
-                >
-                  View Training
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Training Materials */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-50 rounded-lg group-hover:bg-orange-100 transition-colors">
+                      <BookOpen className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">Training</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    Access training materials and workshop resources
+                  </p>
+                  <Button 
+                    onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    View Training
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* News & Events */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Calendar className="h-5 w-5 text-red-500" />
-                  <span>News & Events</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Stay updated with latest consortium news and events
-                </p>
-                <Button 
-                  onClick={() => navigate('/news')}
-                  className="w-full bg-red-500 hover:bg-red-600"
-                >
-                  View News
-                </Button>
-              </CardContent>
-            </Card>
+              {/* News & Events */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                      <Calendar className="h-5 w-5 text-red-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">News & Events</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    Stay updated with latest consortium news and events
+                  </p>
+                  <Button 
+                    onClick={() => navigate('/news')}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    View News
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Member Colleges */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-indigo-500" />
-                  <span>Member Colleges</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  View list of consortium member institutions
-                </p>
-                <Button 
-                  onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
-                  className="w-full bg-indigo-500 hover:bg-indigo-600"
-                >
-                  View Colleges
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Member Colleges */}
+              <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3">
+                    <div className="p-2 bg-indigo-50 rounded-lg group-hover:bg-indigo-100 transition-colors">
+                      <Users className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">Member Colleges</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4 text-sm">
+                    View list of consortium member institutions
+                  </p>
+                  <Button 
+                    onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                  >
+                    View Colleges
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* Recent Resources */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="font-heading text-3xl font-bold text-primary">
+              <h2 className="font-heading text-2xl font-bold text-gray-900">
                 Recent E-Resources
               </h2>
               <Button 
                 onClick={() => navigate('/resources')}
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-white"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 View All Resources
               </Button>
@@ -1102,27 +1179,36 @@ export default function LibrarianCornerPage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {resources.slice(0, 6).map((resource) => (
-                <Card key={resource._id} className="hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="font-heading text-lg text-gray-800">
+                <Card key={resource._id} className="bg-gray-50 border border-gray-200 hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="font-heading text-lg text-gray-900">
                       E-Resources {resource.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2 text-sm text-gray-600">
+                    <div className="space-y-3 text-sm text-gray-600">
                       {resource.eJournals && (
-                        <p><strong>E-Journals:</strong> {resource.eJournals}</p>
+                        <div className="flex items-start space-x-2">
+                          <span className="font-medium text-gray-900 min-w-fit">E-Journals:</span>
+                          <span className="text-gray-600">{resource.eJournals}</span>
+                        </div>
                       )}
                       {resource.eBooks && (
-                        <p><strong>E-Books:</strong> {resource.eBooks}</p>
+                        <div className="flex items-start space-x-2">
+                          <span className="font-medium text-gray-900 min-w-fit">E-Books:</span>
+                          <span className="text-gray-600">{resource.eBooks}</span>
+                        </div>
                       )}
                       {resource.plagiarismDetectionSoftware && (
-                        <p><strong>Plagiarism Tools:</strong> {resource.plagiarismDetectionSoftware}</p>
+                        <div className="flex items-start space-x-2">
+                          <span className="font-medium text-gray-900 min-w-fit">Plagiarism Tools:</span>
+                          <span className="text-gray-600">{resource.plagiarismDetectionSoftware}</span>
+                        </div>
                       )}
                     </div>
                     <Button 
                       onClick={() => navigate(`/resources/${resource.title}`)}
-                      className="w-full mt-4 bg-primary hover:bg-primary/90"
+                      className="w-full mt-6 bg-primary hover:bg-primary/90 text-white"
                       size="sm"
                     >
                       Access Resources
@@ -1136,7 +1222,7 @@ export default function LibrarianCornerPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
+      <footer className="bg-white border-t border-gray-200 py-12">
         <div className="max-w-[120rem] mx-auto px-6">
           {/* Hide contact information for Global Academy of Technology and Acharya Institute of Technology librarians */}
           {!(isAuthenticated && user?.role === 'librarian' && 
@@ -1145,49 +1231,49 @@ export default function LibrarianCornerPage() {
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               {/* Contact Information */}
               <div>
-                <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
+                <h4 className="font-heading text-lg font-semibold mb-4 text-gray-900">Contact Us</h4>
                 <div className="space-y-3">
                   <div>
-                    <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
-                    <p className="font-paragraph text-gray-300 text-sm">
+                    <p className="font-paragraph text-gray-600 text-sm font-medium">Address:</p>
+                    <p className="font-paragraph text-gray-600 text-sm">
                       Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
                     </p>
                   </div>
                   <div>
-                    <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
-                    <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
+                    <p className="font-paragraph text-gray-600 text-sm font-medium">Other Enquiries:</p>
+                    <p className="font-paragraph text-gray-600 text-sm">+91 80225-55555</p>
                   </div>
                 </div>
               </div>
               
               {/* Additional Contact */}
               <div>
-                <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
+                <h4 className="font-heading text-lg font-semibold mb-4 text-gray-900">VTU Consortium</h4>
                 <div className="space-y-3">
                   <div>
-                    <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
-                    <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
+                    <p className="font-paragraph text-gray-600 text-sm font-medium">Email:</p>
+                    <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-600 text-sm hover:text-primary transition-colors">
                       vtuconsortium@gmail.com
                     </a>
                   </div>
                   <div>
-                    <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
-                    <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
+                    <p className="font-paragraph text-gray-600 text-sm font-medium">Phone:</p>
+                    <p className="font-paragraph text-gray-600 text-sm">08312498191</p>
                   </div>
                 </div>
               </div>
             </div>
           )}
           
-          <div className="border-t border-gray-700 pt-8 text-center">
-            <p className="font-paragraph text-gray-400">
+          <div className="border-t border-gray-200 pt-8 text-center">
+            <p className="font-paragraph text-gray-500">
               © 2025 VTU Consortium Portal. All Rights Reserved.
             </p>
             <a 
               href="https://www.inerasoftware.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
+              className="font-paragraph text-gray-500 text-sm hover:text-primary transition-colors cursor-pointer"
             >
               Powered by INERA SOFTWARE
             </a>
