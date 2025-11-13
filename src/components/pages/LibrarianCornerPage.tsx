@@ -1382,17 +1382,6 @@ export default function LibrarianCornerPage() {
             </Card>
           </div>
 
-          {/* File Upload Modal */}
-          <FileUploadModal
-            isOpen={uploadModalOpen}
-            onClose={() => setUploadModalOpen(false)}
-            uploadType={selectedUploadType}
-            collegeName={user?.collegeName || ''}
-            librarianName={user?.librarianName || user?.username || ''}
-            librarianEmail={user?.email || ''}
-            onUploadSuccess={handleUploadSuccess}
-          />
-
           {/* Recent Resources */}
           <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="flex items-center justify-between mb-8">
