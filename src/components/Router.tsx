@@ -12,6 +12,7 @@ import PublisherCornerPage from '@/components/pages/PublisherCornerPage';
 import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
+import ApprovedFilesPage from '@/components/pages/ApprovedFilesPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import DebugUploads from '@/debug-uploads';
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: "librarian",
         element: <LibrarianCornerPage />,
+      },
+      {
+        path: "approved-files/:uploadType",
+        element: <ApprovedFilesPage />,
       },
       {
         path: "librarian-accounts-check",

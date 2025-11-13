@@ -116,6 +116,10 @@ export default function LibrarianCornerPage() {
     setViewFilesModalOpen(true);
   };
 
+  const handleViewApprovedFiles = (uploadType: string) => {
+    navigate(`/approved-files/${encodeURIComponent(uploadType)}`);
+  };
+
   const handleUploadSuccess = () => {
     // Refresh uploads data
     if (user?.role === 'librarian' && user?.collegeName) {
@@ -300,7 +304,7 @@ export default function LibrarianCornerPage() {
             {user?.role === 'librarian' && (
               <>
                 {/* Membership Status Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500">
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 cursor-pointer" onClick={() => handleViewApprovedFiles('Membership Status')}>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -314,7 +318,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload your college membership status documents
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Membership Status')}
                         className="w-full bg-blue-500 hover:bg-blue-600"
@@ -337,7 +341,7 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Membership Fees Receipts Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500">
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500 cursor-pointer" onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -351,7 +355,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload membership fee payment receipts and records
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Membership Fees Receipts')}
                         className="w-full bg-green-500 hover:bg-green-600"
@@ -374,7 +378,7 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Current Year e-Resources Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500">
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500 cursor-pointer" onClick={() => handleViewApprovedFiles('Current Year e-Resources')}>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -388,7 +392,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload current academic year e-resource access details
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Current Year e-Resources')}
                         className="w-full bg-purple-500 hover:bg-purple-600"
@@ -411,7 +415,7 @@ export default function LibrarianCornerPage() {
                 </Card>
 
                 {/* Access Confirmation Upload */}
-                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500">
+                <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 cursor-pointer" onClick={() => handleViewApprovedFiles('Access Confirmation')}>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -425,7 +429,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 mb-4">
                       Upload access confirmation and verification documents
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
                       <Button 
                         onClick={() => handleUploadClick('Access Confirmation')}
                         className="w-full bg-orange-500 hover:bg-orange-600"
