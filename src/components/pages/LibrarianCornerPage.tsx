@@ -372,17 +372,8 @@ export default function LibrarianCornerPage() {
     );
   }
 
-  // If super admin is viewing a specific college's files, show the same interface as college librarian but read-only
+  // If super admin is viewing a specific college's files, show simplified college view
   if (user?.role === 'superadmin' && selectedCollege) {
-    // Set up temporary user context to mimic the selected college's librarian view
-    const tempCollegeUser = {
-      ...user,
-      collegeName: selectedCollege.collegeName,
-      librarianName: selectedCollege.librarianName,
-      email: selectedCollege.email,
-      collegeUrl: selectedCollege.collegeUrl
-    };
-    
     // Use the college files as uploads for this view
     const tempUploads = collegeFiles;
     
@@ -443,507 +434,219 @@ export default function LibrarianCornerPage() {
           </div>
         </header>
 
-        {/* Page Header with Custom Welcome Message */}
-        <section className="bg-primary/5 py-16">
-          <div className="max-w-[120rem] mx-auto px-6">
-            <div className="flex items-center space-x-4 mb-6">
-              <Button
-                onClick={handleBackToColleges}
+        {/* Main Content */}
+        <div className="max-w-[120rem] mx-auto px-6 py-8">
+          {/* Back Button */}
+          <div className="mb-6">
+            <Button
+              onClick={handleBackToColleges}
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Colleges
+            </Button>
+          </div>
+
+          {/* College Header */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                {selectedCollege.collegeUrl ? (
+                  <a 
+                    href={selectedCollege.collegeUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="font-heading text-3xl font-bold text-primary hover:text-secondary transition-colors"
+                  >
+                    {selectedCollege.collegeName}
+                  </a>
+                ) : (
+                  <h1 className="font-heading text-3xl font-bold text-primary">
+                    {selectedCollege.collegeName}
+                  </h1>
+                )}
+                {selectedCollege.librarianName && (
+                  <p className="text-gray-600 font-paragraph mt-2">
+                    Librarian: {selectedCollege.librarianName}
+                  </p>
+                )}
+                {selectedCollege.email && (
+                  <p className="text-gray-600 font-paragraph">
+                    Email: {selectedCollege.email}
+                  </p>
+                )}
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="flex items-center space-x-2">
+                  <Eye className="h-4 w-4 text-blue-600" />
+                  <span className="text-blue-800 font-medium text-sm">Super Admin View</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Upload Status Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Membership Status */}
+            <Card className="border-l-4 border-blue-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Users className="h-5 w-5 text-blue-500" />
+                    <span>Membership Status</span>
+                  </div>
+                  {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Status'))}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Files uploaded: {getSuperAdminUploadedFiles('Membership Status').length}
+                  </p>
+                  {getSuperAdminUploadedFiles('Membership Status').length > 0 && (
+                    <Button 
+                      onClick={() => handleViewFilesClick('Membership Status')}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Files
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Membership Fees Receipts */}
+            <Card className="border-l-4 border-green-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <CreditCard className="h-5 w-5 text-green-500" />
+                    <span>Membership Fees</span>
+                  </div>
+                  {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Fees Receipts'))}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Files uploaded: {getSuperAdminUploadedFiles('Membership Fees Receipts').length}
+                  </p>
+                  {getSuperAdminUploadedFiles('Membership Fees Receipts').length > 0 && (
+                    <Button 
+                      onClick={() => handleViewFilesClick('Membership Fees Receipts')}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Files
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Current Year e-Resources */}
+            <Card className="border-l-4 border-purple-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Database className="h-5 w-5 text-purple-500" />
+                    <span>e-Resources</span>
+                  </div>
+                  {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Current Year e-Resources'))}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Files uploaded: {getSuperAdminUploadedFiles('Current Year e-Resources').length}
+                  </p>
+                  {getSuperAdminUploadedFiles('Current Year e-Resources').length > 0 && (
+                    <Button 
+                      onClick={() => handleViewFilesClick('Current Year e-Resources')}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-purple-500 text-purple-600 hover:bg-purple-50"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Files
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Access Confirmation */}
+            <Card className="border-l-4 border-orange-500">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-semibold text-gray-800 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-orange-500" />
+                    <span>Access Confirmation</span>
+                  </div>
+                  {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Access Confirmation'))}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Files uploaded: {getSuperAdminUploadedFiles('Access Confirmation').length}
+                  </p>
+                  {getSuperAdminUploadedFiles('Access Confirmation').length > 0 && (
+                    <Button 
+                      onClick={() => handleViewFilesClick('Access Confirmation')}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Files
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+            <h2 className="font-heading text-xl font-bold text-primary mb-4">Quick Actions</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <Button 
+                onClick={() => handleViewApprovedFiles('Membership Status')}
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary hover:text-white"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Colleges
+                <Eye className="h-4 w-4 mr-2" />
+                View All Approved Files
+              </Button>
+              <Button 
+                onClick={() => navigate('/admin')}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin Dashboard
+              </Button>
+              <Button 
+                onClick={() => navigate('/librarian-accounts-check')}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Manage Accounts
               </Button>
             </div>
-            
-            <div className="text-center space-y-4">
-              <h1 className="font-heading text-5xl font-bold text-primary">
-                Welcome {selectedCollege.collegeName}
-              </h1>
-              
-              {/* Super Admin Read-Only Notice */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-2xl mx-auto">
-                <div className="flex items-center justify-center space-x-2">
-                  <Eye className="h-5 w-5 text-blue-600" />
-                  <span className="text-blue-800 font-medium">Super Admin View - Read Only Access</span>
-                </div>
-                <p className="text-blue-700 text-sm mt-1">
-                  You are viewing this college's interface. Upload, edit, and remove functions are disabled.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto mt-8">
-                {tempCollegeUser.collegeUrl ? (
-                  <a 
-                    href={tempCollegeUser.collegeUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="font-heading text-2xl font-bold text-primary mb-2 hover:text-secondary transition-colors cursor-pointer block"
-                  >
-                    {tempCollegeUser.collegeName}
-                  </a>
-                ) : (
-                  <h2 className="font-heading text-2xl font-bold text-primary mb-2">
-                    {tempCollegeUser.collegeName}
-                  </h2>
-                )}
-                {tempCollegeUser.librarianName && (
-                  <p className="text-gray-600 font-paragraph">
-                    Librarian: {tempCollegeUser.librarianName} / Nodal Officer
-                  </p>
-                )}
-                
-                {/* Location Section for Global Academy of Technology */}
-                {tempCollegeUser.collegeName?.toLowerCase().includes('global academy of technology') && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <h3 className="font-heading text-lg font-semibold text-primary mb-2">Location</h3>
-                    <p className="text-gray-700 font-paragraph text-sm">
-                      Aditya Layout, Rajarajeshwari Nagar, Bengaluru, Karnataka 560098
-                    </p>
-                  </div>
-                )}
-                
-                <p className="text-gray-600 font-paragraph mt-2">
-                  Access your consortium resources and manage library services
-                </p>
-              </div>
-            </div>
           </div>
-        </section>
+        </div>
 
-        {/* Main Content */}
-        <section className="py-20">
-          <div className="max-w-[120rem] mx-auto px-6">
-            {/* Stats Cards */}
-            <div className="grid md:grid-cols-4 gap-6 mb-12">
-              <Card className="border-l-4 border-blue-500">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">E-Resources Available</CardTitle>
-                    <Database className="h-4 w-4 text-blue-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900">{resources.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-green-500">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">User Guides</CardTitle>
-                    <FileText className="h-4 w-4 text-green-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900">{userGuides.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-yellow-500">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Latest News</CardTitle>
-                    <Calendar className="h-4 w-4 text-yellow-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900">{news.length}</div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-l-4 border-purple-500">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Quick Access</CardTitle>
-                    <Users className="h-4 w-4 text-purple-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900">24/7</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Access Section */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {/* Upload Cards - Show same design but without upload buttons for super admin */}
-              
-              {/* Membership Status Upload */}
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-blue-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Membership Status')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Users className="h-5 w-5 text-blue-500" />
-                      <span>Membership Status</span>
-                    </div>
-                    {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Status'))}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Upload your college membership status documents
-                  </p>
-                  <p className="text-xs text-blue-600 mb-4 italic">
-                    💡 Click anywhere on this card to view approved files
-                  </p>
-                  <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
-                    {/* Upload button hidden for super admin */}
-                    {getSuperAdminUploadedFiles('Membership Status').length > 0 && (
-                      <Button 
-                        onClick={() => handleViewFilesClick('Membership Status')}
-                        variant="outline"
-                        className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Uploaded Files ({getSuperAdminUploadedFiles('Membership Status').length})
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Membership Fees Receipts Upload */}
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-green-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <CreditCard className="h-5 w-5 text-green-500" />
-                      <span>Membership Fees Receipts</span>
-                    </div>
-                    {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Membership Fees Receipts'))}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Upload membership fee payment receipts and records
-                  </p>
-                  <p className="text-xs text-green-600 mb-4 italic">
-                    💡 Click anywhere on this card to view approved files
-                  </p>
-                  <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
-                    {/* Upload button hidden for super admin */}
-                    {getSuperAdminUploadedFiles('Membership Fees Receipts').length > 0 && (
-                      <Button 
-                        onClick={() => handleViewFilesClick('Membership Fees Receipts')}
-                        variant="outline"
-                        className="w-full border-green-500 text-green-600 hover:bg-green-50"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Uploaded Files ({getSuperAdminUploadedFiles('Membership Fees Receipts').length})
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Current Year e-Resources Upload */}
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-purple-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Current Year e-Resources')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Database className="h-5 w-5 text-purple-500" />
-                      <span>Current Year e-Resources</span>
-                    </div>
-                    {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Current Year e-Resources'))}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Upload current academic year e-resource access details
-                  </p>
-                  <p className="text-xs text-purple-600 mb-4 italic">
-                    💡 Click anywhere on this card to view approved files
-                  </p>
-                  <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
-                    {/* Upload button hidden for super admin */}
-                    {getSuperAdminUploadedFiles('Current Year e-Resources').length > 0 && (
-                      <Button 
-                        onClick={() => handleViewFilesClick('Current Year e-Resources')}
-                        variant="outline"
-                        className="w-full border-purple-500 text-purple-600 hover:bg-purple-50"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Uploaded Files ({getSuperAdminUploadedFiles('Current Year e-Resources').length})
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Access Confirmation Upload */}
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-orange-500 cursor-pointer relative" onClick={() => handleViewApprovedFiles('Access Confirmation')}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="h-5 w-5 text-orange-500" />
-                      <span>Access Confirmation</span>
-                    </div>
-                    {getSuperAdminStatusBadge(getSuperAdminUploadStatus('Access Confirmation'))}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Upload access confirmation and verification documents
-                  </p>
-                  <p className="text-xs text-orange-600 mb-4 italic">
-                    💡 Click anywhere on this card to view approved files
-                  </p>
-                  <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
-                    {/* Upload button hidden for super admin */}
-                    {getSuperAdminUploadedFiles('Access Confirmation').length > 0 && (
-                      <Button 
-                        onClick={() => handleViewFilesClick('Access Confirmation')}
-                        variant="outline"
-                        className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Uploaded Files ({getSuperAdminUploadedFiles('Access Confirmation').length})
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* E-Resources Access */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Database className="h-5 w-5 text-blue-500" />
-                    <span>E-Resources</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Access electronic journals, e-books, and digital resources by academic year
-                  </p>
-                  <Button 
-                    onClick={() => navigate('/resources')}
-                    className="w-full bg-blue-500 hover:bg-blue-600"
-                  >
-                    Browse E-Resources
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* User Guides */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="h-5 w-5 text-green-500" />
-                    <span>User Guides</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Step-by-step guides for accessing and using consortium resources
-                  </p>
-                  <Button 
-                    onClick={() => navigate('/guide')}
-                    className="w-full bg-green-500 hover:bg-green-600"
-                  >
-                    View Guides
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Downloads */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Download className="h-5 w-5 text-purple-500" />
-                    <span>Downloads</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Download circulars, forms, and important documents
-                  </p>
-                  <Button 
-                    onClick={() => window.open('https://drive.google.com/drive/folders/1BmvZhX2bk-5KzGhw1hRY_LOGQ3fqdwP4?usp=sharing', '_blank')}
-                    className="w-full bg-purple-500 hover:bg-purple-600"
-                  >
-                    Access Downloads
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Training Materials */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="h-5 w-5 text-orange-500" />
-                    <span>Training</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Access training materials and workshop resources
-                  </p>
-                  <Button 
-                    onClick={() => window.open('https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing', '_blank')}
-                    className="w-full bg-orange-500 hover:bg-orange-600"
-                  >
-                    View Training
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* News & Events */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Calendar className="h-5 w-5 text-red-500" />
-                    <span>News & Events</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Stay updated with latest consortium news and events
-                  </p>
-                  <Button 
-                    onClick={() => navigate('/news')}
-                    className="w-full bg-red-500 hover:bg-red-600"
-                  >
-                    View News
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Member Colleges */}
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Users className="h-5 w-5 text-indigo-500" />
-                    <span>Member Colleges</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    View list of consortium member institutions
-                  </p>
-                  <Button 
-                    onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
-                    className="w-full bg-indigo-500 hover:bg-indigo-600"
-                  >
-                    View Colleges
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Resources */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="font-heading text-3xl font-bold text-primary">
-                  Recent E-Resources
-                </h2>
-                <Button 
-                  onClick={() => navigate('/resources')}
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-white"
-                >
-                  View All Resources
-                </Button>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {resources.slice(0, 6).map((resource) => (
-                  <Card key={resource._id} className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="font-heading text-lg text-gray-800">
-                        E-Resources {resource.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm text-gray-600">
-                        {resource.eJournals && (
-                          <p><strong>E-Journals:</strong> {resource.eJournals}</p>
-                        )}
-                        {resource.eBooks && (
-                          <p><strong>E-Books:</strong> {resource.eBooks}</p>
-                        )}
-                        {resource.plagiarismDetectionSoftware && (
-                          <p><strong>Plagiarism Tools:</strong> {resource.plagiarismDetectionSoftware}</p>
-                        )}
-                      </div>
-                      <Button 
-                        onClick={() => navigate(`/resources/${resource.title}`)}
-                        className="w-full mt-4 bg-primary hover:bg-primary/90"
-                        size="sm"
-                      >
-                        Access Resources
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="bg-gray-800 text-white py-12">
-          <div className="max-w-[120rem] mx-auto px-6">
-            {/* Hide contact information for Global Academy of Technology and Acharya Institute of Technology librarians */}
-            {!(tempCollegeUser?.collegeName?.toLowerCase().includes('global academy of technology') || 
-               tempCollegeUser?.collegeName?.toLowerCase().includes('acharya institute of technology')) && (
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
-                {/* Contact Information */}
-                <div>
-                  <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Address:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">
-                        Acharya, Acharya Dr. S. Radhakrishnan Road, Acharya P.O Soladevanahalli, Bangalore - 560107, Karnataka, India
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Other Enquiries:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">+91 80225-55555</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Additional Contact */}
-                <div>
-                  <h4 className="font-heading text-lg font-semibold mb-4">VTU Consortium</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Email:</p>
-                      <a href="mailto:vtuconsortium@gmail.com" className="font-paragraph text-gray-300 text-sm hover:text-orange-400 transition-colors">
-                        vtuconsortium@gmail.com
-                      </a>
-                    </div>
-                    <div>
-                      <p className="font-paragraph text-gray-300 text-sm font-medium">Phone:</p>
-                      <p className="font-paragraph text-gray-300 text-sm">08312498191</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <div className="border-t border-gray-700 pt-8 text-center">
-              <p className="font-paragraph text-gray-400">
-                © 2025 VTU Consortium Portal. All Rights Reserved.
-              </p>
-              <a 
-                href="https://www.inerasoftware.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="font-paragraph text-gray-400 text-sm hover:text-orange-400 transition-colors cursor-pointer"
-              >
-                Powered by INERA SOFTWARE
-              </a>
-            </div>
-          </div>
-        </footer>
-
-        {/* View Files Modal - No upload modal for super admin */}
-        <ViewFilesModal
+        {/* Modals */}
+        <ViewFilesModal 
           isOpen={viewFilesModalOpen}
           onClose={() => setViewFilesModalOpen(false)}
           uploadType={selectedViewType}
