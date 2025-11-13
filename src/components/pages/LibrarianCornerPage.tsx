@@ -13,6 +13,7 @@ import { BaseCrudService } from '@/integrations';
 import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads, LibrarianAccounts } from '@/entities';
 import FileUploadModal from '@/components/modals/FileUploadModal';
 import ViewFilesModal from '@/components/modals/ViewFilesModal';
+import { useLiveData, useDataUpdater } from '@/hooks/use-live-data';
 
 interface LibrarianResource {
   id: string;
@@ -26,11 +27,15 @@ interface LibrarianResource {
 export default function LibrarianCornerPage() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const [resources, setResources] = useState<EResources[]>([]);
-  const [userGuides, setUserGuides] = useState<UserGuideArticles[]>([]);
-  const [news, setNews] = useState<NewsandEvents[]>([]);
-  const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
-  const [colleges, setColleges] = useState<LibrarianAccounts[]>([]);
+  const { triggerUpdate } = useDataUpdater();
+  
+  // Use live data for real-time updates
+  const { data: resources } = useLiveData<EResources>('E-Resources');
+  const { data: userGuides } = useLiveData<UserGuideArticles>('userguidearticles');
+  const { data: news } = useLiveData<NewsandEvents>('newsandnotifications');
+  const { data: allUploads, refresh: refreshUploads } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
+  const { data: colleges } = useLiveData<LibrarianAccounts>('librarianaccounts');
+  
   const [selectedCollege, setSelectedCollege] = useState<LibrarianAccounts | null>(null);
   const [collegeFiles, setCollegeFiles] = useState<LibrarianFileUploads[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +44,9 @@ export default function LibrarianCornerPage() {
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
   const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
   const [selectedViewType, setSelectedViewType] = useState<string>('');
+
+  // Filter uploads for current user's college
+  const uploads = allUploads.filter(upload => upload.collegeName === user?.collegeName);
 
   // Check if user is authorized (librarian or superadmin)
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
@@ -49,43 +57,11 @@ export default function LibrarianCornerPage() {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        
-        // Fetch E-Resources
-        const { items: eresources } = await BaseCrudService.getAll<EResources>('E-Resources');
-        setResources(eresources);
-
-        // Fetch User Guides
-        const { items: guides } = await BaseCrudService.getAll<UserGuideArticles>('userguidearticles');
-        setUserGuides(guides);
-
-        // Fetch News
-        const { items: newsItems } = await BaseCrudService.getAll<NewsandEvents>('newsandnotifications');
-        setNews(newsItems);
-
-        // If super admin, fetch all colleges for selection
-        if (user?.role === 'superadmin') {
-          const { items: allColleges } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
-          setColleges(allColleges);
-        } else if (user?.role === 'librarian' && user?.collegeName) {
-          // Fetch user's uploads if librarian
-          const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-          console.log('LibrarianCornerPage - All uploads from DB:', userUploads);
-          const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
-          console.log('LibrarianCornerPage - Filtered uploads for college:', user.collegeName, filteredUploads);
-          setUploads(filteredUploads);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [isAuthorized, navigate, user]);
+    // Set loading to false once data is available
+    if (resources.length > 0 || userGuides.length > 0 || news.length > 0) {
+      setIsLoading(false);
+    }
+  }, [isAuthorized, navigate, resources, userGuides, news]);
 
   if (!isAuthorized) {
     return null;
@@ -114,13 +90,9 @@ export default function LibrarianCornerPage() {
 
   const handleCollegeSelect = async (college: LibrarianAccounts) => {
     setSelectedCollege(college);
-    try {
-      const { items: allFiles } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      const collegeSpecificFiles = allFiles.filter(file => file.collegeName === college.collegeName);
-      setCollegeFiles(collegeSpecificFiles);
-    } catch (error) {
-      console.error('Error fetching college files:', error);
-    }
+    // Filter college files from live data
+    const collegeSpecificFiles = allUploads.filter(file => file.collegeName === college.collegeName);
+    setCollegeFiles(collegeSpecificFiles);
   };
 
   const handleBackToColleges = () => {
@@ -182,17 +154,9 @@ export default function LibrarianCornerPage() {
   };
 
   const handleUploadSuccess = () => {
-    // Refresh uploads data
-    if (user?.role === 'librarian' && user?.collegeName) {
-      BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
-        .then(({ items }) => {
-          console.log('LibrarianCornerPage - Refresh: All uploads from DB:', items);
-          const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
-          console.log('LibrarianCornerPage - Refresh: Filtered uploads for college:', user.collegeName, filteredUploads);
-          setUploads(filteredUploads);
-        })
-        .catch(console.error);
-    }
+    // Trigger live data refresh
+    triggerUpdate('librarianfileuploads');
+    refreshUploads();
   };
 
   const getUploadStatus = (uploadType: string) => {

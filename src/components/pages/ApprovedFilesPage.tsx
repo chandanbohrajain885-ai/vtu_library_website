@@ -7,22 +7,37 @@ import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
 import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye } from 'lucide-react';
+import { useLiveData } from '@/hooks/use-live-data';
 
 export default function ApprovedFilesPage() {
   const { uploadType } = useParams<{ uploadType: string }>();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
-  const [files, setFiles] = useState<LibrarianFileUploads[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Check if user is authorized (librarian or superadmin)
-  const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
+  
+  // Use live data for real-time updates
+  const { data: allFiles, isLoading: loading } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
 
   // Get college name from URL params or user data
   const urlParams = new URLSearchParams(window.location.search);
   const collegeFromUrl = urlParams.get('college');
   const targetCollege = collegeFromUrl || user?.collegeName;
   const isViewingOtherCollege = user?.role === 'superadmin' && collegeFromUrl;
+
+  // Filter approved files in real-time
+  const files = allFiles.filter(
+    file => 
+      file.uploadType === decodeURIComponent(uploadType || '') && 
+      file.collegeName === targetCollege &&
+      file.approvalStatus === 'Approved'
+  ).sort((a, b) => {
+    // Sort by approval date (newest first)
+    const dateA = new Date(a.approvalDate || a._createdDate || 0);
+    const dateB = new Date(b.approvalDate || b._createdDate || 0);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  // Check if user is authorized (librarian or superadmin)
+  const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
 
   useEffect(() => {
     if (!isAuthorized) {
@@ -34,52 +49,7 @@ export default function ApprovedFilesPage() {
       navigate('/librarian');
       return;
     }
-
-    fetchApprovedFiles();
   }, [isAuthorized, uploadType, targetCollege, navigate]);
-
-  const fetchApprovedFiles = async () => {
-    if (!uploadType || !targetCollege) return;
-
-    setLoading(true);
-    try {
-      console.log('ApprovedFilesPage - Fetching files for:', {
-        uploadType: decodeURIComponent(uploadType),
-        collegeName: targetCollege,
-        userRole: user?.role,
-        isViewingOtherCollege
-      });
-
-      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      
-      console.log('ApprovedFilesPage - All files:', items.length);
-      console.log('ApprovedFilesPage - Sample files:', items.slice(0, 3));
-
-      // Filter for approved files of the specific type and college
-      const approvedFiles = items.filter(
-        file => 
-          file.uploadType === decodeURIComponent(uploadType) && 
-          file.collegeName === targetCollege &&
-          file.approvalStatus === 'Approved'
-      );
-
-      console.log('ApprovedFilesPage - Filtered approved files:', approvedFiles.length);
-      console.log('ApprovedFilesPage - Approved files:', approvedFiles);
-
-      // Sort by approval date (newest first)
-      approvedFiles.sort((a, b) => {
-        const dateA = new Date(a.approvalDate || a._createdDate || 0);
-        const dateB = new Date(b.approvalDate || b._createdDate || 0);
-        return dateB.getTime() - dateA.getTime();
-      });
-
-      setFiles(approvedFiles);
-    } catch (error) {
-      console.error('Error fetching approved files:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const formatDate = (date: Date | string | undefined) => {
     if (!date) return 'N/A';
@@ -227,7 +197,7 @@ export default function ApprovedFilesPage() {
                   </p>
                 </div>
                 <Button
-                  onClick={fetchApprovedFiles}
+                  onClick={() => window.location.reload()}
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white"
                 >

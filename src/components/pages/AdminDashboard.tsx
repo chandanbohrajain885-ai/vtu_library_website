@@ -13,7 +13,7 @@ import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircl
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
-import { useLiveData } from '@/hooks/use-live-data';
+import { useLiveData, useDataUpdater } from '@/hooks/use-live-data';
 
 const availablePermissions = [
   'view_resources',
@@ -44,17 +44,26 @@ export default function AdminDashboard() {
     rejectPasswordChangeRequest
   } = useAuth();
   
-  // Use live data for password change requests
+  const { triggerUpdate } = useDataUpdater();
+  
+  // Use live data for password change requests and file uploads
   const { 
     data: passwordChangeRequests, 
     isLoading: passwordRequestsLoading 
   } = useLiveData<PasswordChangeRequests>('passwordchangerequests');
   
+  const { 
+    data: allUploads, 
+    refresh: refreshUploads 
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
+  
+  // Filter pending uploads from live data
+  const pendingUploads = allUploads.filter(upload => upload.approvalStatus === 'Pending');
+  
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [viewingRequest, setViewingRequest] = useState<RegistrationRequest | null>(null);
   const [rejectReason, setRejectReason] = useState('');
-  const [pendingUploads, setPendingUploads] = useState<LibrarianFileUploads[]>([]);
   const [viewingUpload, setViewingUpload] = useState<LibrarianFileUploads | null>(null);
   const [approvalComments, setApprovalComments] = useState('');
   const [viewingPasswordRequest, setViewingPasswordRequest] = useState<PasswordChangeRequests | null>(null);
@@ -66,22 +75,8 @@ export default function AdminDashboard() {
     permissions: [] as string[]
   });
 
-  // Fetch pending uploads on component mount
-  useEffect(() => {
-    const fetchPendingUploads = async () => {
-      try {
-        const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-        const pending = items.filter(upload => upload.approvalStatus === 'Pending');
-        setPendingUploads(pending);
-      } catch (error) {
-        console.error('Error fetching pending uploads:', error);
-      }
-    };
-
-    if (user?.role === 'superadmin') {
-      fetchPendingUploads();
-    }
-  }, [user]);
+  // Remove the useEffect that fetches pending uploads since we're using live data
+  // The pendingUploads are now automatically updated via useLiveData
 
   if (user?.role !== 'superadmin') {
     return (
@@ -142,10 +137,9 @@ export default function AdminDashboard() {
         superAdminComments: approvalComments
       });
       
-      // Refresh pending uploads
-      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
-      setPendingUploads(pending);
+      // Trigger live data update
+      triggerUpdate('librarianfileuploads');
+      refreshUploads();
       
       setViewingUpload(null);
       setApprovalComments('');
@@ -165,10 +159,9 @@ export default function AdminDashboard() {
         superAdminComments: approvalComments
       });
       
-      // Refresh pending uploads
-      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
-      setPendingUploads(pending);
+      // Trigger live data update
+      triggerUpdate('librarianfileuploads');
+      refreshUploads();
       
       setViewingUpload(null);
       setApprovalComments('');
