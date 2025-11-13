@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from './AuthContext';
-import { Crown, Lock } from 'lucide-react';
+import { Crown, Lock, Key } from 'lucide-react';
+import { ForgetPasswordModal } from './ForgetPasswordModal';
 
 interface SuperExecutiveModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export function SuperExecutiveModal({ isOpen, onClose, onSuccess }: SuperExecuti
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgetPasswordOpen, setIsForgetPasswordOpen] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,83 +59,106 @@ export function SuperExecutiveModal({ isOpen, onClose, onSuccess }: SuperExecuti
     onClose();
   };
 
+  const handleForgetPassword = () => {
+    setIsForgetPasswordOpen(true);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-purple-700">
-            <Crown className="h-6 w-6" />
-            Super Executive Access
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-4">
-          <div className="flex items-center justify-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-center">
-              <Lock className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-              <p className="text-sm text-purple-700 font-medium">
-                Restricted Access Area
-              </p>
-              <p className="text-xs text-purple-600 mt-1">
-                Super Executive credentials required
-              </p>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-purple-700">
+              <Crown className="h-6 w-6" />
+              Super Executive Access
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-center">
+                <Lock className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                <p className="text-sm text-purple-700 font-medium">
+                  Restricted Access Area
+                </p>
+                <p className="text-xs text-purple-600 mt-1">
+                  Super Executive credentials required
+                </p>
+              </div>
             </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter super executive username"
+                  required
+                  className="border-purple-200 focus:border-purple-500"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter super executive password"
+                  required
+                  className="border-purple-200 focus:border-purple-500"
+                />
+              </div>
+
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={handleForgetPassword}
+                  className="text-sm text-purple-600 hover:underline p-0 h-auto"
+                >
+                  <Key className="h-3 w-3 mr-1" />
+                  Forgot Password?
+                </Button>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  className="flex-1"
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  {isLoading ? 'Verifying...' : 'Access'}
+                </Button>
+              </div>
+            </form>
           </div>
+        </DialogContent>
+      </Dialog>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter super executive username"
-                required
-                className="border-purple-200 focus:border-purple-500"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter super executive password"
-                required
-                className="border-purple-200 focus:border-purple-500"
-              />
-            </div>
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                className="flex-1"
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
-              >
-                {isLoading ? 'Verifying...' : 'Access'}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </DialogContent>
-    </Dialog>
+      <ForgetPasswordModal
+        isOpen={isForgetPasswordOpen}
+        onClose={() => setIsForgetPasswordOpen(false)}
+      />
+    </>
   );
 }

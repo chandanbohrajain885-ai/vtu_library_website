@@ -9,10 +9,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download } from 'lucide-react';
+import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download, Key } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
-import { LibrarianFileUploads } from '@/entities';
+import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
+import { useLiveData } from '@/hooks/use-live-data';
 
 const availablePermissions = [
   'view_resources',
@@ -38,8 +39,17 @@ export default function AdminDashboard() {
     logout,
     registrationRequests,
     approveRegistrationRequest,
-    rejectRegistrationRequest
+    rejectRegistrationRequest,
+    approvePasswordChangeRequest,
+    rejectPasswordChangeRequest
   } = useAuth();
+  
+  // Use live data for password change requests
+  const { 
+    data: passwordChangeRequests, 
+    isLoading: passwordRequestsLoading 
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests');
+  
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [viewingRequest, setViewingRequest] = useState<RegistrationRequest | null>(null);
@@ -47,6 +57,8 @@ export default function AdminDashboard() {
   const [pendingUploads, setPendingUploads] = useState<LibrarianFileUploads[]>([]);
   const [viewingUpload, setViewingUpload] = useState<LibrarianFileUploads | null>(null);
   const [approvalComments, setApprovalComments] = useState('');
+  const [viewingPasswordRequest, setViewingPasswordRequest] = useState<PasswordChangeRequests | null>(null);
+  const [passwordRequestComments, setPasswordRequestComments] = useState('');
   const [newUser, setNewUser] = useState({
     username: '',
     password: '',
@@ -165,7 +177,28 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleApprovePasswordRequest = async (requestId: string) => {
+    try {
+      await approvePasswordChangeRequest(requestId, passwordRequestComments);
+      setViewingPasswordRequest(null);
+      setPasswordRequestComments('');
+    } catch (error) {
+      console.error('Error approving password change request:', error);
+    }
+  };
+
+  const handleRejectPasswordRequest = async (requestId: string) => {
+    try {
+      await rejectPasswordChangeRequest(requestId, passwordRequestComments);
+      setViewingPasswordRequest(null);
+      setPasswordRequestComments('');
+    } catch (error) {
+      console.error('Error rejecting password change request:', error);
+    }
+  };
+
   const pendingRequests = registrationRequests.filter(r => r.status === 'pending');
+  const pendingPasswordRequests = passwordChangeRequests.filter(r => r.status === 'pending');
   const togglePermission = (permission: string, isEditing: boolean = false) => {
     if (isEditing && editingUser) {
       const updatedPermissions = editingUser.permissions.includes(permission)
@@ -202,7 +235,7 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -240,27 +273,147 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pending Requests</CardTitle>
-              <Clock className="h-4 w-4 text-orange-500" />
+              <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">
-                {pendingRequests.length}
-              </div>
+              <div className="text-2xl font-bold">{pendingRequests.length}</div>
             </CardContent>
           </Card>
-
+          
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Uploads</CardTitle>
-              <FileText className="h-4 w-4 text-blue-500" />
+              <CardTitle className="text-sm font-medium">File Uploads</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {pendingUploads.length}
-              </div>
+              <div className="text-2xl font-bold">{pendingUploads.length}</div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Password Requests</CardTitle>
+              <Key className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{pendingPasswordRequests.length}</div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Password Change Requests Section */}
+        {pendingPasswordRequests.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <Key className="h-5 w-5 text-purple-500" />
+                  Password Change Requests
+                </CardTitle>
+                <Badge variant="secondary">{pendingPasswordRequests.length} pending</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {pendingPasswordRequests.map((request) => (
+                  <div key={request._id} className="flex items-center justify-between p-4 border rounded-lg bg-purple-50">
+                    <div className="flex items-center space-x-4">
+                      <div>
+                        <h3 className="font-medium">{request.userIdentity}</h3>
+                        <p className="text-sm text-gray-500">User Type: {request.userType}</p>
+                        {request.collegeName && (
+                          <p className="text-sm text-gray-500">College: {request.collegeName}</p>
+                        )}
+                        <p className="text-xs text-gray-400">
+                          Requested: {new Date(request.requestDate || '').toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="outline" className="text-purple-600 border-purple-600">
+                        {request.status}
+                      </Badge>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setViewingPasswordRequest(request)}
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            Review
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Password Change Request</DialogTitle>
+                          </DialogHeader>
+                          {viewingPasswordRequest && (
+                            <div className="space-y-4">
+                              <div>
+                                <Label className="text-sm font-medium">User</Label>
+                                <p className="text-sm">{viewingPasswordRequest.userIdentity}</p>
+                              </div>
+                              <div>
+                                <Label className="text-sm font-medium">User Type</Label>
+                                <p className="text-sm">{viewingPasswordRequest.userType}</p>
+                              </div>
+                              {viewingPasswordRequest.collegeName && (
+                                <div>
+                                  <Label className="text-sm font-medium">College</Label>
+                                  <p className="text-sm">{viewingPasswordRequest.collegeName}</p>
+                                </div>
+                              )}
+                              <div>
+                                <Label className="text-sm font-medium">Request Date</Label>
+                                <p className="text-sm">
+                                  {new Date(viewingPasswordRequest.requestDate || '').toLocaleString()}
+                                </p>
+                              </div>
+                              <div>
+                                <Label className="text-sm font-medium">Status</Label>
+                                <Badge variant="outline" className="ml-2">
+                                  {viewingPasswordRequest.status}
+                                </Badge>
+                              </div>
+                              <div>
+                                <Label htmlFor="passwordComments">Admin Comments</Label>
+                                <Textarea
+                                  id="passwordComments"
+                                  value={passwordRequestComments}
+                                  onChange={(e) => setPasswordRequestComments(e.target.value)}
+                                  placeholder="Add comments about this password change request..."
+                                  className="mt-1"
+                                />
+                              </div>
+                              <div className="flex space-x-2">
+                                <Button
+                                  onClick={() => handleApprovePasswordRequest(viewingPasswordRequest._id)}
+                                  className="flex-1 bg-green-600 hover:bg-green-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  Approve
+                                </Button>
+                                <Button
+                                  onClick={() => handleRejectPasswordRequest(viewingPasswordRequest._id)}
+                                  variant="destructive"
+                                  className="flex-1"
+                                >
+                                  <XCircle className="h-4 w-4 mr-2" />
+                                  Reject
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Pending File Uploads Section */}
         {pendingUploads.length > 0 && (

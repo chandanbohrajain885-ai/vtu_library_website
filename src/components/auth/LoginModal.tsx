@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from './AuthContext';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Key } from 'lucide-react';
+import { ForgetPasswordModal } from './ForgetPasswordModal';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export function LoginModal({ isOpen, onClose, message, isLibrarianCornerLogin = 
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgetPasswordOpen, setIsForgetPasswordOpen] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,52 +51,75 @@ export function LoginModal({ isOpen, onClose, message, isLibrarianCornerLogin = 
     setLoginData({ username: '', password: '' });
   };
 
+  const handleForgetPassword = () => {
+    setIsForgetPasswordOpen(true);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center">
-            {message || 'Access VTU Consortium Portal'}
-          </DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {message || 'Access VTU Consortium Portal'}
+            </DialogTitle>
+          </DialogHeader>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="login-username">Username</Label>
-            <Input
-              id="login-username"
-              type="text"
-              value={loginData.username}
-              onChange={(e) => setLoginData(prev => ({ ...prev, username: e.target.value }))}
-              placeholder="Enter your username"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="login-password">Password</Label>
-            <Input
-              id="login-password"
-              type="password"
-              value={loginData.password}
-              onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          {error && (
-            <div className="flex items-center space-x-2 text-red-600 text-sm">
-              <AlertCircle className="h-4 w-4" />
-              <span>{error}</span>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="login-username">Username</Label>
+              <Input
+                id="login-username"
+                type="text"
+                value={loginData.username}
+                onChange={(e) => setLoginData(prev => ({ ...prev, username: e.target.value }))}
+                placeholder="Enter your username"
+                required
+              />
             </div>
-          )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <div className="space-y-2">
+              <Label htmlFor="login-password">Password</Label>
+              <Input
+                id="login-password"
+                type="password"
+                value={loginData.password}
+                onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="flex items-center space-x-2 text-red-600 text-sm">
+                <AlertCircle className="h-4 w-4" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Logging in...' : 'Login'}
+            </Button>
+
+            <div className="text-center">
+              <Button
+                type="button"
+                variant="link"
+                onClick={handleForgetPassword}
+                className="text-sm text-primary hover:underline p-0 h-auto"
+              >
+                <Key className="h-3 w-3 mr-1" />
+                Forgot Password?
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <ForgetPasswordModal
+        isOpen={isForgetPasswordOpen}
+        onClose={() => setIsForgetPasswordOpen(false)}
+      />
+    </>
   );
 }

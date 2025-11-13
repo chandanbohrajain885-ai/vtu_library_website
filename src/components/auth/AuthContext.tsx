@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BaseCrudService } from '@/integrations';
-import { LibrarianAccounts } from '@/entities';
+import { LibrarianAccounts, PasswordChangeRequests } from '@/entities';
 
 export interface User {
   id: string;
@@ -40,6 +40,8 @@ interface AuthContextType {
   submitRegistrationRequest: (request: Omit<RegistrationRequest, 'id' | 'requestDate' | 'status'>) => void;
   approveRegistrationRequest: (requestId: string) => void;
   rejectRegistrationRequest: (requestId: string, reason?: string) => void;
+  approvePasswordChangeRequest: (requestId: string, adminComments?: string) => Promise<void>;
+  rejectPasswordChangeRequest: (requestId: string, adminComments?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,7 +53,8 @@ const defaultUsers: User[] = [
     username: 'superadmin',
     role: 'superadmin',
     permissions: ['all'],
-    createdAt: new Date()
+    createdAt: new Date(),
+    email: 'superadmin@vtuconsortium.edu.in' // Default email for super admin
   },
   {
     id: '2',
@@ -117,6 +120,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string, isLibrarianCornerLogin: boolean = false): Promise<boolean> => {
+    // Check for approved password change requests first
+    try {
+      const { items: passwordRequests } = await BaseCrudService.getAll<PasswordChangeRequests>('passwordchangerequests');
+      const approvedRequest = passwordRequests.find(
+        req => req.userIdentity === username && req.status === 'approved'
+      );
+      
+      if (approvedRequest && approvedRequest.newPasswordHash) {
+        // Use the new password for authentication
+        const hashedInputPassword = btoa(password + 'vtu_salt_2025');
+        if (hashedInputPassword === approvedRequest.newPasswordHash) {
+          // Update the stored password and mark request as completed
+          const updatedPasswords = { ...userPasswords, [username]: password };
+          setUserPasswords(updatedPasswords);
+          localStorage.setItem('vtu_user_passwords', JSON.stringify(updatedPasswords));
+          
+          // Mark the request as completed
+          await BaseCrudService.update('passwordchangerequests', {
+            _id: approvedRequest._id,
+            status: 'completed'
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error checking password change requests:', error);
+    }
+
     // First check if it's a default user (superadmin, admin, etc.)
     const foundDefaultUser = users.find(u => u.username === username);
     if (foundDefaultUser && userPasswords[username] === password) {
@@ -261,6 +291,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('vtu_registration_requests', JSON.stringify(updatedRequests));
   };
 
+  const approvePasswordChangeRequest = async (requestId: string, adminComments?: string) => {
+    try {
+      await BaseCrudService.update('passwordchangerequests', {
+        _id: requestId,
+        status: 'approved',
+        adminComments: adminComments || 'Password change approved by Super Admin'
+      });
+    } catch (error) {
+      console.error('Error approving password change request:', error);
+      throw error;
+    }
+  };
+
+  const rejectPasswordChangeRequest = async (requestId: string, adminComments?: string) => {
+    try {
+      await BaseCrudService.update('passwordchangerequests', {
+        _id: requestId,
+        status: 'rejected',
+        adminComments: adminComments || 'Password change rejected by Super Admin'
+      });
+    } catch (error) {
+      console.error('Error rejecting password change request:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -274,7 +330,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       registrationRequests,
       submitRegistrationRequest,
       approveRegistrationRequest,
-      rejectRegistrationRequest
+      rejectRegistrationRequest,
+      approvePasswordChangeRequest,
+      rejectPasswordChangeRequest
     }}>
       {children}
     </AuthContext.Provider>
