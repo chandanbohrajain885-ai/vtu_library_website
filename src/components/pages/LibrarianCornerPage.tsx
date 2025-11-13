@@ -64,7 +64,9 @@ export default function LibrarianCornerPage() {
         // Fetch user's uploads if librarian
         if (user?.role === 'librarian' && user?.collegeName) {
           const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+          console.log('LibrarianCornerPage - All uploads from DB:', userUploads);
           const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
+          console.log('LibrarianCornerPage - Filtered uploads for college:', user.collegeName, filteredUploads);
           setUploads(filteredUploads);
         }
       } catch (error) {
@@ -108,6 +110,8 @@ export default function LibrarianCornerPage() {
   };
 
   const handleViewFilesClick = (uploadType: string) => {
+    console.log('LibrarianCornerPage - handleViewFilesClick called with:', uploadType);
+    console.log('LibrarianCornerPage - User college name:', user?.collegeName);
     setSelectedViewType(uploadType);
     setViewFilesModalOpen(true);
   };
@@ -117,7 +121,9 @@ export default function LibrarianCornerPage() {
     if (user?.role === 'librarian' && user?.collegeName) {
       BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
         .then(({ items }) => {
+          console.log('LibrarianCornerPage - Refresh: All uploads from DB:', items);
           const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
+          console.log('LibrarianCornerPage - Refresh: Filtered uploads for college:', user.collegeName, filteredUploads);
           setUploads(filteredUploads);
         })
         .catch(console.error);
@@ -131,7 +137,11 @@ export default function LibrarianCornerPage() {
   };
 
   const getUploadedFiles = (uploadType: string) => {
-    return uploads.filter(u => u.uploadType === uploadType);
+    const filtered = uploads.filter(u => u.uploadType === uploadType);
+    console.log(`LibrarianCornerPage - getUploadedFiles for ${uploadType}:`, filtered);
+    console.log(`LibrarianCornerPage - All uploads:`, uploads);
+    console.log(`LibrarianCornerPage - User college:`, user?.collegeName);
+    return filtered;
   };
 
   const getStatusBadge = (status: string | null) => {

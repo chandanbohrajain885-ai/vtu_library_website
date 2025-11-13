@@ -28,9 +28,14 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
     setLoading(true);
     try {
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      console.log('ViewFilesModal - All items:', items);
+      console.log('ViewFilesModal - Filter criteria:', { uploadType, collegeName });
+      
       const filteredFiles = items.filter(
         file => file.uploadType === uploadType && file.collegeName === collegeName
       );
+      console.log('ViewFilesModal - Filtered files:', filteredFiles);
+      
       // Sort by upload date (newest first)
       filteredFiles.sort((a, b) => {
         const dateA = new Date(a.uploadDate || a._createdDate || 0);
@@ -115,6 +120,13 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No files uploaded</h3>
               <p className="text-gray-500">No files have been uploaded for this category yet.</p>
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg text-left">
+                <p className="text-sm text-gray-600">
+                  <strong>Debug Info:</strong><br />
+                  Upload Type: {uploadType}<br />
+                  College Name: {collegeName}
+                </p>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">

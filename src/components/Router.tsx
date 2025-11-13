@@ -14,6 +14,7 @@ import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import DebugUploads from '@/debug-uploads';
 // Layout component that includes ScrollToTop
 function Layout() {
   return (
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: "librarian-accounts-check",
         element: <LibrarianAccountsChecker />,
+      },
+      {
+        path: "debug-uploads",
+        element: <DebugUploads />,
       },
       {
         path: "*",

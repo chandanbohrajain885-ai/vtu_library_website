@@ -73,6 +73,7 @@ export default function FileUploadModal({
       };
 
       await BaseCrudService.create('librarianfileuploads', uploadRecord);
+      console.log('FileUploadModal - Successfully created upload record:', uploadRecord);
 
       // Reset form
       setSelectedFile(null);
