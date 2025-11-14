@@ -574,20 +574,6 @@ export default function AdminDashboard() {
                         </Badge>
                       </div>
                       <div className="flex items-center space-x-2">
-                        {/* View button - always available for files with URL */}
-                        {upload.fileUrl && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => window.open(upload.fileUrl, '_blank')}
-                            title="View the uploaded file"
-                            className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
-                          >
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                        )}
-                        
                         {/* Review button for pending files */}
                         {upload.approvalStatus === 'Pending' && (
                           <Dialog>
@@ -693,17 +679,47 @@ export default function AdminDashboard() {
                           </Dialog>
                         )}
                         
-                        {/* Remove button for approved/rejected files to save storage - always beside View button */}
+                        {/* For approved/rejected files: Always show View button next to Remove button */}
                         {(upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected') && (
+                          <>
+                            {/* View button - always visible for approved/rejected files */}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => upload.fileUrl ? window.open(upload.fileUrl, '_blank') : alert('File URL not available')}
+                              title="View the uploaded file"
+                              className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
+                              disabled={!upload.fileUrl}
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              View
+                            </Button>
+                            
+                            {/* Remove button - always beside View button */}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleRemoveUpload(upload._id, upload.uploadType || 'Unknown', upload.collegeName || 'Unknown')}
+                              className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                              title="Permanently delete this file to save storage space"
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Remove
+                            </Button>
+                          </>
+                        )}
+                        
+                        {/* For pending files: Show View button if URL exists */}
+                        {upload.approvalStatus === 'Pending' && upload.fileUrl && (
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleRemoveUpload(upload._id, upload.uploadType || 'Unknown', upload.collegeName || 'Unknown')}
-                            className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                            title="Permanently delete this file to save storage space"
+                            onClick={() => window.open(upload.fileUrl, '_blank')}
+                            title="View the uploaded file"
+                            className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
                           >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Remove
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
                           </Button>
                         )}
                       </div>
