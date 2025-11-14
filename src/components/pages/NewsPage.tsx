@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Newspaper, Calendar, User, Search, ExternalLink, Star } from 'lucide-react';
 
 export default function NewsPage() {
-  const { data: news, isLoading } = useLiveData<NewsandEvents>('newsandnotifications');
+  const { data: news, isLoading } = useLiveData<NewsandEvents>('newsandnotifications', [], 30000); // Poll every 30 seconds
   const [filteredNews, setFilteredNews] = useState<NewsandEvents[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 

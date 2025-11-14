@@ -51,7 +51,7 @@ export default function AdminDashboard() {
     data: passwordChangeRequests, 
     isLoading: passwordRequestsLoading,
     error: passwordRequestsError 
-  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 10000); // Poll every 10 seconds
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 30000); // Poll every 30 seconds (reduced from 10s)
   
   const { 
     data: allUploads, 
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
     isLoading: uploadsLoading,
     error: uploadsError,
     lastUpdated: uploadsLastUpdated
-  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 15000); // Poll every 15 seconds (reduced from 5s)
   
   // Filter pending uploads from live data with error handling
   const pendingUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Pending') : [];

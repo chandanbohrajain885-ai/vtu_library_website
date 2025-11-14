@@ -42,63 +42,38 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
-  // Use live data hooks for real-time updates with optimized polling
+  // Use live data hooks with optimized polling intervals
   const { 
     data: featuredResources, 
     isLoading: resourcesLoading 
-  } = useLiveData<EResources>('E-Resources', [], 10000); // Poll every 10 seconds
+  } = useLiveData<EResources>('E-Resources', [], 30000); // Poll every 30 seconds (reduced from 10s)
   
   const { 
     data: latestNews, 
     isLoading: newsLoading,
     refresh: refreshNews,
     forceRefresh: forceRefreshNews
-  } = useLiveData<NewsandEvents>('newsandnotifications', [], 3000); // Ultra-fast polling every 3 seconds for immediate updates
+  } = useLiveData<NewsandEvents>('newsandnotifications', [], 15000); // Poll every 15 seconds (reduced from 3s)
   
   const { 
     data: userGuides, 
     isLoading: guidesLoading 
-  } = useLiveData<UserGuideArticles>('userguidearticles', [], 15000); // Poll every 15 seconds
+  } = useLiveData<UserGuideArticles>('userguidearticles', [], 60000); // Poll every 60 seconds (reduced from 15s)
   
-  // Aggressive preloading and optimization for news data
+  // Optimized data loading on mount
   useEffect(() => {
-    // Immediate fetch on mount - don't wait for polling
-    const immediateNewsLoad = async () => {
-      try {
-        console.log('HomePage - Immediate news load initiated...');
-        await forceRefreshNews();
-        console.log('HomePage - Immediate news load completed');
-      } catch (error) {
-        console.error('HomePage - Error in immediate news load:', error);
-      }
-    };
-
-    // Execute immediately without waiting
-    immediateNewsLoad();
-    
-    // Also set up a backup refresh after a short delay
-    const backupRefresh = setTimeout(() => {
-      if (latestNews.length === 0) {
-        console.log('HomePage - Backup news refresh triggered');
-        forceRefreshNews();
-      }
-    }, 1000);
-
-    return () => clearTimeout(backupRefresh);
+    // Only force refresh news if we don't have any data
+    if (latestNews.length === 0) {
+      const loadNews = async () => {
+        try {
+          await forceRefreshNews();
+        } catch (error) {
+          console.error('HomePage - Error loading news:', error);
+        }
+      };
+      loadNews();
+    }
   }, []); // Only run once on mount
-
-  // Additional optimization: Refresh news when user returns to tab
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden && latestNews.length === 0) {
-        console.log('HomePage - Tab became visible, refreshing news...');
-        forceRefreshNews();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [latestNews.length, forceRefreshNews]);
 
   // Optimized loading state - only show loading for initial load
   const isInitialLoading = (resourcesLoading && featuredResources.length === 0) || 
@@ -176,7 +151,7 @@ export default function HomePage() {
     { id: 'search-help', title: 'Search Help', content: 'How to search for resources, advanced search tips, search filters, finding specific content', type: 'Site Content', category: 'Help' },
   ];
 
-  // Search function
+  // Optimized search function with reduced debounce
   const performSearch = (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -191,7 +166,7 @@ export default function HomePage() {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Debounce search
+    // Reduced debounce for faster search
     searchTimeoutRef.current = setTimeout(() => {
       const results = searchData.filter(item => {
         const searchTerm = query.toLowerCase();
@@ -206,62 +181,43 @@ export default function HomePage() {
         );
       });
 
-      // Add dynamic results from CMS data
+      // Simplified dynamic search - only search if we have data
       const dynamicResults: SearchResult[] = [];
       
-      // Search in E-Resources
-      featuredResources.forEach(resource => {
-        if (resource.title?.toLowerCase().includes(query.toLowerCase()) ||
-            resource.eJournals?.toLowerCase().includes(query.toLowerCase()) ||
-            resource.eBooks?.toLowerCase().includes(query.toLowerCase()) ||
-            resource.plagiarismDetectionSoftware?.toLowerCase().includes(query.toLowerCase())) {
-          dynamicResults.push({
-            id: `dynamic-resource-${resource._id}`,
-            title: `E-Resources ${resource.title}`,
-            content: resource.eJournals || resource.eBooks || 'E-Resource content',
-            type: 'E-Resources',
-            url: `/resources/${resource.title}`,
-            year: resource.title
-          });
-        }
-      });
+      if (featuredResources.length > 0) {
+        featuredResources.forEach(resource => {
+          if (resource.title?.toLowerCase().includes(query.toLowerCase())) {
+            dynamicResults.push({
+              id: `dynamic-resource-${resource._id}`,
+              title: `E-Resources ${resource.title}`,
+              content: resource.eJournals || resource.eBooks || 'E-Resource content',
+              type: 'E-Resources',
+              url: `/resources/${resource.title}`,
+              year: resource.title
+            });
+          }
+        });
+      }
 
-      // Search in News & Events
-      latestNews.forEach(news => {
-        if (news.title?.toLowerCase().includes(query.toLowerCase()) ||
-            news.content?.toLowerCase().includes(query.toLowerCase()) ||
-            news.author?.toLowerCase().includes(query.toLowerCase())) {
-          dynamicResults.push({
-            id: `dynamic-news-${news._id}`,
-            title: news.title || 'News Item',
-            content: news.content || 'News content',
-            type: 'News & Events',
-            url: news.externalLink || '/news'
-          });
-        }
-      });
-
-      // Search in User Guides
-      userGuides.forEach(guide => {
-        if (guide.title?.toLowerCase().includes(query.toLowerCase()) ||
-            guide.content?.toLowerCase().includes(query.toLowerCase()) ||
-            guide.category?.toLowerCase().includes(query.toLowerCase())) {
-          dynamicResults.push({
-            id: `dynamic-guide-${guide._id}`,
-            title: guide.title || 'User Guide',
-            content: guide.content || 'Guide content',
-            type: 'User Guide',
-            url: `/guide#${guide.slug}`,
-            category: guide.category
-          });
-        }
-      });
+      if (latestNews.length > 0) {
+        latestNews.forEach(news => {
+          if (news.title?.toLowerCase().includes(query.toLowerCase())) {
+            dynamicResults.push({
+              id: `dynamic-news-${news._id}`,
+              title: news.title || 'News Item',
+              content: news.content || 'News content',
+              type: 'News & Events',
+              url: news.externalLink || '/news'
+            });
+          }
+        });
+      }
 
       const allResults = [...results, ...dynamicResults];
-      setSearchResults(allResults.slice(0, 10)); // Limit to 10 results
+      setSearchResults(allResults.slice(0, 8)); // Reduced to 8 results for faster rendering
       setShowSearchResults(true);
       setIsSearching(false);
-    }, 300);
+    }, 200); // Reduced from 300ms to 200ms
   };
 
   // Handle search input change
@@ -302,7 +258,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch user's uploads if librarian
+  // Optimized fetch user's uploads if librarian
   useEffect(() => {
     const fetchUploads = async () => {
       if (user?.role === 'librarian' && user?.collegeName) {
@@ -316,8 +272,11 @@ export default function HomePage() {
       }
     };
 
-    fetchUploads();
-  }, [user]);
+    // Only fetch if user is a librarian
+    if (user?.role === 'librarian') {
+      fetchUploads();
+    }
+  }, [user?.role, user?.collegeName]); // More specific dependencies
 
   // Upload handlers
   const handleUploadClick = (uploadType: string) => {
@@ -415,13 +374,13 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Continuous infinite scroll effect for news cards - seamless endless loop
+  // Optimized infinite scroll effect for news cards
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.5; // Slower, smoother scrolling speed
+    const scrollSpeed = 0.3; // Reduced scroll speed for better performance
     let animationId: number;
     let isPaused = false;
     let isInitialized = false;
@@ -449,13 +408,11 @@ export default function HomePage() {
         const clientWidth = scrollContainer.clientWidth;
         
         // Calculate the width of one set of content (original cards only)
-        // We need to account for the gap between cards
         const cardWidth = 380; // max card width from CSS
         const gap = 24; // gap-6 = 24px
         const singleSetWidth = latestNews.length * (cardWidth + gap);
         
         // When we've scrolled past one complete set, seamlessly reset to beginning
-        // This creates the illusion of infinite scrolling
         if (scrollPosition >= singleSetWidth) {
           scrollPosition = 0; // Reset to exact beginning for seamless loop
         }
@@ -472,12 +429,12 @@ export default function HomePage() {
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Small delay to ensure DOM is ready
+    // Optimized start with reduced delay
     const startScrolling = () => {
       animationId = requestAnimationFrame(scroll);
     };
 
-    const timeoutId = setTimeout(startScrolling, 100);
+    const timeoutId = setTimeout(startScrolling, 50); // Reduced from 100ms
 
     // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {

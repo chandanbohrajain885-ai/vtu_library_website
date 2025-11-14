@@ -20,8 +20,8 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
   const { user } = useAuth();
   const { triggerUpdate } = useDataUpdater();
   
-  // Use live data for real-time updates
-  const { data: allFiles } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 3000); // Poll every 3 seconds
+  // Use live data with optimized polling interval
+  const { data: allFiles } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 15000); // Poll every 15 seconds (reduced from 3s)
   
   // Filter files in real-time
   const files = allFiles

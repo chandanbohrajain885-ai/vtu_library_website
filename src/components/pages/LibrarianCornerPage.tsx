@@ -29,12 +29,12 @@ export default function LibrarianCornerPage() {
   const navigate = useNavigate();
   const { triggerUpdate } = useDataUpdater();
   
-  // Use live data for real-time updates
-  const { data: resources } = useLiveData<EResources>('E-Resources');
-  const { data: userGuides } = useLiveData<UserGuideArticles>('userguidearticles');
-  const { data: news } = useLiveData<NewsandEvents>('newsandnotifications');
-  const { data: allUploads, refresh: refreshUploads } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
-  const { data: colleges } = useLiveData<LibrarianAccounts>('librarianaccounts');
+  // Use live data with optimized polling intervals
+  const { data: resources } = useLiveData<EResources>('E-Resources', [], 60000); // Poll every 60 seconds
+  const { data: userGuides } = useLiveData<UserGuideArticles>('userguidearticles', [], 60000); // Poll every 60 seconds
+  const { data: news } = useLiveData<NewsandEvents>('newsandnotifications', [], 30000); // Poll every 30 seconds
+  const { data: allUploads, refresh: refreshUploads } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 15000); // Poll every 15 seconds (reduced from 5s)
+  const { data: colleges } = useLiveData<LibrarianAccounts>('librarianaccounts', [], 120000); // Poll every 60 seconds
   
   const [selectedCollege, setSelectedCollege] = useState<LibrarianAccounts | null>(null);
   const [collegeFiles, setCollegeFiles] = useState<LibrarianFileUploads[]>([]);

@@ -14,8 +14,8 @@ export default function ApprovedFilesPage() {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   
-  // Use live data for real-time updates
-  const { data: allFiles, isLoading: loading } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
+  // Use live data with optimized polling interval
+  const { data: allFiles, isLoading: loading } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 30000); // Poll every 30 seconds (reduced from 5s)
 
   // Get college name from URL params or user data
   const urlParams = new URLSearchParams(window.location.search);

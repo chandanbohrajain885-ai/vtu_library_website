@@ -56,14 +56,24 @@ export function useLiveData<T extends WixDataItem>(
   const mountedRef = useRef(true);
   const cacheRef = useRef<{ data: T[], timestamp: number } | null>(null);
 
-  // Enhanced fetch data function with caching and performance optimizations
+  // Enhanced fetch data function with improved caching and performance optimizations
   const fetchData = useCallback(async (showLoading = false, useCache = false) => {
     try {
-      // Use cache if available and recent (within 2 seconds for news)
-      if (useCache && cacheRef.current && collectionId === 'newsandnotifications') {
+      // Improved cache logic for all collections
+      if (useCache && cacheRef.current) {
         const cacheAge = Date.now() - cacheRef.current.timestamp;
-        if (cacheAge < 2000) { // 2 seconds cache for news
-          console.log(`useLiveData - Using cached ${collectionId} data`);
+        let cacheThreshold = 5000; // 5 seconds default
+        
+        // Different cache thresholds for different collections
+        if (collectionId === 'newsandnotifications') {
+          cacheThreshold = 10000; // 10 seconds for news (increased from 2s)
+        } else if (collectionId === 'E-Resources') {
+          cacheThreshold = 30000; // 30 seconds for resources
+        } else if (collectionId === 'userguidearticles') {
+          cacheThreshold = 60000; // 60 seconds for guides
+        }
+        
+        if (cacheAge < cacheThreshold) {
           if (mountedRef.current) {
             setData(cacheRef.current.data);
             setIsLoading(false);
@@ -76,21 +86,15 @@ export function useLiveData<T extends WixDataItem>(
       if (showLoading) setIsLoading(true);
       setError(null);
 
-      console.log(`useLiveData - Fetching ${collectionId} (optimized)...`);
-      
       const response = references && references.length > 0
         ? await BaseCrudService.getAll<T>(collectionId, references)
         : await BaseCrudService.getAll<T>(collectionId);
 
-      console.log(`useLiveData - ${collectionId} fetched:`, response.items.length, 'items');
-
-      // Cache the result for news collections
-      if (collectionId === 'newsandnotifications') {
-        cacheRef.current = {
-          data: response.items,
-          timestamp: Date.now()
-        };
-      }
+      // Cache the result for all collections
+      cacheRef.current = {
+        data: response.items,
+        timestamp: Date.now()
+      };
 
       if (mountedRef.current) {
         setData(response.items);
@@ -130,7 +134,7 @@ export function useLiveData<T extends WixDataItem>(
     if (pollInterval > 0) {
       pollIntervalRef.current = setInterval(() => {
         // Use cache for background polling to reduce server load
-        fetchData(false, collectionId === 'newsandnotifications');
+        fetchData(false, true); // Always use cache for background polling
       }, pollInterval);
     }
 

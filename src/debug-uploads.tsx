@@ -12,19 +12,19 @@ export default function DebugUploads() {
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  // Use live data hooks for comparison
+  // Use live data hooks with optimized polling intervals
   const { 
     data: liveUploads, 
     isLoading: liveUploadsLoading, 
     error: liveUploadsError,
     lastUpdated: liveUploadsLastUpdated 
-  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000);
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 30000); // Poll every 30 seconds (reduced from 5s)
 
   const { 
     data: livePasswordRequests, 
     isLoading: livePasswordLoading, 
     error: livePasswordError 
-  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 10000);
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 60000); // Poll every 60 seconds (reduced from 10s)
 
   const fetchDirectData = async () => {
     try {
