@@ -102,8 +102,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedRequests = localStorage.getItem('vtu_registration_requests');
     const storedPasswords = localStorage.getItem('vtu_user_passwords');
     
+    console.log('AuthContext - Initializing with stored data:', {
+      hasStoredUser: !!storedUser,
+      hasStoredUsers: !!storedUsers,
+      hasStoredRequests: !!storedRequests,
+      hasStoredPasswords: !!storedPasswords
+    });
+    
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      console.log('AuthContext - Restoring user from storage:', parsedUser);
+      setUser(parsedUser);
     }
     
     if (storedUsers) {
@@ -120,49 +129,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string, isLibrarianCornerLogin: boolean = false): Promise<boolean> => {
-    // Check for approved password change requests first
     try {
-      const { items: passwordRequests } = await BaseCrudService.getAll<PasswordChangeRequests>('passwordchangerequests');
-      const approvedRequest = passwordRequests.find(
-        req => req.userIdentity === username && req.status === 'approved'
-      );
-      
-      if (approvedRequest && approvedRequest.newPasswordHash) {
-        // Use the new password for authentication
-        const hashedInputPassword = btoa(password + 'vtu_salt_2025');
-        if (hashedInputPassword === approvedRequest.newPasswordHash) {
-          // Update the stored password and mark request as completed
-          const updatedPasswords = { ...userPasswords, [username]: password };
-          setUserPasswords(updatedPasswords);
-          localStorage.setItem('vtu_user_passwords', JSON.stringify(updatedPasswords));
-          
-          // Mark the request as completed
-          await BaseCrudService.update('passwordchangerequests', {
-            _id: approvedRequest._id,
-            status: 'completed'
-          });
+      // Check for approved password change requests first
+      try {
+        const { items: passwordRequests } = await BaseCrudService.getAll<PasswordChangeRequests>('passwordchangerequests');
+        const approvedRequest = passwordRequests.find(
+          req => req.userIdentity === username && req.status === 'approved'
+        );
+        
+        if (approvedRequest && approvedRequest.newPasswordHash) {
+          // Use the new password for authentication
+          const hashedInputPassword = btoa(password + 'vtu_salt_2025');
+          if (hashedInputPassword === approvedRequest.newPasswordHash) {
+            // Update the stored password and mark request as completed
+            const updatedPasswords = { ...userPasswords, [username]: password };
+            setUserPasswords(updatedPasswords);
+            localStorage.setItem('vtu_user_passwords', JSON.stringify(updatedPasswords));
+            
+            // Mark the request as completed
+            await BaseCrudService.update('passwordchangerequests', {
+              _id: approvedRequest._id,
+              status: 'completed'
+            });
+          }
         }
+      } catch (error) {
+        console.error('Error checking password change requests:', error);
       }
-    } catch (error) {
-      console.error('Error checking password change requests:', error);
-    }
 
-    // First check if it's a default user (superadmin, admin, etc.)
-    const foundDefaultUser = users.find(u => u.username === username);
-    if (foundDefaultUser && userPasswords[username] === password) {
-      setUser(foundDefaultUser);
-      localStorage.setItem('vtu_auth_user', JSON.stringify(foundDefaultUser));
-      return true;
-    }
-    
-    // Check if it's a librarian account from CMS
-    try {
+      // First check if it's a default user (superadmin, admin, etc.)
+      const foundDefaultUser = users.find(u => u.username === username);
+      if (foundDefaultUser && userPasswords[username] === password) {
+        setUser(foundDefaultUser);
+        localStorage.setItem('vtu_auth_user', JSON.stringify(foundDefaultUser));
+        return true;
+      }
+      
+      // Check if it's a librarian account from CMS
       const { items: librarianAccounts } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
+      
+      // Debug logging
+      console.log('Login attempt:', { username, isLibrarianCornerLogin });
+      console.log('Available librarian accounts:', librarianAccounts.length);
+      
       const foundLibrarian = librarianAccounts.find(
         account => account.username === username && account.password === password
       );
       
       if (foundLibrarian) {
+        console.log('Found librarian account:', foundLibrarian.collegeName);
+        
         // Restrict specific librarian accounts to only Librarian Corner login
         const restrictedColleges = [
           'acharya institute of technology',
@@ -173,8 +189,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           foundLibrarian.collegeName?.toLowerCase().includes(college)
         );
         
+        console.log('Is restricted account:', isRestrictedAccount);
+        console.log('Is librarian corner login:', isLibrarianCornerLogin);
+        
         // If it's a restricted account and not a Librarian Corner login, deny access
         if (isRestrictedAccount && !isLibrarianCornerLogin) {
+          console.log('Access denied: Restricted account requires Librarian Corner login');
           return false;
         }
         
@@ -192,16 +212,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         setUser(librarianUser);
         localStorage.setItem('vtu_auth_user', JSON.stringify(librarianUser));
+        console.log('Login successful for librarian:', librarianUser.collegeName);
         return true;
+      } else {
+        console.log('No matching librarian account found');
+        // Check if username exists but password is wrong
+        const usernameExists = librarianAccounts.find(account => account.username === username);
+        if (usernameExists) {
+          console.log('Username exists but password incorrect');
+        } else {
+          console.log('Username not found in librarian accounts');
+        }
       }
+      
+      return false;
     } catch (error) {
-      console.error('Error checking librarian accounts:', error);
+      console.error('Error during login process:', error);
+      return false;
     }
-    
-    return false;
   };
 
   const logout = () => {
+    console.log('AuthContext - Logging out user');
     setUser(null);
     localStorage.removeItem('vtu_auth_user');
   };
@@ -344,5 +376,14 @@ export function useAuth() {
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
+  
+  // Debug logging for auth state
+  console.log('useAuth - Current auth state:', {
+    isAuthenticated: context.isAuthenticated,
+    userRole: context.user?.role,
+    username: context.user?.username,
+    collegeName: context.user?.collegeName
+  });
+  
   return context;
 }

@@ -52,7 +52,16 @@ export default function LibrarianCornerPage() {
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
 
   useEffect(() => {
+    console.log('LibrarianCornerPage - Auth check:', { 
+      isAuthenticated, 
+      userRole: user?.role, 
+      isAuthorized,
+      username: user?.username,
+      collegeName: user?.collegeName
+    });
+    
     if (!isAuthorized) {
+      console.log('LibrarianCornerPage - User not authorized, redirecting to home');
       navigate('/');
       return;
     }
@@ -64,6 +73,7 @@ export default function LibrarianCornerPage() {
   }, [isAuthorized, navigate, resources, userGuides, news]);
 
   if (!isAuthorized) {
+    console.log('LibrarianCornerPage - Rendering null due to unauthorized access');
     return null;
   }
 

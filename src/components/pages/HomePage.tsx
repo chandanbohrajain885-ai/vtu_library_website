@@ -392,11 +392,16 @@ export default function HomePage() {
   };
 
   const handleLibrarianCorner = () => {
+    console.log('HomePage - Librarian Corner clicked');
+    console.log('HomePage - Current auth state:', { isAuthenticated, userRole: user?.role });
+    
     if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'librarian')) {
+      console.log('HomePage - Opening librarian corner login modal');
       setIsLibrarianCornerLogin(true);
       setIsLoginModalOpen(true);
       return;
     }
+    console.log('HomePage - Navigating to librarian corner');
     navigate('/librarian');
   };
 

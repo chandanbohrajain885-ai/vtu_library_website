@@ -27,7 +27,15 @@ export function LoginModal({ isOpen, onClose, message, isLibrarianCornerLogin = 
     setIsLoading(true);
 
     try {
+      console.log('LoginModal - Attempting login:', { 
+        username: loginData.username, 
+        isLibrarianCornerLogin 
+      });
+      
       const success = await login(loginData.username, loginData.password, isLibrarianCornerLogin);
+      
+      console.log('LoginModal - Login result:', success);
+      
       if (success) {
         onClose();
         setLoginData({ username: '', password: '' });
@@ -35,10 +43,11 @@ export function LoginModal({ isOpen, onClose, message, isLibrarianCornerLogin = 
         if (isLibrarianCornerLogin) {
           setError('Invalid credentials or access denied. Only authorized librarian accounts can access this section.');
         } else {
-          setError('Invalid username or password');
+          setError('Invalid username or password. If you are a librarian, please use the Librarian Corner login.');
         }
       }
     } catch (err) {
+      console.error('LoginModal - Login error:', err);
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);

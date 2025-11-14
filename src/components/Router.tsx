@@ -13,6 +13,8 @@ import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import ApprovedFilesPage from '@/components/pages/ApprovedFilesPage';
+import ErrorChecker from '@/components/debug/ErrorChecker';
+import LibrarianLoginTester from '@/components/debug/LibrarianLoginTester';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import DebugUploads from '@/debug-uploads';
@@ -83,6 +85,14 @@ const router = createBrowserRouter([
       {
         path: "debug-uploads",
         element: <DebugUploads />,
+      },
+      {
+        path: "error-checker",
+        element: <ErrorChecker />,
+      },
+      {
+        path: "login-tester",
+        element: <LibrarianLoginTester />,
       },
       {
         path: "*",
