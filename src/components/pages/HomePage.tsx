@@ -1514,15 +1514,18 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-      {/* Hero Section with Library Background */}
-      <section className="relative bg-gray-900 text-white py-12 sm:py-16 lg:py-20" style={{
-        backgroundImage: "url('https://static.wixstatic.com/media/e79745_2317321fb2464e569d297d063f30bdef~mv2.png?originWidth=1152&originHeight=576')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}>
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      {/* Hero Section with VTU Logo */}
+      <section className="relative bg-gradient-to-br from-primary to-blue-800 text-white py-12 sm:py-16 lg:py-20">
         <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
+          {/* VTU Logo at Top Center */}
+          <div className="mb-8">
+            <Image
+              src="https://static.wixstatic.com/media/e79745_54a15b5bb22e4ad48044eee5506bdfee~mv2.jpg"
+              alt="VTU Logo"
+              width={200}
+              className="mx-auto h-auto max-w-[200px] w-full object-contain"
+            />
+          </div>
           <div className="space-y-4 sm:space-y-6">
             {/* Only show main title if not authenticated as librarian */}
             {(!isAuthenticated || user?.role !== 'librarian') && (
