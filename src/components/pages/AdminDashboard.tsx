@@ -693,7 +693,7 @@ export default function AdminDashboard() {
                           </Dialog>
                         )}
                         
-                        {/* Remove button for approved/rejected files to save storage */}
+                        {/* Remove button for approved/rejected files to save storage - always beside View button */}
                         {(upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected') && (
                           <Button
                             variant="outline"

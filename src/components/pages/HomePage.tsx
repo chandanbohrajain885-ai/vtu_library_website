@@ -468,9 +468,11 @@ export default function HomePage() {
   if (isInitialLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="text-gray-800 font-heading text-xl">Loading VTU Consortium...</div>
-          <div className="text-gray-600 font-paragraph text-sm">Fetching latest news and resources</div>
+        <div className="text-center space-y-6">
+          <h1 className="text-gray-800 font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+            WELCOME TO VTU CONSORTIUM.
+          </h1>
+          <div className="text-gray-600 font-paragraph text-base">Fetching latest news and resources</div>
         </div>
       </div>
     );
