@@ -467,12 +467,30 @@ export default function HomePage() {
 
   if (isInitialLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center space-y-6">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <div className="text-center space-y-8">
+          {/* Large Logo at Top Center */}
+          <div className="mb-8">
+            <Image
+              src="https://static.wixstatic.com/media/e79745_5f0aaf86510640758d847486c98854fe~mv2.png"
+              alt="VTU Consortium Logo"
+              width={300}
+              className="mx-auto h-auto max-w-[300px] w-full object-contain"
+            />
+          </div>
+          
+          {/* Welcome Text */}
           <h1 className="text-gray-800 font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
             WELCOME TO VTU CONSORTIUM.
           </h1>
-          <div className="text-gray-600 font-paragraph text-base">Fetching latest news and resources</div>
+          
+          {/* Loading Indicator */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <div className="text-gray-600 font-paragraph text-base">Fetching latest news and resources</div>
+            </div>
+          </div>
         </div>
       </div>
     );
