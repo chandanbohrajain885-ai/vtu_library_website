@@ -416,25 +416,49 @@ export default function HomePage() {
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 1; // Consistent scrolling speed
+    const scrollSpeed = 0.5; // Slower, smoother scrolling speed
     let animationId: number;
     let isPaused = false;
+    let isInitialized = false;
     
     const scroll = () => {
-      if (!isPaused) {
+      if (!isPaused && scrollContainer) {
+        // Wait for the DOM to be fully rendered before starting
+        if (!isInitialized) {
+          const scrollWidth = scrollContainer.scrollWidth;
+          const clientWidth = scrollContainer.clientWidth;
+          
+          // Only start if we have content to scroll
+          if (scrollWidth > clientWidth && scrollWidth > 0) {
+            isInitialized = true;
+          } else {
+            animationId = requestAnimationFrame(scroll);
+            return;
+          }
+        }
+        
         scrollPosition += scrollSpeed;
         
         // Get current measurements
         const scrollWidth = scrollContainer.scrollWidth;
         const clientWidth = scrollContainer.clientWidth;
         
-        // Calculate the width of one set of content (original, not duplicated)
-        const singleSetWidth = scrollWidth / 2;
+        // Calculate the width of one set of content (original cards only)
+        // We need to account for the gap between cards
+        const cardWidth = 380; // max card width from CSS
+        const gap = 24; // gap-6 = 24px
+        const singleSetWidth = latestNews.length * (cardWidth + gap);
         
         // When we've scrolled past one complete set, seamlessly reset to beginning
         // This creates the illusion of infinite scrolling
         if (scrollPosition >= singleSetWidth) {
-          scrollPosition = scrollPosition - singleSetWidth;
+          scrollPosition = 0; // Reset to exact beginning for seamless loop
+        }
+        
+        // Ensure we don't exceed the scroll bounds
+        const maxScroll = scrollWidth - clientWidth;
+        if (scrollPosition > maxScroll) {
+          scrollPosition = 0;
         }
         
         scrollContainer.scrollLeft = scrollPosition;
@@ -443,8 +467,12 @@ export default function HomePage() {
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Start the continuous animation
-    animationId = requestAnimationFrame(scroll);
+    // Small delay to ensure DOM is ready
+    const startScrolling = () => {
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    const timeoutId = setTimeout(startScrolling, 100);
 
     // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {
@@ -459,7 +487,10 @@ export default function HomePage() {
     scrollContainer.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      cancelAnimationFrame(animationId);
+      clearTimeout(timeoutId);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
       scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
       scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
@@ -1827,11 +1858,13 @@ export default function HomePage() {
             {/* Continuous Infinite Scrolling News Cards - Right to Left */}
             <div 
               ref={newsScrollContainerRef}
-              className="flex gap-4 sm:gap-6 overflow-x-hidden relative"
+              className="flex gap-6 overflow-x-hidden relative"
               style={{ 
                 scrollBehavior: 'auto',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
+                willChange: 'scroll-position',
+                transform: 'translateZ(0)' // Enable hardware acceleration
               }}
             >
               {/* Show optimized loading indicator only for initial load */}
@@ -1870,14 +1903,14 @@ export default function HomePage() {
                 <>
                   {/* Original news cards */}
                   {latestNews.map((news, index) => (
-                    <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                    <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                            <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-base">
                               {new Date(news.publicationDate || Date.now()).getDate()}
                             </div>
-                            <div className="text-xs sm:text-sm text-gray-500">
+                            <div className="text-sm text-gray-500">
                               <div className="font-medium">
                                 {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                               </div>
@@ -1887,12 +1920,12 @@ export default function HomePage() {
                             Coming Soon
                           </Badge>
                         </div>
-                        <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                        <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
                           {news.title || 'News Title'}
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-base">
                           <span className="font-bold text-green-600">Venue: </span>
                           <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                         </p>
@@ -1940,14 +1973,14 @@ export default function HomePage() {
                   
                   {/* Duplicate cards for seamless infinite scrolling */}
                   {latestNews.map((news, index) => (
-                    <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                    <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                            <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-base">
                               {new Date(news.publicationDate || Date.now()).getDate()}
                             </div>
-                            <div className="text-xs sm:text-sm text-gray-500">
+                            <div className="text-sm text-gray-500">
                               <div className="font-medium">
                                 {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                               </div>
@@ -1957,12 +1990,12 @@ export default function HomePage() {
                             Coming Soon
                           </Badge>
                         </div>
-                        <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                        <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
                           {news.title || 'News Title'}
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-base">
                           <span className="font-bold text-green-600">Venue: </span>
                           <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
                         </p>
