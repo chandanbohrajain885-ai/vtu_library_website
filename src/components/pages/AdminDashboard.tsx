@@ -79,6 +79,23 @@ export default function AdminDashboard() {
       passwordRequestsError,
       passwordRequestsLoading
     });
+    
+    // Debug file URLs for approved/rejected uploads
+    const approvedRejectedUploads = allUploads.filter(upload => 
+      upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected'
+    );
+    
+    console.log('AdminDashboard - Approved/Rejected Files Debug:', 
+      approvedRejectedUploads.map(upload => ({
+        id: upload._id,
+        status: upload.approvalStatus,
+        uploadType: upload.uploadType,
+        hasFileUrl: !!upload.fileUrl,
+        fileUrl: upload.fileUrl,
+        collegeName: upload.collegeName,
+        librarianName: upload.librarianName
+      }))
+    );
   }, [allUploads, pendingUploads, approvedUploads, rejectedUploads, uploadsLastUpdated, uploadsError, uploadsLoading, passwordRequestsError, passwordRequestsLoading]);
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -627,7 +644,24 @@ export default function AdminDashboard() {
                                         <Button
                                           variant="outline"
                                           size="sm"
-                                          onClick={() => window.open(viewingUpload.fileUrl, '_blank')}
+                                          onClick={() => {
+                                            console.log('AdminDashboard - View File button clicked in modal:', {
+                                              uploadId: viewingUpload._id,
+                                              fileUrl: viewingUpload.fileUrl,
+                                              uploadType: viewingUpload.uploadType
+                                            });
+                                            
+                                            if (viewingUpload.fileUrl) {
+                                              try {
+                                                window.open(viewingUpload.fileUrl, '_blank', 'noopener,noreferrer');
+                                              } catch (error) {
+                                                console.error('AdminDashboard - Error opening file from modal:', error);
+                                                alert('Error opening file. Please try again or contact support.');
+                                              }
+                                            } else {
+                                              alert('File URL not available.');
+                                            }
+                                          }}
                                         >
                                           <Download className="h-4 w-4 mr-1" />
                                           View File
@@ -686,9 +720,31 @@ export default function AdminDashboard() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => upload.fileUrl ? window.open(upload.fileUrl, '_blank') : alert('File URL not available')}
-                              title="View the uploaded file"
-                              className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
+                              onClick={() => {
+                                console.log('AdminDashboard - View button clicked for upload:', {
+                                  uploadId: upload._id,
+                                  fileUrl: upload.fileUrl,
+                                  uploadType: upload.uploadType,
+                                  status: upload.approvalStatus
+                                });
+                                
+                                if (upload.fileUrl) {
+                                  try {
+                                    window.open(upload.fileUrl, '_blank', 'noopener,noreferrer');
+                                  } catch (error) {
+                                    console.error('AdminDashboard - Error opening file:', error);
+                                    alert('Error opening file. Please try again or contact support.');
+                                  }
+                                } else {
+                                  console.warn('AdminDashboard - No file URL available for upload:', upload._id);
+                                  alert('File URL not available. The file may have been moved or deleted.');
+                                }
+                              }}
+                              title={upload.fileUrl ? "View the uploaded file" : "File URL not available"}
+                              className={`${upload.fileUrl 
+                                ? 'bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100' 
+                                : 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
+                              }`}
                               disabled={!upload.fileUrl}
                             >
                               <Eye className="h-4 w-4 mr-1" />
@@ -714,7 +770,21 @@ export default function AdminDashboard() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => window.open(upload.fileUrl, '_blank')}
+                            onClick={() => {
+                              console.log('AdminDashboard - View button clicked for pending upload:', {
+                                uploadId: upload._id,
+                                fileUrl: upload.fileUrl,
+                                uploadType: upload.uploadType,
+                                status: upload.approvalStatus
+                              });
+                              
+                              try {
+                                window.open(upload.fileUrl, '_blank', 'noopener,noreferrer');
+                              } catch (error) {
+                                console.error('AdminDashboard - Error opening pending file:', error);
+                                alert('Error opening file. Please try again or contact support.');
+                              }
+                            }}
                             title="View the uploaded file"
                             className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
                           >
