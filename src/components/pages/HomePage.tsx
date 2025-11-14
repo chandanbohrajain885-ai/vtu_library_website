@@ -500,13 +500,13 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <div className="text-center space-y-8">
-          {/* Large Logo at Top Center */}
+          {/* Large VTU Logo at Top Center */}
           <div className="mb-8">
             <Image
-              src="https://static.wixstatic.com/media/e79745_5f0aaf86510640758d847486c98854fe~mv2.png"
-              alt="VTU Consortium Logo"
-              width={300}
-              className="mx-auto h-auto max-w-[300px] w-full object-contain"
+              src="https://static.wixstatic.com/media/e79745_54a15b5bb22e4ad48044eee5506bdfee~mv2.jpg"
+              alt="VTU Logo"
+              width={400}
+              className="mx-auto h-auto max-w-[400px] w-full object-contain"
             />
           </div>
           
@@ -1514,18 +1514,9 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-      {/* Hero Section with VTU Logo */}
+      {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary to-blue-800 text-white py-12 sm:py-16 lg:py-20">
         <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
-          {/* VTU Logo at Top Center */}
-          <div className="mb-8">
-            <Image
-              src="https://static.wixstatic.com/media/e79745_54a15b5bb22e4ad48044eee5506bdfee~mv2.jpg"
-              alt="VTU Logo"
-              width={200}
-              className="mx-auto h-auto max-w-[200px] w-full object-contain"
-            />
-          </div>
           <div className="space-y-4 sm:space-y-6">
             {/* Only show main title if not authenticated as librarian */}
             {(!isAuthenticated || user?.role !== 'librarian') && (
