@@ -42,23 +42,68 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
-  // Use live data hooks for real-time updates
+  // Use live data hooks for real-time updates with optimized polling
   const { 
     data: featuredResources, 
     isLoading: resourcesLoading 
-  } = useLiveData<EResources>('E-Resources');
+  } = useLiveData<EResources>('E-Resources', [], 10000); // Poll every 10 seconds
   
   const { 
     data: latestNews, 
-    isLoading: newsLoading 
-  } = useLiveData<NewsandEvents>('newsandnotifications');
+    isLoading: newsLoading,
+    refresh: refreshNews,
+    forceRefresh: forceRefreshNews
+  } = useLiveData<NewsandEvents>('newsandnotifications', [], 3000); // Ultra-fast polling every 3 seconds for immediate updates
   
   const { 
     data: userGuides, 
     isLoading: guidesLoading 
-  } = useLiveData<UserGuideArticles>('userguidearticles');
+  } = useLiveData<UserGuideArticles>('userguidearticles', [], 15000); // Poll every 15 seconds
   
-  const isLoading = resourcesLoading || newsLoading || guidesLoading;
+  // Aggressive preloading and optimization for news data
+  useEffect(() => {
+    // Immediate fetch on mount - don't wait for polling
+    const immediateNewsLoad = async () => {
+      try {
+        console.log('HomePage - Immediate news load initiated...');
+        await forceRefreshNews();
+        console.log('HomePage - Immediate news load completed');
+      } catch (error) {
+        console.error('HomePage - Error in immediate news load:', error);
+      }
+    };
+
+    // Execute immediately without waiting
+    immediateNewsLoad();
+    
+    // Also set up a backup refresh after a short delay
+    const backupRefresh = setTimeout(() => {
+      if (latestNews.length === 0) {
+        console.log('HomePage - Backup news refresh triggered');
+        forceRefreshNews();
+      }
+    }, 1000);
+
+    return () => clearTimeout(backupRefresh);
+  }, []); // Only run once on mount
+
+  // Additional optimization: Refresh news when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && latestNews.length === 0) {
+        console.log('HomePage - Tab became visible, refreshing news...');
+        forceRefreshNews();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [latestNews.length, forceRefreshNews]);
+
+  // Optimized loading state - only show loading for initial load
+  const isInitialLoading = (resourcesLoading && featuredResources.length === 0) || 
+                          (newsLoading && latestNews.length === 0) || 
+                          (guidesLoading && userGuides.length === 0);
   
   // File upload states
   const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
@@ -420,10 +465,13 @@ export default function HomePage() {
     };
   }, [latestNews]);
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-gray-800 font-heading text-xl">Loading...</div>
+        <div className="text-center space-y-4">
+          <div className="text-gray-800 font-heading text-xl">Loading VTU Consortium...</div>
+          <div className="text-gray-600 font-paragraph text-sm">Fetching latest news and resources</div>
+        </div>
       </div>
     );
   }
@@ -1766,145 +1814,181 @@ export default function HomePage() {
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
               }}
             >
-              {/* Original news cards */}
-              {latestNews.map((news, index) => (
-                <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
-                          {new Date(news.publicationDate || Date.now()).getDate()}
+              {/* Show optimized loading indicator only for initial load */}
+              {newsLoading && latestNews.length === 0 ? (
+                <div className="flex items-center justify-center w-full py-8">
+                  <div className="text-center space-y-3">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-gray-600 text-sm">Loading latest news...</p>
+                    <Button 
+                      onClick={() => forceRefreshNews()}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs"
+                    >
+                      Retry Load
+                    </Button>
+                  </div>
+                </div>
+              ) : latestNews.length === 0 ? (
+                <div className="flex items-center justify-center w-full py-8">
+                  <div className="text-center space-y-3">
+                    <Calendar className="h-10 w-10 text-gray-400 mx-auto" />
+                    <p className="text-gray-600 text-sm">No news available</p>
+                    <Button 
+                      onClick={() => forceRefreshNews()}
+                      variant="outline"
+                      size="sm"
+                      className="bg-primary text-white hover:bg-primary/90"
+                    >
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Load News
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Original news cards */}
+                  {latestNews.map((news, index) => (
+                    <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                              {new Date(news.publicationDate || Date.now()).getDate()}
+                            </div>
+                            <div className="text-xs sm:text-sm text-gray-500">
+                              <div className="font-medium">
+                                {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                              </div>
+                            </div>
+                          </div>
+                          <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                            Coming Soon
+                          </Badge>
                         </div>
-                        <div className="text-xs sm:text-sm text-gray-500">
-                          <div className="font-medium">
-                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                          {news.title || 'News Title'}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                          <span className="font-bold text-green-600">Venue: </span>
+                          <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                            onClick={() => {
+                              if (news.externalLink) {
+                                window.open(news.externalLink, '_blank');
+                              } else {
+                                window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                              }
+                            }}
+                          >
+                            Read More
+                          </Button>
+                          <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                            {/* Edit Button - Only visible to superadmin */}
+                            {isAuthenticated && (user?.role === 'superadmin') && (
+                              <Button
+                                onClick={() => {
+                                  setEditingNewsId(news._id);
+                                  setIsEditNewsModalOpen(true);
+                                }}
+                                size="sm"
+                                variant="outline"
+                                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                              >
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                            )}
+                            {news.author && (
+                              <span className="text-xs text-gray-500">
+                                By {news.author}
+                              </span>
+                            )}
                           </div>
                         </div>
-                      </div>
-                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                        Coming Soon
-                      </Badge>
-                    </div>
-                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
-                      {news.title || 'News Title'}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
-                      <span className="font-bold text-green-600">Venue: </span>
-                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
-                        onClick={() => {
-                          if (news.externalLink) {
-                            window.open(news.externalLink, '_blank');
-                          } else {
-                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                          }
-                        }}
-                      >
-                        Read More
-                      </Button>
-                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                        {/* Edit Button - Only visible to superadmin */}
-                        {isAuthenticated && (user?.role === 'superadmin') && (
-                          <Button
-                            onClick={() => {
-                              setEditingNewsId(news._id);
-                              setIsEditNewsModalOpen(true);
-                            }}
-                            size="sm"
-                            variant="outline"
-                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                          >
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit
-                          </Button>
-                        )}
-                        {news.author && (
-                          <span className="text-xs text-gray-500">
-                            By {news.author}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              
-              {/* Duplicate cards for seamless infinite scrolling */}
-              {latestNews.map((news, index) => (
-                <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
-                          {new Date(news.publicationDate || Date.now()).getDate()}
+                      </CardContent>
+                    </Card>
+                  ))}
+                  
+                  {/* Duplicate cards for seamless infinite scrolling */}
+                  {latestNews.map((news, index) => (
+                    <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                              {new Date(news.publicationDate || Date.now()).getDate()}
+                            </div>
+                            <div className="text-xs sm:text-sm text-gray-500">
+                              <div className="font-medium">
+                                {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                              </div>
+                            </div>
+                          </div>
+                          <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                            Coming Soon
+                          </Badge>
                         </div>
-                        <div className="text-xs sm:text-sm text-gray-500">
-                          <div className="font-medium">
-                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                          {news.title || 'News Title'}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                          <span className="font-bold text-green-600">Venue: </span>
+                          <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                            onClick={() => {
+                              if (news.externalLink) {
+                                window.open(news.externalLink, '_blank');
+                              } else {
+                                window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                              }
+                            }}
+                          >
+                            Read More
+                          </Button>
+                          <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                            {/* Edit Button - Only visible to superadmin */}
+                            {isAuthenticated && (user?.role === 'superadmin') && (
+                              <Button
+                                onClick={() => {
+                                  setEditingNewsId(news._id);
+                                  setIsEditNewsModalOpen(true);
+                                }}
+                                size="sm"
+                                variant="outline"
+                                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                              >
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                            )}
+                            {news.author && (
+                              <span className="text-xs text-gray-500">
+                                By {news.author}
+                              </span>
+                            )}
                           </div>
                         </div>
-                      </div>
-                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                        Coming Soon
-                      </Badge>
-                    </div>
-                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
-                      {news.title || 'News Title'}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
-                      <span className="font-bold text-green-600">Venue: </span>
-                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
-                        onClick={() => {
-                          if (news.externalLink) {
-                            window.open(news.externalLink, '_blank');
-                          } else {
-                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                          }
-                        }}
-                      >
-                        Read More
-                      </Button>
-                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                        {/* Edit Button - Only visible to superadmin */}
-                        {isAuthenticated && (user?.role === 'superadmin') && (
-                          <Button
-                            onClick={() => {
-                              setEditingNewsId(news._id);
-                              setIsEditNewsModalOpen(true);
-                            }}
-                            size="sm"
-                            variant="outline"
-                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                          >
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit
-                          </Button>
-                        )}
-                        {news.author && (
-                          <span className="text-xs text-gray-500">
-                            By {news.author}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </section>

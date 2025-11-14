@@ -41,7 +41,7 @@ class DataUpdateEmitter {
 // Global instance
 export const dataUpdateEmitter = new DataUpdateEmitter();
 
-// Hook for live data updates
+// Hook for live data updates with enhanced performance
 export function useLiveData<T extends WixDataItem>(
   collectionId: string,
   references?: string[],
@@ -54,20 +54,43 @@ export function useLiveData<T extends WixDataItem>(
   
   const pollIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(true);
+  const cacheRef = useRef<{ data: T[], timestamp: number } | null>(null);
 
-  // Fetch data function with better error handling
-  const fetchData = useCallback(async (showLoading = false) => {
+  // Enhanced fetch data function with caching and performance optimizations
+  const fetchData = useCallback(async (showLoading = false, useCache = false) => {
     try {
+      // Use cache if available and recent (within 2 seconds for news)
+      if (useCache && cacheRef.current && collectionId === 'newsandnotifications') {
+        const cacheAge = Date.now() - cacheRef.current.timestamp;
+        if (cacheAge < 2000) { // 2 seconds cache for news
+          console.log(`useLiveData - Using cached ${collectionId} data`);
+          if (mountedRef.current) {
+            setData(cacheRef.current.data);
+            setIsLoading(false);
+            setLastUpdated(new Date(cacheRef.current.timestamp));
+          }
+          return;
+        }
+      }
+
       if (showLoading) setIsLoading(true);
       setError(null);
 
-      console.log(`useLiveData - Fetching ${collectionId}...`);
+      console.log(`useLiveData - Fetching ${collectionId} (optimized)...`);
       
       const response = references && references.length > 0
         ? await BaseCrudService.getAll<T>(collectionId, references)
         : await BaseCrudService.getAll<T>(collectionId);
 
       console.log(`useLiveData - ${collectionId} fetched:`, response.items.length, 'items');
+
+      // Cache the result for news collections
+      if (collectionId === 'newsandnotifications') {
+        cacheRef.current = {
+          data: response.items,
+          timestamp: Date.now()
+        };
+      }
 
       if (mountedRef.current) {
         setData(response.items);
@@ -84,29 +107,30 @@ export function useLiveData<T extends WixDataItem>(
     }
   }, [collectionId, references]);
 
-  // Refresh function for manual updates
+  // Enhanced refresh function
   const refresh = useCallback(() => {
-    fetchData(false);
+    fetchData(false, false); // Don't use cache on manual refresh
   }, [fetchData]);
 
   // Force refresh with loading state
   const forceRefresh = useCallback(() => {
-    fetchData(true);
+    fetchData(true, false); // Don't use cache on force refresh
   }, [fetchData]);
 
   useEffect(() => {
     mountedRef.current = true;
     
-    // Initial fetch
-    fetchData(true);
+    // Initial fetch with cache check for better performance
+    fetchData(true, true);
 
     // Subscribe to data update events
     const unsubscribe = dataUpdateEmitter.subscribe(collectionId, refresh);
 
-    // Set up polling
+    // Set up optimized polling based on collection type
     if (pollInterval > 0) {
       pollIntervalRef.current = setInterval(() => {
-        fetchData(false);
+        // Use cache for background polling to reduce server load
+        fetchData(false, collectionId === 'newsandnotifications');
       }, pollInterval);
     }
 
