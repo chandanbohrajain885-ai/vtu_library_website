@@ -123,6 +123,20 @@ export default function Chatbot({ isOpen, onClose, isFullscreen = false, onToggl
     }
   };
 
+  const stopSpeaking = () => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      setIsSpeaking(false);
+    }
+  };
+
+  const handleClose = () => {
+    // Immediately stop any ongoing speech
+    stopSpeaking();
+    // Call the original close handler
+    onClose();
+  };
+
   const stopListening = () => {
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
@@ -363,7 +377,7 @@ export default function Chatbot({ isOpen, onClose, isFullscreen = false, onToggl
                 
                 {/* Always show close button for user control */}
                 <Button
-                  onClick={onClose}
+                  onClick={handleClose}
                   variant="ghost"
                   size="sm"
                   className="text-white hover:bg-red-500/80 hover:bg-white/20 transition-all duration-200 border border-white/30 hover:border-red-300"

@@ -134,6 +134,28 @@ export default function AdminDashboard() {
     );
   }
 
+  const togglePermission = (permission: string, isEditing = false) => {
+    if (isEditing && editingUser) {
+      const updatedPermissions = editingUser.permissions.includes(permission)
+        ? editingUser.permissions.filter(p => p !== permission)
+        : [...editingUser.permissions, permission];
+      
+      setEditingUser({
+        ...editingUser,
+        permissions: updatedPermissions
+      });
+    } else {
+      const updatedPermissions = newUser.permissions.includes(permission)
+        ? newUser.permissions.filter(p => p !== permission)
+        : [...newUser.permissions, permission];
+      
+      setNewUser({
+        ...newUser,
+        permissions: updatedPermissions
+      });
+    }
+  };
+
   const handleCreateUser = () => {
     if (!newUser.username || !newUser.password) return;
 
@@ -218,6 +240,28 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleRemoveUpload = async (uploadId: string, uploadType: string, collegeName: string) => {
+    if (!confirm(`Are you sure you want to permanently delete this ${uploadType} file from ${collegeName}? This action cannot be undone and will free up storage space.`)) {
+      return;
+    }
+    
+    try {
+      console.log('AdminDashboard - Removing upload:', uploadId);
+      await BaseCrudService.delete('librarianfileuploads', uploadId);
+      
+      console.log('AdminDashboard - Upload removed successfully');
+      
+      // Trigger live data update and force refresh
+      triggerUpdate('librarianfileuploads');
+      await refreshUploads();
+      
+      alert('File removed successfully and storage space freed.');
+    } catch (error) {
+      console.error('Error removing upload:', error);
+      alert('Error removing file. Please try again.');
+    }
+  };
+
   const handleApprovePasswordRequest = async (requestId: string) => {
     try {
       await approvePasswordChangeRequest(requestId, passwordRequestComments);
@@ -237,22 +281,8 @@ export default function AdminDashboard() {
       console.error('Error rejecting password change request:', error);
     }
   };
-
-  const pendingRequests = registrationRequests ? registrationRequests.filter(r => r.status === 'pending') : [];
   
-  const togglePermission = (permission: string, isEditing: boolean = false) => {
-    if (isEditing && editingUser) {
-      const updatedPermissions = editingUser.permissions.includes(permission)
-        ? editingUser.permissions.filter(p => p !== permission)
-        : [...editingUser.permissions, permission];
-      setEditingUser({ ...editingUser, permissions: updatedPermissions });
-    } else {
-      const updatedPermissions = newUser.permissions.includes(permission)
-        ? newUser.permissions.filter(p => p !== permission)
-        : [...newUser.permissions, permission];
-      setNewUser({ ...newUser, permissions: updatedPermissions });
-    }
-  };
+  const pendingRequests = registrationRequests ? registrationRequests.filter(r => r.status === 'pending') : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -549,9 +579,10 @@ export default function AdminDashboard() {
                             variant="outline"
                             size="sm"
                             onClick={() => window.open(upload.fileUrl, '_blank')}
+                            title="View the uploaded file"
                           >
                             <Eye className="h-4 w-4 mr-1" />
-                            View File
+                            View
                           </Button>
                         )}
                         {upload.approvalStatus === 'Pending' && (
@@ -561,6 +592,8 @@ export default function AdminDashboard() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setViewingUpload(upload)}
+                                className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
+                                title="Review and approve/reject this upload"
                               >
                                 <Eye className="h-4 w-4 mr-1" />
                                 Review
@@ -654,6 +687,19 @@ export default function AdminDashboard() {
                               )}
                             </DialogContent>
                           </Dialog>
+                        )}
+                        {/* Remove button for all files (approved/rejected) to save storage */}
+                        {(upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected') && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleRemoveUpload(upload._id, upload.uploadType || 'Unknown', upload.collegeName || 'Unknown')}
+                            className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                            title="Permanently delete this file to save storage space"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Remove
+                          </Button>
                         )}
                       </div>
                     </div>
