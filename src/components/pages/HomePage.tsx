@@ -503,30 +503,57 @@ export default function HomePage() {
 
   if (isInitialLoading) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-        <div className="text-center space-y-8">
-          {/* Large Logo at Top Center */}
-          <div className="mb-8">
-            <Image
-              src="https://static.wixstatic.com/media/e79745_5f0aaf86510640758d847486c98854fe~mv2.png"
-              alt="VTU Consortium Logo"
-              width={300}
-              className="mx-auto h-auto max-w-[300px] w-full object-contain"
-            />
-          </div>
-          
-          {/* Welcome Text */}
-          <h1 className="text-gray-800 font-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-            WELCOME TO VTU CONSORTIUM.
-          </h1>
-          
-          {/* Loading Indicator */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-center space-x-3">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <div className="text-gray-600 font-paragraph text-base">Fetching latest news and resources</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col items-center justify-center px-4">
+        <div className="text-center space-y-12 max-w-4xl mx-auto">
+          {/* Large VTU Logo - Centered and Prominent */}
+          <div className="flex justify-center">
+            <div className="relative">
+              <Image
+                src="https://static.wixstatic.com/media/e79745_90377b562fa24369a4eab8af2db85db8~mv2.jpeg"
+                alt="VTU Logo"
+                width={400}
+                className="mx-auto h-auto max-w-[280px] sm:max-w-[350px] lg:max-w-[400px] w-full object-contain drop-shadow-lg"
+              />
+              {/* Subtle glow effect behind logo */}
+              <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl scale-110 -z-10"></div>
             </div>
           </div>
+          
+          {/* Professional Welcome Text */}
+          <div className="space-y-6">
+            <h1 className="text-primary font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-wide">
+              Welcome to VTU Consortium
+            </h1>
+            <p className="text-gray-600 font-paragraph text-lg sm:text-xl lg:text-2xl font-medium max-w-3xl mx-auto leading-relaxed">
+              Visvesvaraya Technological University Digital Library Consortium
+            </p>
+          </div>
+          
+          {/* Elegant Loading Indicator */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-center space-x-4">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary/20 border-t-primary"></div>
+                <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse"></div>
+              </div>
+              <div className="text-gray-700 font-paragraph text-base sm:text-lg font-medium">
+                Loading Resources...
+              </div>
+            </div>
+            
+            {/* Loading Progress Dots */}
+            <div className="flex justify-center space-x-2">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-secondary rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         </div>
       </div>
     );
