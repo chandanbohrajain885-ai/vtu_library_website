@@ -11,7 +11,7 @@ import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle, Eye, Clock, AlertCircle, MessageCircle } from 'lucide-react';
-import ChatbotTrigger from '@/components/ui/chatbot-trigger';
+
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -2152,8 +2152,7 @@ export default function HomePage() {
         collegeName={user?.collegeName || ''}
       />
 
-      {/* AI Assistant Floating Button */}
-      <ChatbotTrigger />
+
     </div>
   );
 }
