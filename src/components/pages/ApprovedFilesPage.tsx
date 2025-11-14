@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
-import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye } from 'lucide-react';
+import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye, Trash2 } from 'lucide-react';
 import { useLiveData } from '@/hooks/use-live-data';
 
 export default function ApprovedFilesPage() {
@@ -288,6 +288,27 @@ export default function ApprovedFilesPage() {
                                 View File
                               </Button>
                             </>
+                          )}
+                          {/* Allow librarians to remove their own files, even if approved */}
+                          {user?.role === 'librarian' && user?.collegeName === targetCollege && !isViewingOtherCollege && (
+                            <Button
+                              onClick={async () => {
+                                if (confirm('Are you sure you want to remove this file? This action cannot be undone.')) {
+                                  try {
+                                    await BaseCrudService.delete('librarianfileuploads', file._id);
+                                    window.location.reload(); // Refresh to show updated list
+                                  } catch (error) {
+                                    console.error('Error removing file:', error);
+                                    alert('Error removing file. Please try again.');
+                                  }
+                                }
+                              }}
+                              variant="outline"
+                              className="text-red-600 border-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Remove
+                            </Button>
                           )}
                         </div>
                       </div>

@@ -86,12 +86,17 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
   const handleRemoveFile = async (fileId: string) => {
     if (!canEditFiles) return;
     
+    if (!confirm('Are you sure you want to remove this file? This action cannot be undone.')) {
+      return;
+    }
+    
     try {
       await BaseCrudService.delete('librarianfileuploads', fileId);
       // Trigger live data update
       triggerUpdate('librarianfileuploads');
     } catch (error) {
       console.error('Error removing file:', error);
+      alert('Error removing file. Please try again.');
     }
   };
 
@@ -223,17 +228,15 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
                           </>
                         )}
                         {canEditFiles && (
-                          <>
-                            <Button
-                              onClick={() => handleRemoveFile(file._id)}
-                              size="sm"
-                              variant="outline"
-                              className="text-red-600 border-red-600 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Remove
-                            </Button>
-                          </>
+                          <Button
+                            onClick={() => handleRemoveFile(file._id)}
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 border-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Remove
+                          </Button>
                         )}
                       </div>
                     </div>

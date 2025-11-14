@@ -802,17 +802,17 @@ export default function LibrarianCornerPage() {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-heading text-2xl font-bold text-gray-900">File Management</h2>
                 <div className="text-sm text-gray-500">
-                  Click on any card to view approved files
+                  Upload files and view approved files for each category
                 </div>
               </div>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Membership Status Upload */}
-                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Membership Status')}>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                        <div className="p-2 bg-blue-50 rounded-lg">
                           <Users className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
@@ -826,7 +826,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 text-sm mb-4">
                       Upload your college membership status documents
                     </p>
-                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3">
                       <Button 
                         onClick={() => handleUploadClick('Membership Status')}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white"
@@ -846,16 +846,24 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Membership Status').length})
                         </Button>
                       )}
+                      <Button 
+                        onClick={() => handleViewApprovedFiles('Membership Status')}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                        size="sm"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        View Approved Files
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Membership Fees Receipts Upload */}
-                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-green-50 rounded-lg group-hover:bg-green-100 transition-colors">
+                        <div className="p-2 bg-green-50 rounded-lg">
                           <CreditCard className="h-5 w-5 text-green-600" />
                         </div>
                         <div>
@@ -869,7 +877,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 text-sm mb-4">
                       Upload membership fee payment receipts and records
                     </p>
-                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3">
                       <Button 
                         onClick={() => handleUploadClick('Membership Fees Receipts')}
                         className="w-full bg-green-600 hover:bg-green-700 text-white"
@@ -889,16 +897,24 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Membership Fees Receipts').length})
                         </Button>
                       )}
+                      <Button 
+                        onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}
+                        className="w-full bg-green-500 hover:bg-green-600 text-white"
+                        size="sm"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        View Approved Files
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Current Year e-Resources Upload */}
-                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Current Year e-Resources')}>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
+                        <div className="p-2 bg-purple-50 rounded-lg">
                           <Database className="h-5 w-5 text-purple-600" />
                         </div>
                         <div>
@@ -912,7 +928,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 text-sm mb-4">
                       Upload current academic year e-resource access details
                     </p>
-                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3">
                       <Button 
                         onClick={() => handleUploadClick('Current Year e-Resources')}
                         className="w-full bg-purple-600 hover:bg-purple-700 text-white"
@@ -932,16 +948,24 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Current Year e-Resources').length})
                         </Button>
                       )}
+                      <Button 
+                        onClick={() => handleViewApprovedFiles('Current Year e-Resources')}
+                        className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                        size="sm"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        View Approved Files
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Access Confirmation Upload */}
-                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer group" onClick={() => handleViewApprovedFiles('Access Confirmation')}>
+                <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-orange-50 rounded-lg group-hover:bg-orange-100 transition-colors">
+                        <div className="p-2 bg-orange-50 rounded-lg">
                           <CheckCircle className="h-5 w-5 text-orange-600" />
                         </div>
                         <div>
@@ -955,7 +979,7 @@ export default function LibrarianCornerPage() {
                     <p className="text-gray-600 text-sm mb-4">
                       Upload access confirmation and verification documents
                     </p>
-                    <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-3">
                       <Button 
                         onClick={() => handleUploadClick('Access Confirmation')}
                         className="w-full bg-orange-600 hover:bg-orange-700 text-white"
@@ -975,6 +999,14 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Access Confirmation').length})
                         </Button>
                       )}
+                      <Button 
+                        onClick={() => handleViewApprovedFiles('Access Confirmation')}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                        size="sm"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        View Approved Files
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>

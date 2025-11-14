@@ -97,11 +97,16 @@ export default function AdminDashboard() {
   });
 
   // Force refresh function for debugging
-  const handleForceRefresh = () => {
+  const handleForceRefresh = async () => {
     console.log('AdminDashboard - Force refreshing all data...');
-    refreshUploads();
-    triggerUpdate('librarianfileuploads');
-    triggerUpdate('passwordchangerequests');
+    try {
+      await refreshUploads();
+      triggerUpdate('librarianfileuploads');
+      triggerUpdate('passwordchangerequests');
+      console.log('AdminDashboard - Refresh completed');
+    } catch (error) {
+      console.error('AdminDashboard - Error during refresh:', error);
+    }
   };
 
   // Remove the useEffect that fetches pending uploads since we're using live data
@@ -172,9 +177,9 @@ export default function AdminDashboard() {
       
       console.log('AdminDashboard - Upload approved successfully');
       
-      // Trigger live data update
+      // Trigger live data update and force refresh
       triggerUpdate('librarianfileuploads');
-      refreshUploads();
+      await refreshUploads();
       
       setViewingUpload(null);
       setApprovalComments('');
@@ -201,9 +206,9 @@ export default function AdminDashboard() {
       
       console.log('AdminDashboard - Upload rejected successfully');
       
-      // Trigger live data update
+      // Trigger live data update and force refresh
       triggerUpdate('librarianfileuploads');
-      refreshUploads();
+      await refreshUploads();
       
       setViewingUpload(null);
       setApprovalComments('');
@@ -263,8 +268,8 @@ export default function AdminDashboard() {
               <Link to="/">
                 <Button variant="outline">Back to Site</Button>
               </Link>
-              <Button onClick={handleForceRefresh} variant="secondary" size="sm">
-                Refresh Data
+              <Button onClick={handleForceRefresh} variant="secondary" size="sm" disabled={uploadsLoading}>
+                {uploadsLoading ? 'Refreshing...' : 'Refresh Data'}
               </Button>
               <Button onClick={logout} variant="destructive">Logout</Button>
             </div>
@@ -487,8 +492,8 @@ export default function AdminDashboard() {
                 <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No File Uploads</h3>
                 <p className="text-gray-500">No file upload requests have been submitted yet.</p>
-                <Button onClick={handleForceRefresh} variant="outline" className="mt-4">
-                  Refresh Data
+                <Button onClick={handleForceRefresh} variant="outline" className="mt-4" disabled={uploadsLoading}>
+                  {uploadsLoading ? 'Refreshing...' : 'Refresh Data'}
                 </Button>
               </div>
             ) : (
