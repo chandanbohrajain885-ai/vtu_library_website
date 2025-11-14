@@ -525,7 +525,7 @@ export default function HomePage() {
               Welcome to VTU Consortium
             </h1>
             <p className="text-gray-600 font-paragraph text-lg sm:text-xl lg:text-2xl font-medium max-w-3xl mx-auto leading-relaxed">
-              Visvesvaraya Technological University Digital Library Consortium
+              Visvesvaraya Technological University Library Consortium
             </p>
           </div>
           
