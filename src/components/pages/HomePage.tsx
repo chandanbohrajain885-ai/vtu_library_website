@@ -1514,49 +1514,53 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary to-blue-800 text-white py-12 sm:py-16 lg:py-20">
-        <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
-          <div className="space-y-4 sm:space-y-6">
-            {/* Only show main title if not authenticated as librarian */}
-            {(!isAuthenticated || user?.role !== 'librarian') && (
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
-            )}
-            
-                    {/* Welcome message for authenticated users */}
-                    {isAuthenticated && user && (
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
-                        {user.role === 'librarian' && user.collegeName ? (
-                          <div className="text-center">
-                            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                              WELCOME...
-                            </h2>
-                            <a 
-                              href="https://www.acharya.ac.in/acharya-institute-of-technology" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
-                            >
-                              <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
-                                {user.collegeName}
-                              </h3>
-                            </a>
-                            {user.librarianName && (
-                              <p className="text-gray-200 text-lg font-medium">
-                                Librarian: Librarian / Nodal Officer
-                              </p>
-                            )}
-                          </div>
-                        ) : (
-                          <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
-                            {user.role === 'superadmin' 
-                              ? 'Welcome Super Admin'
-                              : `Welcome ${user.username}`
-                            }
-                          </h2>
-                        )}
-                      </div>
+      {/* Hero Section with Background Image */}
+      <section className="relative min-h-screen bg-cover bg-center bg-no-repeat text-white py-12 sm:py-16 lg:py-20" style={{backgroundImage: 'url(https://static.wixstatic.com/media/e79745_010576d77a3944f3b871cd0a2443a07f~mv2.png)'}}>
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center flex items-center justify-center min-h-screen">
+          <div className="space-y-8 sm:space-y-12">
+            {/* Main Welcome Title */}
+            <div className="text-center">
+              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 text-white drop-shadow-lg">
+                WELCOME TO VTU CONSORTIUM
+              </h1>
+            </div>
+
+            {/* Welcome message for authenticated users */}
+            {isAuthenticated && user && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+                {user.role === 'librarian' && user.collegeName ? (
+                  <div className="text-center">
+                    <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+                      WELCOME...
+                    </h2>
+                    <a 
+                      href="https://www.acharya.ac.in/acharya-institute-of-technology" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                      <h3 className="font-heading text-xl sm:text-2xl lg:text-3xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
+                        {user.collegeName}
+                      </h3>
+                    </a>
+                    {user.librarianName && (
+                      <p className="text-gray-200 text-lg font-medium">
+                        Librarian: Librarian / Nodal Officer
+                      </p>
                     )}
+                  </div>
+                ) : (
+                  <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
+                    {user.role === 'superadmin' 
+                      ? 'Welcome Super Admin'
+                      : `Welcome ${user.username}`
+                    }
+                  </h2>
+                )}
+              </div>
+            )}
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-6 sm:mt-8 relative">
