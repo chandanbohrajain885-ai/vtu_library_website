@@ -481,12 +481,20 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Membership Status')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
+                      className="w-full border-blue-200 text-blue-600 hover:bg-blue-50 mb-2"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
                     </Button>
                   )}
+                  <Button 
+                    onClick={() => handleViewApprovedFiles('Membership Status')}
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                    size="sm"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    View Approved Files
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -514,12 +522,20 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Membership Fees Receipts')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-green-200 text-green-600 hover:bg-green-50"
+                      className="w-full border-green-200 text-green-600 hover:bg-green-50 mb-2"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
                     </Button>
                   )}
+                  <Button 
+                    onClick={() => handleViewApprovedFiles('Membership Fees Receipts')}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white"
+                    size="sm"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    View Approved Files
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -547,12 +563,20 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Current Year e-Resources')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
+                      className="w-full border-purple-200 text-purple-600 hover:bg-purple-50 mb-2"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
                     </Button>
                   )}
+                  <Button 
+                    onClick={() => handleViewApprovedFiles('Current Year e-Resources')}
+                    className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                    size="sm"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    View Approved Files
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -580,12 +604,20 @@ export default function LibrarianCornerPage() {
                       onClick={() => handleViewFilesClick('Access Confirmation')}
                       variant="outline"
                       size="sm"
-                      className="w-full border-orange-200 text-orange-600 hover:bg-orange-50"
+                      className="w-full border-orange-200 text-orange-600 hover:bg-orange-50 mb-2"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       View Files
                     </Button>
                   )}
+                  <Button 
+                    onClick={() => handleViewApprovedFiles('Access Confirmation')}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                    size="sm"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    View Approved Files
+                  </Button>
                 </div>
               </CardContent>
             </Card>
