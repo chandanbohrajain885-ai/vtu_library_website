@@ -500,13 +500,13 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <div className="text-center space-y-8">
-          {/* Large VTU Logo at Top Center */}
+          {/* Large Logo at Top Center */}
           <div className="mb-8">
             <Image
-              src="https://static.wixstatic.com/media/e79745_54a15b5bb22e4ad48044eee5506bdfee~mv2.jpg"
-              alt="VTU Logo"
-              width={400}
-              className="mx-auto h-auto max-w-[400px] w-full object-contain"
+              src="https://static.wixstatic.com/media/e79745_5f0aaf86510640758d847486c98854fe~mv2.png"
+              alt="VTU Consortium Logo"
+              width={300}
+              className="mx-auto h-auto max-w-[300px] w-full object-contain"
             />
           </div>
           
@@ -1514,53 +1514,55 @@ export default function HomePage() {
           </nav>
         </div>
       </header>
-      {/* Hero Section with Background Image */}
-      <section className="relative min-h-screen bg-cover bg-center bg-no-repeat text-white py-12 sm:py-16 lg:py-20" style={{backgroundImage: 'url(https://static.wixstatic.com/media/e79745_010576d77a3944f3b871cd0a2443a07f~mv2.png)'}}>
+      {/* Hero Section with Library Background */}
+      <section className="relative bg-gray-900 text-white py-12 sm:py-16 lg:py-20" style={{
+        backgroundImage: "url('https://static.wixstatic.com/media/e79745_2317321fb2464e569d297d063f30bdef~mv2.png?originWidth=1152&originHeight=576')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
         {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center flex items-center justify-center min-h-screen">
-          <div className="space-y-8 sm:space-y-12">
-            {/* Main Welcome Title */}
-            <div className="text-center">
-              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 text-white drop-shadow-lg">
-                WELCOME TO VTU CONSORTIUM
-              </h1>
-            </div>
-
-            {/* Welcome message for authenticated users */}
-            {isAuthenticated && user && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
-                {user.role === 'librarian' && user.collegeName ? (
-                  <div className="text-center">
-                    <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
-                      WELCOME...
-                    </h2>
-                    <a 
-                      href="https://www.acharya.ac.in/acharya-institute-of-technology" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
-                    >
-                      <h3 className="font-heading text-xl sm:text-2xl lg:text-3xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
-                        {user.collegeName}
-                      </h3>
-                    </a>
-                    {user.librarianName && (
-                      <p className="text-gray-200 text-lg font-medium">
-                        Librarian: Librarian / Nodal Officer
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
-                    {user.role === 'superadmin' 
-                      ? 'Welcome Super Admin'
-                      : `Welcome ${user.username}`
-                    }
-                  </h2>
-                )}
-              </div>
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative max-w-[120rem] mx-auto px-4 sm:px-6 text-center">
+          <div className="space-y-4 sm:space-y-6">
+            {/* Only show main title if not authenticated as librarian */}
+            {(!isAuthenticated || user?.role !== 'librarian') && (
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">{t('hero.title')}</h1>
             )}
+            
+                    {/* Welcome message for authenticated users */}
+                    {isAuthenticated && user && (
+                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8">
+                        {user.role === 'librarian' && user.collegeName ? (
+                          <div className="text-center">
+                            <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                              WELCOME...
+                            </h2>
+                            <a 
+                              href="https://www.acharya.ac.in/acharya-institute-of-technology" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
+                            >
+                              <h3 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-300 mb-3 leading-tight hover:underline">
+                                {user.collegeName}
+                              </h3>
+                            </a>
+                            {user.librarianName && (
+                              <p className="text-gray-200 text-lg font-medium">
+                                Librarian: Librarian / Nodal Officer
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <h2 className="font-heading text-xl font-bold text-white mb-2 text-center">
+                            {user.role === 'superadmin' 
+                              ? 'Welcome Super Admin'
+                              : `Welcome ${user.username}`
+                            }
+                          </h2>
+                        )}
+                      </div>
+                    )}
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mt-6 sm:mt-8 relative">
