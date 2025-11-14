@@ -574,17 +574,21 @@ export default function AdminDashboard() {
                         </Badge>
                       </div>
                       <div className="flex items-center space-x-2">
+                        {/* View button - always available for files with URL */}
                         {upload.fileUrl && (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => window.open(upload.fileUrl, '_blank')}
                             title="View the uploaded file"
+                            className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
                           >
                             <Eye className="h-4 w-4 mr-1" />
                             View
                           </Button>
                         )}
+                        
+                        {/* Review button for pending files */}
                         {upload.approvalStatus === 'Pending' && (
                           <Dialog>
                             <DialogTrigger asChild>
@@ -592,10 +596,10 @@ export default function AdminDashboard() {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setViewingUpload(upload)}
-                                className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
+                                className="bg-yellow-50 border-yellow-200 text-yellow-600 hover:bg-yellow-100"
                                 title="Review and approve/reject this upload"
                               >
-                                <Eye className="h-4 w-4 mr-1" />
+                                <Settings className="h-4 w-4 mr-1" />
                                 Review
                               </Button>
                             </DialogTrigger>
@@ -688,7 +692,8 @@ export default function AdminDashboard() {
                             </DialogContent>
                           </Dialog>
                         )}
-                        {/* Remove button for all files (approved/rejected) to save storage */}
+                        
+                        {/* Remove button for approved/rejected files to save storage */}
                         {(upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected') && (
                           <Button
                             variant="outline"
