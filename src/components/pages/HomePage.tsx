@@ -371,18 +371,26 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Highly optimized infinite scroll effect for news cards with better performance
+  // Optimized infinite scroll effect for news cards with improved performance and reduced lag
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.2; // Further reduced scroll speed for better performance
+    const scrollSpeed = 0.15; // Further reduced scroll speed to minimize lag
     let animationId: number;
     let isPaused = false;
     let isInitialized = false;
+    let lastTime = 0;
     
-    const scroll = () => {
+    const scroll = (currentTime: number) => {
+      // Throttle animation to 30fps for better performance
+      if (currentTime - lastTime < 33) {
+        animationId = requestAnimationFrame(scroll);
+        return;
+      }
+      lastTime = currentTime;
+
       if (!isPaused && scrollContainer) {
         // Wait for the DOM to be fully rendered before starting
         if (!isInitialized) {
@@ -426,12 +434,12 @@ export default function HomePage() {
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Optimized start with increased delay for better performance
+    // Optimized start with longer delay to reduce initial lag
     const startScrolling = () => {
       animationId = requestAnimationFrame(scroll);
     };
 
-    const timeoutId = setTimeout(startScrolling, 100); // Increased from 50ms for better performance
+    const timeoutId = setTimeout(startScrolling, 200); // Increased delay to reduce initial lag
 
     // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {
@@ -442,8 +450,8 @@ export default function HomePage() {
       isPaused = false;
     };
 
-    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
-    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+    scrollContainer.addEventListener('mouseenter', handleMouseEnter, { passive: true });
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
       clearTimeout(timeoutId);
@@ -601,15 +609,13 @@ export default function HomePage() {
                         {t('nav.home')}
                       </Link>
                       
-                      <button 
-                        onClick={() => {
-                          navigate('/about');
-                          setIsMobileMenuOpen(false);
-                        }} 
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                      <Link 
+                        to="/about"
+                        className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                        onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {t('nav.about')}
-                      </button>
+                      </Link>
                       
                       <button 
                         onClick={() => {
@@ -1120,9 +1126,9 @@ export default function HomePage() {
             {/* Desktop Navigation - All Navigation Options in Single Line */}
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center flex-wrap">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">{t('nav.home')}</Link>
-              <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">
+              <Link to="/about" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">
                 {t('nav.about')}
-              </button>
+              </Link>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
@@ -1841,7 +1847,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Continuous Infinite Scrolling News Cards - Right to Left */}
+            {/* Optimized Continuous Infinite Scrolling News Cards with reduced lag */}
             <div 
               ref={newsScrollContainerRef}
               className="flex gap-6 overflow-x-hidden relative"
@@ -1850,7 +1856,8 @@ export default function HomePage() {
                 maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
                 willChange: 'scroll-position',
-                transform: 'translateZ(0)' // Enable hardware acceleration
+                transform: 'translateZ(0)', // Enable hardware acceleration
+                contain: 'layout style paint' // Optimize rendering
               }}
             >
               {/* Show optimized loading indicator only for initial load */}

@@ -102,16 +102,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedRequests = localStorage.getItem('vtu_registration_requests');
     const storedPasswords = localStorage.getItem('vtu_user_passwords');
     
-    console.log('AuthContext - Initializing with stored data:', {
-      hasStoredUser: !!storedUser,
-      hasStoredUsers: !!storedUsers,
-      hasStoredRequests: !!storedRequests,
-      hasStoredPasswords: !!storedPasswords
-    });
-    
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      console.log('AuthContext - Restoring user from storage:', parsedUser);
       setUser(parsedUser);
     }
     
@@ -168,17 +160,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Check if it's a librarian account from CMS
       const { items: librarianAccounts } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
       
-      // Debug logging
-      console.log('Login attempt:', { username, isLibrarianCornerLogin });
-      console.log('Available librarian accounts:', librarianAccounts.length);
-      
       const foundLibrarian = librarianAccounts.find(
         account => account.username === username && account.password === password
       );
       
       if (foundLibrarian) {
-        console.log('Found librarian account:', foundLibrarian.collegeName);
-        
         // Restrict specific librarian accounts to only Librarian Corner login
         const restrictedColleges = [
           'acharya institute of technology',
@@ -189,12 +175,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           foundLibrarian.collegeName?.toLowerCase().includes(college)
         );
         
-        console.log('Is restricted account:', isRestrictedAccount);
-        console.log('Is librarian corner login:', isLibrarianCornerLogin);
-        
         // If it's a restricted account and not a Librarian Corner login, deny access
         if (isRestrictedAccount && !isLibrarianCornerLogin) {
-          console.log('Access denied: Restricted account requires Librarian Corner login');
           return false;
         }
         
@@ -212,16 +194,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         setUser(librarianUser);
         localStorage.setItem('vtu_auth_user', JSON.stringify(librarianUser));
-        console.log('Login successful for librarian:', librarianUser.collegeName);
         return true;
       } else {
-        console.log('No matching librarian account found');
         // Check if username exists but password is wrong
         const usernameExists = librarianAccounts.find(account => account.username === username);
         if (usernameExists) {
-          console.log('Username exists but password incorrect');
+          // Username exists but password incorrect
+          return false;
         } else {
-          console.log('Username not found in librarian accounts');
+          // Username not found in librarian accounts
+          return false;
         }
       }
       
@@ -233,7 +215,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('AuthContext - Logging out user');
     setUser(null);
     localStorage.removeItem('vtu_auth_user');
   };
@@ -376,14 +357,6 @@ export function useAuth() {
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  
-  // Debug logging for auth state
-  console.log('useAuth - Current auth state:', {
-    isAuthenticated: context.isAuthenticated,
-    userRole: context.user?.role,
-    username: context.user?.username,
-    collegeName: context.user?.collegeName
-  });
   
   return context;
 }

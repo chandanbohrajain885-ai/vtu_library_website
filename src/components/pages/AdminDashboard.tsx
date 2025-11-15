@@ -46,12 +46,13 @@ export default function AdminDashboard() {
   
   const { triggerUpdate } = useDataUpdater();
   
-  // Use live data for password change requests and file uploads with optimized intervals
+  // Use live data for password change requests and file uploads with faster intervals for admin
   const { 
     data: passwordChangeRequests, 
     isLoading: passwordRequestsLoading,
-    error: passwordRequestsError 
-  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 60000); // Poll every 60 seconds for better performance
+    error: passwordRequestsError,
+    refresh: refreshPasswordRequests 
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 30000); // Faster polling for admin
   
   const { 
     data: allUploads, 
@@ -59,7 +60,7 @@ export default function AdminDashboard() {
     isLoading: uploadsLoading,
     error: uploadsError,
     lastUpdated: uploadsLastUpdated
-  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 30000); // Poll every 30 seconds for better performance
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 15000); // Faster polling for admin
   
   // Filter pending uploads from live data with error handling
   const pendingUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Pending') : [];
@@ -84,14 +85,17 @@ export default function AdminDashboard() {
     permissions: [] as string[]
   });
 
-  // Optimized force refresh function
+  // Enhanced force refresh function with better error handling
   const handleForceRefresh = async () => {
     try {
-      await refreshUploads();
+      await Promise.all([
+        refreshUploads(),
+        refreshPasswordRequests()
+      ]);
       triggerUpdate('librarianfileuploads');
       triggerUpdate('passwordchangerequests');
     } catch (error) {
-      // Silently handle errors to avoid console spam
+      alert('Error refreshing data. Please try again.');
     }
   };
 
