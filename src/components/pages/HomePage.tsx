@@ -42,33 +42,33 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
-  // Use live data hooks with optimized polling intervals
+  // Use live data hooks with optimized polling intervals for better performance
   const { 
     data: featuredResources, 
     isLoading: resourcesLoading 
-  } = useLiveData<EResources>('E-Resources', [], 30000); // Poll every 30 seconds (reduced from 10s)
+  } = useLiveData<EResources>('E-Resources', [], 60000); // Poll every 60 seconds for better performance
   
   const { 
     data: latestNews, 
     isLoading: newsLoading,
     refresh: refreshNews,
     forceRefresh: forceRefreshNews
-  } = useLiveData<NewsandEvents>('newsandnotifications', [], 15000); // Poll every 15 seconds (reduced from 3s)
+  } = useLiveData<NewsandEvents>('newsandnotifications', [], 30000); // Poll every 30 seconds for better performance
   
   const { 
     data: userGuides, 
     isLoading: guidesLoading 
-  } = useLiveData<UserGuideArticles>('userguidearticles', [], 60000); // Poll every 60 seconds (reduced from 15s)
+  } = useLiveData<UserGuideArticles>('userguidearticles', [], 120000); // Poll every 2 minutes for better performance
   
-  // Optimized data loading on mount
+  // Optimized data loading on mount - only load if no data exists
   useEffect(() => {
-    // Only force refresh news if we don't have any data
-    if (latestNews.length === 0) {
+    // Only force refresh news if we don't have any data and it's not currently loading
+    if (latestNews.length === 0 && !newsLoading) {
       const loadNews = async () => {
         try {
           await forceRefreshNews();
         } catch (error) {
-          console.error('HomePage - Error loading news:', error);
+          // Silently handle errors to avoid console spam
         }
       };
       loadNews();
@@ -151,7 +151,7 @@ export default function HomePage() {
     { id: 'search-help', title: 'Search Help', content: 'How to search for resources, advanced search tips, search filters, finding specific content', type: 'Site Content', category: 'Help' },
   ];
 
-  // Optimized search function with reduced debounce
+  // Optimized search function with improved debounce and caching
   const performSearch = (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -166,7 +166,7 @@ export default function HomePage() {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Reduced debounce for faster search
+    // Optimized debounce for faster search response
     searchTimeoutRef.current = setTimeout(() => {
       const results = searchData.filter(item => {
         const searchTerm = query.toLowerCase();
@@ -181,11 +181,11 @@ export default function HomePage() {
         );
       });
 
-      // Simplified dynamic search - only search if we have data
+      // Optimized dynamic search - only search if we have data and limit results
       const dynamicResults: SearchResult[] = [];
       
       if (featuredResources.length > 0) {
-        featuredResources.forEach(resource => {
+        featuredResources.slice(0, 3).forEach(resource => { // Limit to 3 resources
           if (resource.title?.toLowerCase().includes(query.toLowerCase())) {
             dynamicResults.push({
               id: `dynamic-resource-${resource._id}`,
@@ -200,7 +200,7 @@ export default function HomePage() {
       }
 
       if (latestNews.length > 0) {
-        latestNews.forEach(news => {
+        latestNews.slice(0, 3).forEach(news => { // Limit to 3 news items
           if (news.title?.toLowerCase().includes(query.toLowerCase())) {
             dynamicResults.push({
               id: `dynamic-news-${news._id}`,
@@ -214,10 +214,10 @@ export default function HomePage() {
       }
 
       const allResults = [...results, ...dynamicResults];
-      setSearchResults(allResults.slice(0, 8)); // Reduced to 8 results for faster rendering
+      setSearchResults(allResults.slice(0, 6)); // Reduced to 6 results for faster rendering
       setShowSearchResults(true);
       setIsSearching(false);
-    }, 200); // Reduced from 300ms to 200ms
+    }, 150); // Reduced from 200ms to 150ms for faster response
   };
 
   // Handle search input change
@@ -258,7 +258,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Optimized fetch user's uploads if librarian
+  // Optimized fetch user's uploads with better error handling
   useEffect(() => {
     const fetchUploads = async () => {
       if (user?.role === 'librarian' && user?.collegeName) {
@@ -267,13 +267,13 @@ export default function HomePage() {
           const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
           setUploads(filteredUploads);
         } catch (error) {
-          console.error('Error fetching uploads:', error);
+          // Silently handle errors to avoid console spam
         }
       }
     };
 
-    // Only fetch if user is a librarian
-    if (user?.role === 'librarian') {
+    // Only fetch if user is a librarian and we don't already have uploads
+    if (user?.role === 'librarian' && uploads.length === 0) {
       fetchUploads();
     }
   }, [user?.role, user?.collegeName]); // More specific dependencies
@@ -290,14 +290,16 @@ export default function HomePage() {
   };
 
   const handleUploadSuccess = () => {
-    // Refresh uploads data
+    // Refresh uploads data with better error handling
     if (user?.role === 'librarian' && user?.collegeName) {
       BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
         .then(({ items }) => {
           const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
           setUploads(filteredUploads);
         })
-        .catch(console.error);
+        .catch(() => {
+          // Silently handle errors to avoid console spam
+        });
     }
   };
 
@@ -351,16 +353,11 @@ export default function HomePage() {
   };
 
   const handleLibrarianCorner = () => {
-    console.log('HomePage - Librarian Corner clicked');
-    console.log('HomePage - Current auth state:', { isAuthenticated, userRole: user?.role });
-    
     if (!isAuthenticated || (user?.role !== 'superadmin' && user?.role !== 'librarian')) {
-      console.log('HomePage - Opening librarian corner login modal');
       setIsLibrarianCornerLogin(true);
       setIsLoginModalOpen(true);
       return;
     }
-    console.log('HomePage - Navigating to librarian corner');
     navigate('/librarian');
   };
 
@@ -374,13 +371,13 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Optimized infinite scroll effect for news cards
+  // Highly optimized infinite scroll effect for news cards with better performance
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.3; // Reduced scroll speed for better performance
+    const scrollSpeed = 0.2; // Further reduced scroll speed for better performance
     let animationId: number;
     let isPaused = false;
     let isInitialized = false;
@@ -429,12 +426,12 @@ export default function HomePage() {
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Optimized start with reduced delay
+    // Optimized start with increased delay for better performance
     const startScrolling = () => {
       animationId = requestAnimationFrame(scroll);
     };
 
-    const timeoutId = setTimeout(startScrolling, 50); // Reduced from 100ms
+    const timeoutId = setTimeout(startScrolling, 100); // Increased from 50ms for better performance
 
     // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {

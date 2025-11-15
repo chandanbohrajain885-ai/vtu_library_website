@@ -59,18 +59,22 @@ export function useLiveData<T extends WixDataItem>(
   // Enhanced fetch data function with improved caching and performance optimizations
   const fetchData = useCallback(async (showLoading = false, useCache = false) => {
     try {
-      // Improved cache logic for all collections
+      // Improved cache logic for all collections with longer cache times
       if (useCache && cacheRef.current) {
         const cacheAge = Date.now() - cacheRef.current.timestamp;
-        let cacheThreshold = 5000; // 5 seconds default
+        let cacheThreshold = 10000; // 10 seconds default (increased from 5s)
         
-        // Different cache thresholds for different collections
+        // Different cache thresholds for different collections - increased for better performance
         if (collectionId === 'newsandnotifications') {
-          cacheThreshold = 10000; // 10 seconds for news (increased from 2s)
+          cacheThreshold = 30000; // 30 seconds for news (increased from 10s)
         } else if (collectionId === 'E-Resources') {
-          cacheThreshold = 30000; // 30 seconds for resources
+          cacheThreshold = 60000; // 60 seconds for resources (increased from 30s)
         } else if (collectionId === 'userguidearticles') {
-          cacheThreshold = 60000; // 60 seconds for guides
+          cacheThreshold = 120000; // 2 minutes for guides (increased from 60s)
+        } else if (collectionId === 'librarianfileuploads') {
+          cacheThreshold = 20000; // 20 seconds for uploads
+        } else if (collectionId === 'passwordchangerequests') {
+          cacheThreshold = 45000; // 45 seconds for password requests
         }
         
         if (cacheAge < cacheThreshold) {
@@ -102,7 +106,7 @@ export function useLiveData<T extends WixDataItem>(
         setIsLoading(false);
       }
     } catch (err) {
-      console.error(`useLiveData - Error fetching ${collectionId}:`, err);
+      // Reduced console logging for better performance
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to fetch data');
         setIsLoading(false);
@@ -130,12 +134,12 @@ export function useLiveData<T extends WixDataItem>(
     // Subscribe to data update events
     const unsubscribe = dataUpdateEmitter.subscribe(collectionId, refresh);
 
-    // Set up optimized polling based on collection type
+    // Set up optimized polling based on collection type with longer intervals
     if (pollInterval > 0) {
       pollIntervalRef.current = setInterval(() => {
-        // Use cache for background polling to reduce server load
+        // Use cache for background polling to reduce server load and improve performance
         fetchData(false, true); // Always use cache for background polling
-      }, pollInterval);
+      }, Math.max(pollInterval, 15000)); // Minimum 15 seconds for any polling to reduce server load
     }
 
     // Cleanup

@@ -46,12 +46,12 @@ export default function AdminDashboard() {
   
   const { triggerUpdate } = useDataUpdater();
   
-  // Use live data for password change requests and file uploads with error handling
+  // Use live data for password change requests and file uploads with optimized intervals
   const { 
     data: passwordChangeRequests, 
     isLoading: passwordRequestsLoading,
     error: passwordRequestsError 
-  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 30000); // Poll every 30 seconds (reduced from 10s)
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 60000); // Poll every 60 seconds for better performance
   
   const { 
     data: allUploads, 
@@ -59,44 +59,15 @@ export default function AdminDashboard() {
     isLoading: uploadsLoading,
     error: uploadsError,
     lastUpdated: uploadsLastUpdated
-  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 15000); // Poll every 15 seconds (reduced from 5s)
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 30000); // Poll every 30 seconds for better performance
   
   // Filter pending uploads from live data with error handling
   const pendingUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Pending') : [];
   const approvedUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Approved') : [];
   const rejectedUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Rejected') : [];
   
-  // Debug logging
-  useEffect(() => {
-    console.log('AdminDashboard - Debug Info:', {
-      totalUploads: allUploads.length,
-      pendingUploads: pendingUploads.length,
-      approvedUploads: approvedUploads.length,
-      rejectedUploads: rejectedUploads.length,
-      uploadsLastUpdated,
-      uploadsError,
-      uploadsLoading,
-      passwordRequestsError,
-      passwordRequestsLoading
-    });
-    
-    // Debug file URLs for approved/rejected uploads
-    const approvedRejectedUploads = allUploads.filter(upload => 
-      upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected'
-    );
-    
-    console.log('AdminDashboard - Approved/Rejected Files Debug:', 
-      approvedRejectedUploads.map(upload => ({
-        id: upload._id,
-        status: upload.approvalStatus,
-        uploadType: upload.uploadType,
-        hasFileUrl: !!upload.fileUrl,
-        fileUrl: upload.fileUrl,
-        collegeName: upload.collegeName,
-        librarianName: upload.librarianName
-      }))
-    );
-  }, [allUploads, pendingUploads, approvedUploads, rejectedUploads, uploadsLastUpdated, uploadsError, uploadsLoading, passwordRequestsError, passwordRequestsLoading]);
+  // Removed debug logging for better performance
+  // Debug logging has been removed to improve performance and reduce console spam
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -113,16 +84,14 @@ export default function AdminDashboard() {
     permissions: [] as string[]
   });
 
-  // Force refresh function for debugging
+  // Optimized force refresh function
   const handleForceRefresh = async () => {
-    console.log('AdminDashboard - Force refreshing all data...');
     try {
       await refreshUploads();
       triggerUpdate('librarianfileuploads');
       triggerUpdate('passwordchangerequests');
-      console.log('AdminDashboard - Refresh completed');
     } catch (error) {
-      console.error('AdminDashboard - Error during refresh:', error);
+      // Silently handle errors to avoid console spam
     }
   };
 
@@ -206,15 +175,12 @@ export default function AdminDashboard() {
 
   const handleApproveUpload = async (uploadId: string) => {
     try {
-      console.log('AdminDashboard - Approving upload:', uploadId);
       await BaseCrudService.update('librarianfileuploads', {
         _id: uploadId,
         approvalStatus: 'Approved',
         approvalDate: new Date().toISOString(),
         superAdminComments: approvalComments
       });
-      
-      console.log('AdminDashboard - Upload approved successfully');
       
       // Trigger live data update and force refresh
       triggerUpdate('librarianfileuploads');
@@ -223,7 +189,6 @@ export default function AdminDashboard() {
       setViewingUpload(null);
       setApprovalComments('');
     } catch (error) {
-      console.error('Error approving upload:', error);
       alert('Error approving upload. Please try again.');
     }
   };
@@ -235,15 +200,12 @@ export default function AdminDashboard() {
     }
     
     try {
-      console.log('AdminDashboard - Rejecting upload:', uploadId);
       await BaseCrudService.update('librarianfileuploads', {
         _id: uploadId,
         approvalStatus: 'Rejected',
         approvalDate: new Date().toISOString(),
         superAdminComments: approvalComments
       });
-      
-      console.log('AdminDashboard - Upload rejected successfully');
       
       // Trigger live data update and force refresh
       triggerUpdate('librarianfileuploads');
@@ -252,7 +214,6 @@ export default function AdminDashboard() {
       setViewingUpload(null);
       setApprovalComments('');
     } catch (error) {
-      console.error('Error rejecting upload:', error);
       alert('Error rejecting upload. Please try again.');
     }
   };
@@ -263,10 +224,7 @@ export default function AdminDashboard() {
     }
     
     try {
-      console.log('AdminDashboard - Removing upload:', uploadId);
       await BaseCrudService.delete('librarianfileuploads', uploadId);
-      
-      console.log('AdminDashboard - Upload removed successfully');
       
       // Trigger live data update and force refresh
       triggerUpdate('librarianfileuploads');
@@ -274,7 +232,6 @@ export default function AdminDashboard() {
       
       alert('File removed successfully and storage space freed.');
     } catch (error) {
-      console.error('Error removing upload:', error);
       alert('Error removing file. Please try again.');
     }
   };
@@ -645,17 +602,10 @@ export default function AdminDashboard() {
                                           variant="outline"
                                           size="sm"
                                           onClick={() => {
-                                            console.log('AdminDashboard - View File button clicked in modal:', {
-                                              uploadId: viewingUpload._id,
-                                              fileUrl: viewingUpload.fileUrl,
-                                              uploadType: viewingUpload.uploadType
-                                            });
-                                            
                                             if (viewingUpload.fileUrl) {
                                               try {
                                                 window.open(viewingUpload.fileUrl, '_blank', 'noopener,noreferrer');
                                               } catch (error) {
-                                                console.error('AdminDashboard - Error opening file from modal:', error);
                                                 alert('Error opening file. Please try again or contact support.');
                                               }
                                             } else {
