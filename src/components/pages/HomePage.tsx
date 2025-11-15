@@ -609,13 +609,15 @@ export default function HomePage() {
                         {t('nav.home')}
                       </Link>
                       
-                      <Link 
-                        to="/about"
-                        className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                      <button 
+                        onClick={() => {
+                          navigate('/about');
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
                         {t('nav.about')}
-                      </Link>
+                      </button>
                       
                       <button 
                         onClick={() => {
@@ -1126,9 +1128,12 @@ export default function HomePage() {
             {/* Desktop Navigation - All Navigation Options in Single Line */}
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center flex-wrap">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">{t('nav.home')}</Link>
-              <Link to="/about" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">
+              <button 
+                onClick={() => navigate('/about')}
+                className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap bg-transparent border-none text-white cursor-pointer"
+              >
                 {t('nav.about')}
-              </Link>
+              </button>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
