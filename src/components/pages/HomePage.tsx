@@ -53,26 +53,26 @@ export default function HomePage() {
     isLoading: newsLoading,
     refresh: refreshNews,
     forceRefresh: forceRefreshNews
-  } = useLiveData<NewsandEvents>('newsandnotifications', [], 30000); // Poll every 30 seconds for better performance
+  } = useLiveData<NewsandEvents>('newsandnotifications', [], 15000); // Reduced to 15 seconds for faster news updates
   
   const { 
     data: userGuides, 
     isLoading: guidesLoading 
   } = useLiveData<UserGuideArticles>('userguidearticles', [], 120000); // Poll every 2 minutes for better performance
   
-  // Optimized data loading on mount - only load if no data exists
+  // Optimized data loading on mount - preload news data for faster display
   useEffect(() => {
-    // Only force refresh news if we don't have any data and it's not currently loading
-    if (latestNews.length === 0 && !newsLoading) {
-      const loadNews = async () => {
-        try {
-          await forceRefreshNews();
-        } catch (error) {
-          // Silently handle errors to avoid console spam
-        }
-      };
-      loadNews();
-    }
+    // Force refresh news immediately on mount for faster loading
+    const loadNews = async () => {
+      try {
+        await forceRefreshNews();
+      } catch (error) {
+        console.warn('Failed to load news data:', error);
+      }
+    };
+    
+    // Load news immediately without waiting
+    loadNews();
   }, []); // Only run once on mount
 
   // Optimized loading state - only show loading for initial load
@@ -371,36 +371,45 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Optimized infinite scroll effect for news cards with improved performance and reduced lag
+  // Highly optimized infinite scroll effect for news cards with smooth performance
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.15; // Further reduced scroll speed to minimize lag
+    const scrollSpeed = 0.3; // Optimized scroll speed for smooth movement
     let animationId: number;
     let isPaused = false;
     let isInitialized = false;
     let lastTime = 0;
+    let cardWidth = 0;
+    let singleSetWidth = 0;
     
+    // Pre-calculate dimensions for better performance
+    const initializeDimensions = () => {
+      const firstCard = scrollContainer.querySelector('.news-card');
+      if (firstCard) {
+        const cardRect = firstCard.getBoundingClientRect();
+        cardWidth = cardRect.width;
+        const gap = 24; // gap-6 = 24px
+        singleSetWidth = latestNews.length * (cardWidth + gap);
+        isInitialized = true;
+      }
+    };
+
     const scroll = (currentTime: number) => {
-      // Throttle animation to 30fps for better performance
-      if (currentTime - lastTime < 33) {
+      // Throttle animation to 60fps for smoother performance
+      if (currentTime - lastTime < 16.67) {
         animationId = requestAnimationFrame(scroll);
         return;
       }
       lastTime = currentTime;
 
       if (!isPaused && scrollContainer) {
-        // Wait for the DOM to be fully rendered before starting
+        // Initialize dimensions on first run
         if (!isInitialized) {
-          const scrollWidth = scrollContainer.scrollWidth;
-          const clientWidth = scrollContainer.clientWidth;
-          
-          // Only start if we have content to scroll
-          if (scrollWidth > clientWidth && scrollWidth > 0) {
-            isInitialized = true;
-          } else {
+          initializeDimensions();
+          if (!isInitialized) {
             animationId = requestAnimationFrame(scroll);
             return;
           }
@@ -408,38 +417,27 @@ export default function HomePage() {
         
         scrollPosition += scrollSpeed;
         
-        // Get current measurements
-        const scrollWidth = scrollContainer.scrollWidth;
-        const clientWidth = scrollContainer.clientWidth;
-        
-        // Calculate the width of one set of content (original cards only)
-        const cardWidth = 380; // max card width from CSS
-        const gap = 24; // gap-6 = 24px
-        const singleSetWidth = latestNews.length * (cardWidth + gap);
-        
-        // When we've scrolled past one complete set, seamlessly reset to beginning
+        // Seamless infinite loop - reset when we've scrolled one complete set
         if (scrollPosition >= singleSetWidth) {
-          scrollPosition = 0; // Reset to exact beginning for seamless loop
-        }
-        
-        // Ensure we don't exceed the scroll bounds
-        const maxScroll = scrollWidth - clientWidth;
-        if (scrollPosition > maxScroll) {
           scrollPosition = 0;
         }
         
-        scrollContainer.scrollLeft = scrollPosition;
+        // Use transform for better performance than scrollLeft
+        scrollContainer.style.transform = `translateX(-${scrollPosition}px)`;
       }
       
       animationId = requestAnimationFrame(scroll);
     };
 
-    // Optimized start with longer delay to reduce initial lag
+    // Start scrolling immediately for faster response
     const startScrolling = () => {
-      animationId = requestAnimationFrame(scroll);
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        animationId = requestAnimationFrame(scroll);
+      }, 100);
     };
 
-    const timeoutId = setTimeout(startScrolling, 200); // Increased delay to reduce initial lag
+    startScrolling();
 
     // Pause scrolling on hover for better user experience
     const handleMouseEnter = () => {
@@ -450,16 +448,30 @@ export default function HomePage() {
       isPaused = false;
     };
 
+    // Use passive listeners for better performance
     scrollContainer.addEventListener('mouseenter', handleMouseEnter, { passive: true });
     scrollContainer.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
+    // Handle window resize to recalculate dimensions
+    const handleResize = () => {
+      isInitialized = false;
+      scrollPosition = 0;
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
+
     return () => {
-      clearTimeout(timeoutId);
       if (animationId) {
         cancelAnimationFrame(animationId);
       }
       scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
       scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('resize', handleResize);
+      
+      // Reset transform on cleanup
+      if (scrollContainer) {
+        scrollContainer.style.transform = '';
+      }
     };
   }, [latestNews]);
 
@@ -1852,33 +1864,30 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Optimized Continuous Infinite Scrolling News Cards with reduced lag */}
+            {/* Optimized Continuous Infinite Scrolling News Cards with smooth performance */}
             <div 
               ref={newsScrollContainerRef}
-              className="flex gap-6 overflow-x-hidden relative"
+              className="flex gap-6 overflow-hidden relative"
               style={{ 
-                scrollBehavior: 'auto',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-                willChange: 'scroll-position',
+                willChange: 'transform',
                 transform: 'translateZ(0)', // Enable hardware acceleration
-                contain: 'layout style paint' // Optimize rendering
+                contain: 'layout style paint', // Optimize rendering
+                width: '100%'
               }}
             >
-              {/* Show optimized loading indicator only for initial load */}
+              {/* Show optimized loading indicator with faster feedback */}
               {newsLoading && latestNews.length === 0 ? (
                 <div className="flex items-center justify-center w-full py-8">
                   <div className="text-center space-y-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-                    <p className="text-gray-600 text-sm">Loading latest news...</p>
-                    <Button 
-                      onClick={() => forceRefreshNews()}
-                      variant="outline"
-                      size="sm"
-                      className="text-xs"
-                    >
-                      Retry Load
-                    </Button>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-gray-600 text-sm font-medium">Loading latest news...</p>
+                    <div className="flex justify-center space-x-1">
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
                   </div>
                 </div>
               ) : latestNews.length === 0 ? (
@@ -1901,7 +1910,7 @@ export default function HomePage() {
                 <>
                   {/* Original news cards */}
                   {latestNews.map((news, index) => (
-                    <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                    <Card key={news._id || index} className="news-card hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
@@ -1971,7 +1980,7 @@ export default function HomePage() {
                   
                   {/* Duplicate cards for seamless infinite scrolling */}
                   {latestNews.map((news, index) => (
-                    <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                    <Card key={`duplicate-${news._id || index}`} className="news-card hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
