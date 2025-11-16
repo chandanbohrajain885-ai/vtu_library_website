@@ -53,26 +53,29 @@ export default function HomePage() {
     isLoading: newsLoading,
     refresh: refreshNews,
     forceRefresh: forceRefreshNews
-  } = useLiveData<NewsandEvents>('newsandnotifications', [], 15000); // Reduced to 15 seconds for faster news updates
+  } = useLiveData<NewsandEvents>('newsandnotifications', [], 10000); // Faster polling for immediate updates
   
   const { 
     data: userGuides, 
     isLoading: guidesLoading 
   } = useLiveData<UserGuideArticles>('userguidearticles', [], 120000); // Poll every 2 minutes for better performance
   
-  // Optimized data loading on mount - preload news data for faster display
+  // Immediate data loading on mount for instant display
   useEffect(() => {
-    // Force refresh news immediately on mount for faster loading
-    const loadNews = async () => {
+    // Load news data immediately without delay
+    const loadInitialData = async () => {
       try {
-        await forceRefreshNews();
+        await Promise.all([
+          forceRefreshNews(),
+          refreshNews()
+        ]);
       } catch (error) {
-        console.warn('Failed to load news data:', error);
+        console.warn('Failed to load initial data:', error);
       }
     };
     
-    // Load news immediately without waiting
-    loadNews();
+    // Load data immediately
+    loadInitialData();
   }, []); // Only run once on mount
 
   // Optimized loading state - only show loading for initial load
@@ -371,97 +374,82 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Highly optimized infinite scroll effect for news cards with smooth performance
+  // Completely rebuilt infinite scroll effect for news cards with robust performance
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
     if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.3; // Optimized scroll speed for smooth movement
+    const scrollSpeed = 0.5; // Smooth scroll speed
     let animationId: number;
     let isPaused = false;
     let isInitialized = false;
-    let lastTime = 0;
     let cardWidth = 0;
-    let singleSetWidth = 0;
+    let totalWidth = 0;
     
-    // Pre-calculate dimensions for better performance
+    // Initialize dimensions with retry mechanism
     const initializeDimensions = () => {
-      const firstCard = scrollContainer.querySelector('.news-card');
-      if (firstCard) {
+      const cards = scrollContainer.querySelectorAll('.news-card');
+      if (cards.length > 0) {
+        const firstCard = cards[0] as HTMLElement;
         const cardRect = firstCard.getBoundingClientRect();
-        cardWidth = cardRect.width;
-        const gap = 24; // gap-6 = 24px
-        singleSetWidth = latestNews.length * (cardWidth + gap);
+        cardWidth = cardRect.width + 24; // Include gap
+        totalWidth = cardWidth * latestNews.length;
         isInitialized = true;
+        console.log('News scroll initialized:', { cardWidth, totalWidth, cardsCount: cards.length });
+        return true;
       }
+      return false;
     };
 
-    const scroll = (currentTime: number) => {
-      // Throttle animation to 60fps for smoother performance
-      if (currentTime - lastTime < 16.67) {
-        animationId = requestAnimationFrame(scroll);
-        return;
-      }
-      lastTime = currentTime;
-
-      if (!isPaused && scrollContainer) {
-        // Initialize dimensions on first run
-        if (!isInitialized) {
-          initializeDimensions();
-          if (!isInitialized) {
-            animationId = requestAnimationFrame(scroll);
-            return;
-          }
-        }
-        
+    // Smooth animation loop
+    const animate = () => {
+      if (!isPaused && scrollContainer && isInitialized) {
         scrollPosition += scrollSpeed;
         
-        // Seamless infinite loop - reset when we've scrolled one complete set
-        if (scrollPosition >= singleSetWidth) {
+        // Reset position for infinite loop
+        if (scrollPosition >= totalWidth) {
           scrollPosition = 0;
         }
         
-        // Use transform for better performance than scrollLeft
+        // Apply transform
         scrollContainer.style.transform = `translateX(-${scrollPosition}px)`;
       }
       
-      animationId = requestAnimationFrame(scroll);
+      animationId = requestAnimationFrame(animate);
     };
 
-    // Start scrolling immediately for faster response
-    const startScrolling = () => {
-      // Small delay to ensure DOM is ready
+    // Start animation with proper initialization
+    const startAnimation = () => {
+      // Wait for DOM to be ready
       setTimeout(() => {
-        animationId = requestAnimationFrame(scroll);
-      }, 300);
+        if (initializeDimensions()) {
+          animationId = requestAnimationFrame(animate);
+        } else {
+          // Retry initialization
+          setTimeout(startAnimation, 100);
+        }
+      }, 500);
     };
 
-    startScrolling();
+    startAnimation();
 
-    // Pause scrolling on hover for better user experience
-    const handleMouseEnter = () => {
-      isPaused = true;
-    };
-    
-    const handleMouseLeave = () => {
-      isPaused = false;
-    };
+    // Pause on hover
+    const handleMouseEnter = () => { isPaused = true; };
+    const handleMouseLeave = () => { isPaused = false; };
 
-    // Use passive listeners for better performance
-    scrollContainer.addEventListener('mouseenter', handleMouseEnter, { passive: true });
-    scrollContainer.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
 
-    // Handle window resize to recalculate dimensions
+    // Handle resize
     const handleResize = () => {
       isInitialized = false;
       scrollPosition = 0;
-      if (scrollContainer) {
-        scrollContainer.style.transform = 'translateX(0px)';
-      }
+      scrollContainer.style.transform = 'translateX(0px)';
+      setTimeout(() => initializeDimensions(), 100);
     };
-    
-    window.addEventListener('resize', handleResize, { passive: true });
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
       if (animationId) {
@@ -470,11 +458,7 @@ export default function HomePage() {
       scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
       scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
       window.removeEventListener('resize', handleResize);
-      
-      // Reset transform on cleanup
-      if (scrollContainer) {
-        scrollContainer.style.transform = 'translateX(0px)';
-      }
+      scrollContainer.style.transform = 'translateX(0px)';
     };
   }, [latestNews]);
 
@@ -627,7 +611,11 @@ export default function HomePage() {
                       <Link 
                         to="/about"
                         className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate('/about');
+                          setIsMobileMenuOpen(false);
+                        }}
                       >
                         {t('nav.about')}
                       </Link>
@@ -1144,6 +1132,10 @@ export default function HomePage() {
               <Link 
                 to="/about"
                 className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/about');
+                }}
               >
                 {t('nav.about')}
               </Link>
@@ -1865,17 +1857,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Optimized Continuous Infinite Scrolling News Cards with smooth performance */}
+            {/* Optimized News Scrolling Container */}
             <div 
               ref={newsScrollContainerRef}
-              className="news-container flex gap-6 overflow-hidden relative"
+              className="news-container flex gap-6 relative"
               style={{ 
-                maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-                willChange: 'transform',
-                transform: 'translateZ(0)', // Enable hardware acceleration
-                contain: 'layout style paint', // Optimize rendering
-                width: '100%'
+                overflow: 'hidden',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+                width: '100%',
+                minHeight: '300px'
               }}
             >
               {/* Show optimized loading indicator with faster feedback */}
