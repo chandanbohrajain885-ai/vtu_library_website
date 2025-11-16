@@ -434,7 +434,7 @@ export default function HomePage() {
       // Small delay to ensure DOM is ready
       setTimeout(() => {
         animationId = requestAnimationFrame(scroll);
-      }, 100);
+      }, 300);
     };
 
     startScrolling();
@@ -456,6 +456,9 @@ export default function HomePage() {
     const handleResize = () => {
       isInitialized = false;
       scrollPosition = 0;
+      if (scrollContainer) {
+        scrollContainer.style.transform = 'translateX(0px)';
+      }
     };
     
     window.addEventListener('resize', handleResize, { passive: true });
@@ -470,7 +473,7 @@ export default function HomePage() {
       
       // Reset transform on cleanup
       if (scrollContainer) {
-        scrollContainer.style.transform = '';
+        scrollContainer.style.transform = 'translateX(0px)';
       }
     };
   }, [latestNews]);
@@ -621,15 +624,13 @@ export default function HomePage() {
                         {t('nav.home')}
                       </Link>
                       
-                      <button 
-                        onClick={() => {
-                          navigate('/about');
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                      <Link 
+                        to="/about"
+                        className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                        onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {t('nav.about')}
-                      </button>
+                      </Link>
                       
                       <button 
                         onClick={() => {
@@ -1140,12 +1141,12 @@ export default function HomePage() {
             {/* Desktop Navigation - All Navigation Options in Single Line */}
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center flex-wrap">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">{t('nav.home')}</Link>
-              <button 
-                onClick={() => navigate('/about')}
-                className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap bg-transparent border-none text-white cursor-pointer"
+              <Link 
+                to="/about"
+                className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap"
               >
                 {t('nav.about')}
-              </button>
+              </Link>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
@@ -1867,7 +1868,7 @@ export default function HomePage() {
             {/* Optimized Continuous Infinite Scrolling News Cards with smooth performance */}
             <div 
               ref={newsScrollContainerRef}
-              className="flex gap-6 overflow-hidden relative"
+              className="news-container flex gap-6 overflow-hidden relative"
               style={{ 
                 maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
