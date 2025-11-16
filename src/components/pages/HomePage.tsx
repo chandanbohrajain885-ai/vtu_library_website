@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGlobalDataStore } from '@/stores/globalDataStore';
+import { LibrarianFileUploads } from '@/entities';
 import { BaseCrudService } from '@/integrations';
-import { EResources, NewsandEvents, UserGuideArticles, LibrarianFileUploads } from '@/entities';
-import { useLiveData } from '@/hooks/use-live-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,33 @@ import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle, Eye, Clock, AlertCircle, MessageCircle } from 'lucide-react';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
+
+// Optimized icon imports - only import what we need
+import BookOpen from 'lucide-react/dist/esm/icons/book-open';
+import Download from 'lucide-react/dist/esm/icons/download';
+import Users from 'lucide-react/dist/esm/icons/users';
+import Search from 'lucide-react/dist/esm/icons/search';
+import Calendar from 'lucide-react/dist/esm/icons/calendar';
+import User from 'lucide-react/dist/esm/icons/user';
+import Phone from 'lucide-react/dist/esm/icons/phone';
+import Mail from 'lucide-react/dist/esm/icons/mail';
+import MapPin from 'lucide-react/dist/esm/icons/map-pin';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import LogOut from 'lucide-react/dist/esm/icons/log-out';
+import ExternalLink from 'lucide-react/dist/esm/icons/external-link';
+import FileText from 'lucide-react/dist/esm/icons/file-text';
+import Globe from 'lucide-react/dist/esm/icons/globe';
+import Database from 'lucide-react/dist/esm/icons/database';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Edit from 'lucide-react/dist/esm/icons/edit';
+import Menu from 'lucide-react/dist/esm/icons/menu';
+import ImageIcon from 'lucide-react/dist/esm/icons/image';
+import Upload from 'lucide-react/dist/esm/icons/upload';
+import CreditCard from 'lucide-react/dist/esm/icons/credit-card';
+import CheckCircle from 'lucide-react/dist/esm/icons/check-circle';
+import Eye from 'lucide-react/dist/esm/icons/eye';
+import MessageCircle from 'lucide-react/dist/esm/icons/message-circle';
 
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
@@ -42,55 +68,22 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
-  // Use live data hooks with optimized polling intervals for better performance
+  // Use centralized data store instead of individual hooks
   const { 
-    data: featuredResources, 
-    isLoading: resourcesLoading 
-  } = useLiveData<EResources>('E-Resources', [], 60000); // Poll every 60 seconds for better performance
+    eResources: featuredResources, 
+    news: latestNews, 
+    userGuides,
+    isLoading 
+  } = useGlobalDataStore();
   
-  const { 
-    data: latestNews, 
-    isLoading: newsLoading,
-    refresh: refreshNews,
-    forceRefresh: forceRefreshNews
-  } = useLiveData<NewsandEvents>('newsandnotifications', [], 10000); // Faster polling for immediate updates
-  
-  const { 
-    data: userGuides, 
-    isLoading: guidesLoading 
-  } = useLiveData<UserGuideArticles>('userguidearticles', [], 120000); // Poll every 2 minutes for better performance
-  
-  // Immediate data loading on mount for instant display
-  useEffect(() => {
-    // Load news data immediately without delay
-    const loadInitialData = async () => {
-      try {
-        await Promise.all([
-          forceRefreshNews(),
-          refreshNews()
-        ]);
-      } catch (error) {
-        console.warn('Failed to load initial data:', error);
-      }
-    };
-    
-    // Load data immediately
-    loadInitialData();
-  }, []); // Only run once on mount
-
-  // Optimized loading state - only show loading for initial load
-  const isInitialLoading = (resourcesLoading && featuredResources.length === 0) || 
-                          (newsLoading && latestNews.length === 0) || 
-                          (guidesLoading && userGuides.length === 0);
-  
-  // File upload states
+  // File upload states - reduced state management
   const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
   const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
   const [selectedViewType, setSelectedViewType] = useState<string>('');
   
-  // Search functionality
+  // Optimized search functionality with better performance
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -154,8 +147,8 @@ export default function HomePage() {
     { id: 'search-help', title: 'Search Help', content: 'How to search for resources, advanced search tips, search filters, finding specific content', type: 'Site Content', category: 'Help' },
   ];
 
-  // Optimized search function with improved debounce and caching
-  const performSearch = (query: string) => {
+  // Optimized search function with improved performance and caching
+  const performSearch = useCallback((query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
       setShowSearchResults(false);
@@ -171,84 +164,97 @@ export default function HomePage() {
 
     // Optimized debounce for faster search response
     searchTimeoutRef.current = setTimeout(() => {
-      const results = searchData.filter(item => {
+      try {
         const searchTerm = query.toLowerCase();
-        return (
-          item.title.toLowerCase().includes(searchTerm) ||
-          item.content.toLowerCase().includes(searchTerm) ||
-          item.type.toLowerCase().includes(searchTerm) ||
-          item.year?.toLowerCase().includes(searchTerm) ||
-          item.provider?.toLowerCase().includes(searchTerm) ||
-          item.subject?.toLowerCase().includes(searchTerm) ||
-          item.category?.toLowerCase().includes(searchTerm)
-        );
-      });
-
-      // Optimized dynamic search - only search if we have data and limit results
-      const dynamicResults: SearchResult[] = [];
-      
-      if (featuredResources.length > 0) {
-        featuredResources.slice(0, 3).forEach(resource => { // Limit to 3 resources
-          if (resource.title?.toLowerCase().includes(query.toLowerCase())) {
-            dynamicResults.push({
-              id: `dynamic-resource-${resource._id}`,
-              title: `E-Resources ${resource.title}`,
-              content: resource.eJournals || resource.eBooks || 'E-Resource content',
-              type: 'E-Resources',
-              url: `/resources/${resource.title}`,
-              year: resource.title
-            });
-          }
+        const results = searchData.filter(item => {
+          return (
+            item.title.toLowerCase().includes(searchTerm) ||
+            item.content.toLowerCase().includes(searchTerm) ||
+            item.type.toLowerCase().includes(searchTerm) ||
+            item.year?.toLowerCase().includes(searchTerm) ||
+            item.provider?.toLowerCase().includes(searchTerm) ||
+            item.subject?.toLowerCase().includes(searchTerm) ||
+            item.category?.toLowerCase().includes(searchTerm)
+          );
         });
+
+        // Optimized dynamic search with error handling
+        const dynamicResults: SearchResult[] = [];
+        
+        // Search in E-Resources with error boundary
+        if (featuredResources?.length > 0) {
+          featuredResources.slice(0, 2).forEach(resource => {
+            if (resource.title?.toLowerCase().includes(searchTerm)) {
+              dynamicResults.push({
+                id: `dynamic-resource-${resource._id}`,
+                title: `E-Resources ${resource.title}`,
+                content: resource.eJournals || resource.eBooks || 'E-Resource content',
+                type: 'E-Resources',
+                url: `/resources/${resource.title}`,
+                year: resource.title
+              });
+            }
+          });
+        }
+
+        // Search in News with error boundary
+        if (latestNews?.length > 0) {
+          latestNews.slice(0, 2).forEach(news => {
+            if (news.title?.toLowerCase().includes(searchTerm)) {
+              dynamicResults.push({
+                id: `dynamic-news-${news._id}`,
+                title: news.title || 'News Item',
+                content: news.content || 'News content',
+                type: 'News & Events',
+                url: news.externalLink || '/news'
+              });
+            }
+          });
+        }
+
+        const allResults = [...results, ...dynamicResults];
+        setSearchResults(allResults.slice(0, 5)); // Reduced to 5 results for better performance
+        setShowSearchResults(true);
+      } catch (error) {
+        console.warn('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
       }
+    }, 200); // Optimized debounce timing
+  }, [featuredResources, latestNews, searchData]);
 
-      if (latestNews.length > 0) {
-        latestNews.slice(0, 3).forEach(news => { // Limit to 3 news items
-          if (news.title?.toLowerCase().includes(query.toLowerCase())) {
-            dynamicResults.push({
-              id: `dynamic-news-${news._id}`,
-              title: news.title || 'News Item',
-              content: news.content || 'News content',
-              type: 'News & Events',
-              url: news.externalLink || '/news'
-            });
-          }
-        });
-      }
-
-      const allResults = [...results, ...dynamicResults];
-      setSearchResults(allResults.slice(0, 6)); // Reduced to 6 results for faster rendering
-      setShowSearchResults(true);
-      setIsSearching(false);
-    }, 150); // Reduced from 200ms to 150ms for faster response
-  };
-
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle search input change with error boundary
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
     performSearch(query);
-  };
+  }, [performSearch]);
 
-  // Handle search result click
-  const handleSearchResultClick = (result: SearchResult) => {
-    if (result.url) {
-      if (result.url.startsWith('http')) {
-        window.open(result.url, '_blank');
-      } else {
-        navigate(result.url);
+  // Handle search result click with error handling
+  const handleSearchResultClick = useCallback((result: SearchResult) => {
+    try {
+      if (result.url) {
+        if (result.url.startsWith('http')) {
+          window.open(result.url, '_blank');
+        } else {
+          navigate(result.url);
+        }
       }
+      setShowSearchResults(false);
+      setSearchQuery('');
+    } catch (error) {
+      console.warn('Navigation error:', error);
     }
-    setShowSearchResults(false);
-    setSearchQuery('');
-  };
+  }, [navigate]);
 
-  // Handle search submit
-  const handleSearchSubmit = () => {
+  // Handle search submit with error handling
+  const handleSearchSubmit = useCallback(() => {
     if (searchResults.length > 0) {
       handleSearchResultClick(searchResults[0]);
     }
-  };
+  }, [searchResults, handleSearchResultClick]);
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLibrarianCornerLogin, setIsLibrarianCornerLogin] = useState(false);
   const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
@@ -279,7 +285,7 @@ export default function HomePage() {
     if (user?.role === 'librarian' && uploads.length === 0) {
       fetchUploads();
     }
-  }, [user?.role, user?.collegeName]); // More specific dependencies
+  }, [user?.role, user?.collegeName, uploads.length]); // More specific dependencies
 
   // Upload handlers
   const handleUploadClick = (uploadType: string) => {
@@ -374,37 +380,43 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Completely rebuilt infinite scroll effect for news cards with robust performance
+  // Optimized infinite scroll effect with proper memory management
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
-    if (!scrollContainer || latestNews.length === 0) return;
+    if (!scrollContainer || !latestNews?.length) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.5; // Smooth scroll speed
-    let animationId: number;
+    const scrollSpeed = 0.3; // Optimized scroll speed
+    let animationId: number | null = null;
     let isPaused = false;
     let isInitialized = false;
     let cardWidth = 0;
     let totalWidth = 0;
+    let initTimeout: NodeJS.Timeout | null = null;
+    let retryTimeout: NodeJS.Timeout | null = null;
+    let resizeTimeout: NodeJS.Timeout | null = null;
     
-    // Initialize dimensions with retry mechanism
+    // Initialize dimensions with proper error handling
     const initializeDimensions = () => {
-      const cards = scrollContainer.querySelectorAll('.news-card');
-      if (cards.length > 0) {
-        const firstCard = cards[0] as HTMLElement;
-        const cardRect = firstCard.getBoundingClientRect();
-        cardWidth = cardRect.width + 24; // Include gap
-        totalWidth = cardWidth * latestNews.length;
-        isInitialized = true;
-        console.log('News scroll initialized:', { cardWidth, totalWidth, cardsCount: cards.length });
-        return true;
+      try {
+        const cards = scrollContainer.querySelectorAll('.news-card');
+        if (cards.length > 0) {
+          const firstCard = cards[0] as HTMLElement;
+          const cardRect = firstCard.getBoundingClientRect();
+          cardWidth = cardRect.width + 24; // Include gap
+          totalWidth = cardWidth * latestNews.length;
+          isInitialized = true;
+          return true;
+        }
+      } catch (error) {
+        console.warn('Failed to initialize news scroll dimensions:', error);
       }
       return false;
     };
 
-    // Smooth animation loop
+    // Optimized animation loop with proper cleanup checks
     const animate = () => {
-      if (!isPaused && scrollContainer && isInitialized) {
+      if (!isPaused && scrollContainer && isInitialized && animationId !== null) {
         scrollPosition += scrollSpeed;
         
         // Reset position for infinite loop
@@ -412,55 +424,88 @@ export default function HomePage() {
           scrollPosition = 0;
         }
         
-        // Apply transform
-        scrollContainer.style.transform = `translateX(-${scrollPosition}px)`;
+        // Apply transform with performance optimization
+        scrollContainer.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
       }
       
-      animationId = requestAnimationFrame(animate);
+      if (animationId !== null) {
+        animationId = requestAnimationFrame(animate);
+      }
     };
 
-    // Start animation with proper initialization
+    // Start animation with proper initialization and cleanup
     const startAnimation = () => {
-      // Wait for DOM to be ready
-      setTimeout(() => {
+      initTimeout = setTimeout(() => {
         if (initializeDimensions()) {
           animationId = requestAnimationFrame(animate);
         } else {
-          // Retry initialization
-          setTimeout(startAnimation, 100);
+          // Retry initialization with limit
+          retryTimeout = setTimeout(startAnimation, 100);
         }
-      }, 500);
+      }, 300); // Reduced initial delay
     };
 
     startAnimation();
 
-    // Pause on hover
+    // Event handlers with proper cleanup
     const handleMouseEnter = () => { isPaused = true; };
     const handleMouseLeave = () => { isPaused = false; };
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
     scrollContainer.addEventListener('mouseleave', handleMouseLeave);
 
-    // Handle resize
+    // Optimized resize handler
     const handleResize = () => {
-      isInitialized = false;
-      scrollPosition = 0;
-      scrollContainer.style.transform = 'translateX(0px)';
-      setTimeout(() => initializeDimensions(), 100);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        isInitialized = false;
+        scrollPosition = 0;
+        if (scrollContainer) {
+          scrollContainer.style.transform = 'translate3d(0, 0, 0)';
+        }
+        initializeDimensions();
+      }, 150);
     };
 
     window.addEventListener('resize', handleResize);
 
+    // Comprehensive cleanup function
     return () => {
-      if (animationId) {
+      // Clear all timeouts
+      if (initTimeout) clearTimeout(initTimeout);
+      if (retryTimeout) clearTimeout(retryTimeout);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      
+      // Cancel animation frame
+      if (animationId !== null) {
         cancelAnimationFrame(animationId);
+        animationId = null;
       }
-      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('resize', handleResize);
-      scrollContainer.style.transform = 'translateX(0px)';
+      
+      // Remove event listeners
+      try {
+        if (scrollContainer) {
+          scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+          scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+          scrollContainer.style.transform = 'translate3d(0, 0, 0)';
+        }
+        window.removeEventListener('resize', handleResize);
+      } catch (error) {
+        console.warn('Cleanup error:', error);
+      }
     };
-  }, [latestNews]);
+  }, [latestNews]); // Dependency on latestNews only
+
+  // Cleanup search timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
   if (isInitialLoading) {
     return (
@@ -521,8 +566,23 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Top Header Bar */}
+    <ErrorBoundary>
+      <div className="min-h-screen bg-white">
+        {/* Loading state with skeleton */}
+        {isLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+              <div className="text-center">
+                <div className="loading-skeleton w-16 h-16 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-lg font-semibold mb-2">Loading VTU Consortium</h3>
+                <p className="text-gray-600">Please wait while we load the latest content...</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Rest of the component content */}
+        {/* Top Header Bar */}
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-4 text-sm">
@@ -1870,7 +1930,7 @@ export default function HomePage() {
               }}
             >
               {/* Show optimized loading indicator with faster feedback */}
-              {newsLoading && latestNews.length === 0 ? (
+              {isLoading && latestNews.length === 0 ? (
                 <div className="flex items-center justify-center w-full py-8">
                   <div className="text-center space-y-3">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
@@ -1887,15 +1947,6 @@ export default function HomePage() {
                   <div className="text-center space-y-3">
                     <Calendar className="h-10 w-10 text-gray-400 mx-auto" />
                     <p className="text-gray-600 text-sm">No news available</p>
-                    <Button 
-                      onClick={() => forceRefreshNews()}
-                      variant="outline"
-                      size="sm"
-                      className="bg-primary text-white hover:bg-primary/90"
-                    >
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Load News
-                    </Button>
                   </div>
                 </div>
               ) : (
@@ -2152,6 +2203,7 @@ export default function HomePage() {
       />
 
 
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

@@ -17,9 +17,14 @@ import ErrorChecker from '@/components/debug/ErrorChecker';
 import LibrarianLoginTester from '@/components/debug/LibrarianLoginTester';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { useAutoRefresh } from '@/stores/globalDataStore';
 import DebugUploads from '@/debug-uploads';
-// Layout component that includes ScrollToTop
+
+// Layout component that includes ScrollToTop and global data management
 function Layout() {
+  // Initialize centralized data management
+  useAutoRefresh();
+  
   return (
     <>
       <ScrollToTop />

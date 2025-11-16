@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useLiveData } from '@/hooks/use-live-data';
-import { NewsandEvents } from '@/entities';
+import { useGlobalDataStore } from '@/stores/globalDataStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Newspaper, Calendar, User, Search, ExternalLink, Star } from 'lucide-react';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
+
+// Optimized icon imports
+import Newspaper from 'lucide-react/dist/esm/icons/newspaper';
+import Calendar from 'lucide-react/dist/esm/icons/calendar';
+import User from 'lucide-react/dist/esm/icons/user';
+import Search from 'lucide-react/dist/esm/icons/search';
+import ExternalLink from 'lucide-react/dist/esm/icons/external-link';
+import Star from 'lucide-react/dist/esm/icons/star';
 
 export default function NewsPage() {
-  const { data: news, isLoading } = useLiveData<NewsandEvents>('newsandnotifications', [], 30000); // Poll every 30 seconds
-  const [filteredNews, setFilteredNews] = useState<NewsandEvents[]>([]);
+  const { news, isLoading } = useGlobalDataStore();
+  const [filteredNews, setFilteredNews] = useState(news);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -52,7 +59,8 @@ export default function NewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <ErrorBoundary>
+      <div className="min-h-screen bg-background">
       {/* Header Navigation */}
       <header className="bg-primary text-primary-foreground shadow-lg">
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6 py-4">
@@ -427,6 +435,7 @@ export default function NewsPage() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
