@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
-import { Search, BookOpen, ExternalLink, Calendar } from 'lucide-react';
+import { Search, BookOpen, ExternalLink, Calendar, ArrowLeft } from 'lucide-react';
 
 export default function JournalsPage() {
   const [journals, setJournals] = useState<EResources[]>([]);
@@ -90,6 +90,19 @@ export default function JournalsPage() {
       {/* Page Header */}
       <section className="bg-primary/5 py-16">
         <div className="max-w-[120rem] mx-auto px-6">
+          {/* Back Button */}
+          <div className="mb-8">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                className="bg-white text-primary hover:bg-gray-100 border-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+          
           <div className="text-center space-y-4">
             <h1 className="font-heading text-5xl font-bold text-primary">
               ACADEMIC JOURNALS

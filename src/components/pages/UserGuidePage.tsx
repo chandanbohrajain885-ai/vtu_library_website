@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Image } from '@/components/ui/image';
-import { Search, BookOpen, HelpCircle, User, Calendar, ArrowRight, Edit, Plus } from 'lucide-react';
+import { Search, BookOpen, HelpCircle, User, Calendar, ArrowRight, Edit, Plus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 
 export default function UserGuidePage() {
@@ -98,6 +98,19 @@ export default function UserGuidePage() {
       {/* Page Header */}
       <section className="bg-primary/5 py-16">
         <div className="max-w-[120rem] mx-auto px-6">
+          {/* Back Button */}
+          <div className="mb-8">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                className="bg-white text-primary hover:bg-gray-100 border-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+          
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center space-x-4">
               <h1 className="font-heading text-5xl font-bold text-primary">

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Newspaper, Calendar, User, Search, ExternalLink, Star } from 'lucide-react';
+import { Newspaper, Calendar, User, Search, ExternalLink, Star, ArrowLeft } from 'lucide-react';
 
 export default function NewsPage() {
   const { data: news, isLoading } = useLiveData<NewsandEvents>('newsandnotifications');
@@ -82,6 +82,19 @@ export default function NewsPage() {
       {/* Page Header */}
       <section className="bg-primary/5 py-12 sm:py-16">
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
+          {/* Back Button */}
+          <div className="mb-8">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                className="bg-white text-primary hover:bg-gray-100 border-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+          
           <div className="text-center space-y-4">
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
               NEWS & NOTIFICATIONS

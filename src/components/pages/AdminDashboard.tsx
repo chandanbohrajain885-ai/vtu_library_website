@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download, Key, History, User as UserIcon, Building, Calendar, ExternalLink } from 'lucide-react';
+import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download, Key, History, User as UserIcon, Building, Calendar, ExternalLink, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
@@ -296,7 +296,10 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <Link to="/">
-                <Button variant="outline">Back to Site</Button>
+                <Button variant="outline">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Home
+                </Button>
               </Link>
               <Button onClick={logout} variant="destructive">Logout</Button>
             </div>

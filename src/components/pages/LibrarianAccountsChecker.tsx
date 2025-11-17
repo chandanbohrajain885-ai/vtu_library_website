@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianAccounts } from '@/entities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Users, Database, CheckCircle, AlertCircle } from 'lucide-react';
+import { Users, Database, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function LibrarianAccountsChecker() {
   const [accounts, setAccounts] = useState<LibrarianAccounts[]>([]);
@@ -53,6 +54,19 @@ export default function LibrarianAccountsChecker() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-[120rem] mx-auto">
+        {/* Back Button */}
+        <div className="mb-8">
+          <Link to="/admin">
+            <Button 
+              variant="outline" 
+              className="bg-white text-primary hover:bg-gray-100 border-primary"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Admin Dashboard
+            </Button>
+          </Link>
+        </div>
+        
         <div className="mb-8">
           <h1 className="font-heading text-4xl font-bold text-primary mb-4">
             Librarian Accounts Status Check
