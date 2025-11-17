@@ -524,15 +524,9 @@ export default function HomePage() {
                         {t('nav.about')}
                       </button>
                       
-                      <button 
-                        onClick={() => {
-                          window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank');
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                      >
+                      <div className="block w-full text-left px-4 py-3 text-gray-800 rounded-md font-medium cursor-default">
                         {t('nav.membercolleges')}
-                      </button>
+                      </div>
                       
                       {/* Committee Section */}
                       <div className="border border-gray-200 rounded-md p-3">
@@ -1036,13 +1030,9 @@ export default function HomePage() {
               <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">
                 {t('nav.about')}
               </button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
-                onClick={() => window.open('https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true', '_blank')}
-              >
+              <div className="text-white p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap cursor-default">
                 {t('nav.membercolleges')}
-              </Button>
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">

@@ -180,24 +180,3 @@ export interface UserGuideArticles {
   /** @wixFieldType image */
   featuredImage?: string;
 }
-
-
-/**
- * Collection ID: membercolleges
- * Interface for MemberColleges
- */
-export interface MemberColleges {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType text */
-  collegeName?: string;
-  /** @wixFieldType text */
-  communicationAddress?: string;
-  /** @wixFieldType text */
-  librarianName?: string;
-  /** @wixFieldType text */
-  email?: string;
-  /** @wixFieldType text */
-  phone?: string;
-}

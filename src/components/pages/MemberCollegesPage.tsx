@@ -5,27 +5,36 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function MemberCollegesPage() {
   const [colleges, setColleges] = useState<MemberColleges[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  const fetchColleges = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log('🔍 Fetching Member Colleges data from CMS...');
+      
+      const { items } = await BaseCrudService.getAll<MemberColleges>('membercolleges');
+      console.log('✅ Successfully fetched colleges:', items.length, 'items');
+      console.log('📊 Data preview:', items.slice(0, 2)); // Log first 2 items for debugging
+      
+      setColleges(items);
+      setLastUpdated(new Date());
+    } catch (err) {
+      console.error('❌ Error fetching colleges:', err);
+      setError('Failed to load member colleges. Please try refreshing the page.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchColleges = async () => {
-      try {
-        setLoading(true);
-        const { items } = await BaseCrudService.getAll<MemberColleges>('membercolleges');
-        setColleges(items);
-      } catch (err) {
-        setError('Failed to load member colleges');
-        console.error('Error fetching colleges:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchColleges();
   }, []);
 
@@ -47,7 +56,15 @@ export default function MemberCollegesPage() {
         <div className="container mx-auto px-4 py-16">
           <Card className="max-w-md mx-auto">
             <CardContent className="p-6 text-center">
-              <p className="text-red-600">{error}</p>
+              <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button onClick={fetchColleges} className="flex items-center gap-2 mx-auto">
+                <RefreshCw className="w-4 h-4" />
+                Retry
+              </Button>
+              <div className="mt-4 text-sm text-gray-600">
+                <p>Debug info available at: <a href="/debug-member-colleges" className="text-primary underline">/debug-member-colleges</a></p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -80,9 +97,28 @@ export default function MemberCollegesPage() {
         <div className="container mx-auto px-4">
           <Card className="shadow-lg">
             <CardHeader className="bg-primary/5 border-b">
-              <CardTitle className="font-heading text-2xl text-primary">
-                Member Colleges Directory
-              </CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle className="font-heading text-2xl text-primary">
+                  Member Colleges Directory
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  {lastUpdated && (
+                    <Badge variant="outline" className="text-xs">
+                      Updated: {lastUpdated.toLocaleTimeString()}
+                    </Badge>
+                  )}
+                  <Button 
+                    onClick={fetchColleges} 
+                    size="sm" 
+                    variant="outline"
+                    disabled={loading}
+                    className="flex items-center gap-1"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -119,40 +155,56 @@ export default function MemberCollegesPage() {
                           {index + 1}
                         </TableCell>
                         <TableCell className="font-paragraph font-semibold text-primary">
-                          {college.collegeName}
+                          {college.collegeName || (
+                            <span className="text-red-500 italic">Missing college name</span>
+                          )}
                         </TableCell>
                         <TableCell className="font-paragraph">
-                          <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                            <span className="text-sm leading-relaxed">
-                              {college.communicationAddress}
-                            </span>
-                          </div>
+                          {college.communicationAddress ? (
+                            <div className="flex items-start gap-2">
+                              <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
+                              <span className="text-sm leading-relaxed">
+                                {college.communicationAddress}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-red-500 italic">Missing address</span>
+                          )}
                         </TableCell>
                         <TableCell className="font-paragraph font-medium">
-                          {college.librarianName}
+                          {college.librarianName || (
+                            <span className="text-red-500 italic">Missing librarian name</span>
+                          )}
                         </TableCell>
                         <TableCell className="font-paragraph">
-                          <div className="flex items-center gap-2">
-                            <Mail className="w-4 h-4 text-primary" />
-                            <a 
-                              href={`mailto:${college.email}`}
-                              className="text-primary hover:text-secondary transition-colors text-sm"
-                            >
-                              {college.email}
-                            </a>
-                          </div>
+                          {college.email ? (
+                            <div className="flex items-center gap-2">
+                              <Mail className="w-4 h-4 text-primary" />
+                              <a 
+                                href={`mailto:${college.email}`}
+                                className="text-primary hover:text-secondary transition-colors text-sm"
+                              >
+                                {college.email}
+                              </a>
+                            </div>
+                          ) : (
+                            <span className="text-red-500 italic">Missing email</span>
+                          )}
                         </TableCell>
                         <TableCell className="font-paragraph">
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-primary" />
-                            <a 
-                              href={`tel:${college.phone}`}
-                              className="text-primary hover:text-secondary transition-colors text-sm"
-                            >
-                              {college.phone}
-                            </a>
-                          </div>
+                          {college.phone ? (
+                            <div className="flex items-center gap-2">
+                              <Phone className="w-4 h-4 text-primary" />
+                              <a 
+                                href={`tel:${college.phone}`}
+                                className="text-primary hover:text-secondary transition-colors text-sm"
+                              >
+                                {college.phone}
+                              </a>
+                            </div>
+                          ) : (
+                            <span className="text-red-500 italic">Missing phone</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -162,16 +214,19 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {colleges.length === 0 && (
+          {colleges.length === 0 && !loading && (
             <Card className="mt-8">
               <CardContent className="p-8 text-center">
                 <GraduationCap className="w-16 h-16 text-primary/30 mx-auto mb-4" />
                 <h3 className="font-heading text-xl text-primary mb-2">
                   No Member Colleges Found
                 </h3>
-                <p className="font-paragraph text-gray-600">
+                <p className="font-paragraph text-gray-600 mb-4">
                   Member college information will appear here once added to the system.
                 </p>
+                <div className="text-sm text-gray-500">
+                  <p>For debugging, visit: <a href="/debug-member-colleges" className="text-primary underline">/debug-member-colleges</a></p>
+                </div>
               </CardContent>
             </Card>
           )}
