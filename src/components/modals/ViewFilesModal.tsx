@@ -7,6 +7,7 @@ import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Download, Calendar, User, FileText, ExternalLink, Clock, CheckCircle, XCircle, AlertCircle, Edit, Trash2 } from 'lucide-react';
+import { useLiveData, useDataUpdater } from '@/hooks/use-live-data';
 
 interface ViewFilesModalProps {
   isOpen: boolean;
@@ -17,43 +18,23 @@ interface ViewFilesModalProps {
 
 export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeName }: ViewFilesModalProps) {
   const { user } = useAuth();
-  const [files, setFiles] = useState<LibrarianFileUploads[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { triggerUpdate } = useDataUpdater();
+  
+  // Use live data for real-time updates
+  const { data: allFiles } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 3000); // Poll every 3 seconds
+  
+  // Filter files in real-time
+  const files = allFiles
+    .filter(file => file.uploadType === uploadType && file.collegeName === collegeName)
+    .sort((a, b) => {
+      // Sort by upload date (newest first)
+      const dateA = new Date(a.uploadDate || a._createdDate || 0);
+      const dateB = new Date(b.uploadDate || b._createdDate || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
 
   // Check if user can edit/remove files (only college librarians, not super admin)
   const canEditFiles = user?.role === 'librarian' && user?.collegeName === collegeName;
-
-  useEffect(() => {
-    if (isOpen && uploadType && collegeName) {
-      fetchFiles();
-    }
-  }, [isOpen, uploadType, collegeName]);
-
-  const fetchFiles = async () => {
-    setLoading(true);
-    try {
-      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      console.log('ViewFilesModal - All items:', items);
-      console.log('ViewFilesModal - Filter criteria:', { uploadType, collegeName });
-      
-      const filteredFiles = items.filter(
-        file => file.uploadType === uploadType && file.collegeName === collegeName
-      );
-      console.log('ViewFilesModal - Filtered files:', filteredFiles);
-      
-      // Sort by upload date (newest first)
-      filteredFiles.sort((a, b) => {
-        const dateA = new Date(a.uploadDate || a._createdDate || 0);
-        const dateB = new Date(b.uploadDate || b._createdDate || 0);
-        return dateB.getTime() - dateA.getTime();
-      });
-      setFiles(filteredFiles);
-    } catch (error) {
-      console.error('Error fetching files:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getStatusIcon = (status: string | undefined) => {
     switch (status) {
@@ -105,12 +86,17 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
   const handleRemoveFile = async (fileId: string) => {
     if (!canEditFiles) return;
     
+    if (!confirm('Are you sure you want to remove this file? This action cannot be undone.')) {
+      return;
+    }
+    
     try {
       await BaseCrudService.delete('librarianfileuploads', fileId);
-      // Refresh the files list
-      fetchFiles();
+      // Trigger live data update
+      triggerUpdate('librarianfileuploads');
     } catch (error) {
       console.error('Error removing file:', error);
+      alert('Error removing file. Please try again.');
     }
   };
 
@@ -134,11 +120,7 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
         </DialogHeader>
 
         <div className="mt-6">
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="text-gray-500">Loading files...</div>
-            </div>
-          ) : files.length === 0 ? (
+          {files.length === 0 ? (
             <div className="text-center py-8">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No files uploaded</h3>
@@ -158,7 +140,7 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
                   {files.length} file{files.length !== 1 ? 's' : ''} found
                 </h3>
                 <Button
-                  onClick={fetchFiles}
+                  onClick={() => window.location.reload()}
                   variant="outline"
                   size="sm"
                   className="text-blue-600 border-blue-600 hover:bg-blue-50"
@@ -246,17 +228,15 @@ export default function ViewFilesModal({ isOpen, onClose, uploadType, collegeNam
                           </>
                         )}
                         {canEditFiles && (
-                          <>
-                            <Button
-                              onClick={() => handleRemoveFile(file._id)}
-                              size="sm"
-                              variant="outline"
-                              className="text-red-600 border-red-600 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Remove
-                            </Button>
-                          </>
+                          <Button
+                            onClick={() => handleRemoveFile(file._id)}
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 border-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Remove
+                          </Button>
                         )}
                       </div>
                     </div>
