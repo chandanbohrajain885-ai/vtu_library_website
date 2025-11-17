@@ -11,7 +11,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 export default function ResourcesPage() {
   const { year } = useParams();
   const { user } = useAuth();
-  const { data: eResourcesData, isLoading } = useLiveData<EResources>('E-Resources', [], 60000); // Poll every 60 seconds
+  const { data: eResourcesData, isLoading } = useLiveData<EResources>('E-Resources');
   
   // Check if user is superadmin for edit buttons
   const canEdit = user?.role === 'superadmin';

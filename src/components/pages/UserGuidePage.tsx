@@ -13,7 +13,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 
 export default function UserGuidePage() {
   const { user } = useAuth();
-  const { data: articles, isLoading } = useLiveData<UserGuideArticles>('userguidearticles', [], 60000); // Poll every 60 seconds
+  const { data: articles, isLoading } = useLiveData<UserGuideArticles>('userguidearticles');
   const [filteredArticles, setFilteredArticles] = useState<UserGuideArticles[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');

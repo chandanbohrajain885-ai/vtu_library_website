@@ -13,18 +13,11 @@ import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import ApprovedFilesPage from '@/components/pages/ApprovedFilesPage';
-import ErrorChecker from '@/components/debug/ErrorChecker';
-import LibrarianLoginTester from '@/components/debug/LibrarianLoginTester';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { useAutoRefresh } from '@/stores/globalDataStore';
 import DebugUploads from '@/debug-uploads';
-
-// Layout component that includes ScrollToTop and global data management
+// Layout component that includes ScrollToTop
 function Layout() {
-  // Initialize centralized data management
-  useAutoRefresh();
-  
   return (
     <>
       <ScrollToTop />
@@ -90,14 +83,6 @@ const router = createBrowserRouter([
       {
         path: "debug-uploads",
         element: <DebugUploads />,
-      },
-      {
-        path: "error-checker",
-        element: <ErrorChecker />,
-      },
-      {
-        path: "login-tester",
-        element: <LibrarianLoginTester />,
       },
       {
         path: "*",

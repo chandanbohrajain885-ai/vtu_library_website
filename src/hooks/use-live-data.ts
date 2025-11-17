@@ -41,7 +41,7 @@ class DataUpdateEmitter {
 // Global instance
 export const dataUpdateEmitter = new DataUpdateEmitter();
 
-// Hook for live data updates with enhanced performance
+// Hook for live data updates
 export function useLiveData<T extends WixDataItem>(
   collectionId: string,
   references?: string[],
@@ -54,39 +54,10 @@ export function useLiveData<T extends WixDataItem>(
   
   const pollIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(true);
-  const cacheRef = useRef<{ data: T[], timestamp: number } | null>(null);
 
-  // Enhanced fetch data function with improved caching and performance optimizations
-  const fetchData = useCallback(async (showLoading = false, useCache = false) => {
+  // Fetch data function
+  const fetchData = useCallback(async (showLoading = false) => {
     try {
-      // Improved cache logic for all collections with longer cache times
-      if (useCache && cacheRef.current) {
-        const cacheAge = Date.now() - cacheRef.current.timestamp;
-        let cacheThreshold = 10000; // 10 seconds default (increased from 5s)
-        
-        // Different cache thresholds for different collections - increased for better performance
-        if (collectionId === 'newsandnotifications') {
-          cacheThreshold = 30000; // 30 seconds for news (increased from 10s)
-        } else if (collectionId === 'E-Resources') {
-          cacheThreshold = 60000; // 60 seconds for resources (increased from 30s)
-        } else if (collectionId === 'userguidearticles') {
-          cacheThreshold = 120000; // 2 minutes for guides (increased from 60s)
-        } else if (collectionId === 'librarianfileuploads') {
-          cacheThreshold = 20000; // 20 seconds for uploads
-        } else if (collectionId === 'passwordchangerequests') {
-          cacheThreshold = 45000; // 45 seconds for password requests
-        }
-        
-        if (cacheAge < cacheThreshold) {
-          if (mountedRef.current) {
-            setData(cacheRef.current.data);
-            setIsLoading(false);
-            setLastUpdated(new Date(cacheRef.current.timestamp));
-          }
-          return;
-        }
-      }
-
       if (showLoading) setIsLoading(true);
       setError(null);
 
@@ -94,52 +65,44 @@ export function useLiveData<T extends WixDataItem>(
         ? await BaseCrudService.getAll<T>(collectionId, references)
         : await BaseCrudService.getAll<T>(collectionId);
 
-      // Cache the result for all collections
-      cacheRef.current = {
-        data: response.items,
-        timestamp: Date.now()
-      };
-
       if (mountedRef.current) {
         setData(response.items);
         setLastUpdated(new Date());
         setIsLoading(false);
       }
     } catch (err) {
-      // Reduced console logging for better performance
+      console.error(`Error fetching ${collectionId}:`, err);
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to fetch data');
         setIsLoading(false);
-        // Don't clear data on error, keep the last successful fetch
       }
     }
   }, [collectionId, references]);
 
-  // Enhanced refresh function
+  // Refresh function for manual updates
   const refresh = useCallback(() => {
-    fetchData(false, false); // Don't use cache on manual refresh
+    fetchData(false);
   }, [fetchData]);
 
   // Force refresh with loading state
   const forceRefresh = useCallback(() => {
-    fetchData(true, false); // Don't use cache on force refresh
+    fetchData(true);
   }, [fetchData]);
 
   useEffect(() => {
     mountedRef.current = true;
     
-    // Initial fetch with cache check for better performance
-    fetchData(true, true);
+    // Initial fetch
+    fetchData(true);
 
     // Subscribe to data update events
     const unsubscribe = dataUpdateEmitter.subscribe(collectionId, refresh);
 
-    // Set up optimized polling based on collection type with longer intervals
+    // Set up polling
     if (pollInterval > 0) {
       pollIntervalRef.current = setInterval(() => {
-        // Use cache for background polling to reduce server load and improve performance
-        fetchData(false, true); // Always use cache for background polling
-      }, Math.max(pollInterval, 15000)); // Minimum 15 seconds for any polling to reduce server load
+        fetchData(false);
+      }, pollInterval);
     }
 
     // Cleanup

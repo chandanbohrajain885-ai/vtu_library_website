@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGlobalDataStore } from '@/stores/globalDataStore';
-import { LibrarianFileUploads } from '@/entities';
 import { BaseCrudService } from '@/integrations';
+import { EResources, NewsandEvents, UserGuideArticles, LibrarianFileUploads } from '@/entities';
+import { useLiveData } from '@/hooks/use-live-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,34 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Image } from '@/components/ui/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { ErrorBoundary } from '@/components/ui/error-boundary';
-
-// Optimized icon imports - only import what we need
-import BookOpen from 'lucide-react/dist/esm/icons/book-open';
-import Download from 'lucide-react/dist/esm/icons/download';
-import Users from 'lucide-react/dist/esm/icons/users';
-import Search from 'lucide-react/dist/esm/icons/search';
-import Calendar from 'lucide-react/dist/esm/icons/calendar';
-import User from 'lucide-react/dist/esm/icons/user';
-import Phone from 'lucide-react/dist/esm/icons/phone';
-import Mail from 'lucide-react/dist/esm/icons/mail';
-import MapPin from 'lucide-react/dist/esm/icons/map-pin';
-import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
-import LogOut from 'lucide-react/dist/esm/icons/log-out';
-import ExternalLink from 'lucide-react/dist/esm/icons/external-link';
-import FileText from 'lucide-react/dist/esm/icons/file-text';
-import Globe from 'lucide-react/dist/esm/icons/globe';
-import Database from 'lucide-react/dist/esm/icons/database';
-import Plus from 'lucide-react/dist/esm/icons/plus';
-import Edit from 'lucide-react/dist/esm/icons/edit';
-import Menu from 'lucide-react/dist/esm/icons/menu';
-import ImageIcon from 'lucide-react/dist/esm/icons/image';
-import Upload from 'lucide-react/dist/esm/icons/upload';
-import CreditCard from 'lucide-react/dist/esm/icons/credit-card';
-import CheckCircle from 'lucide-react/dist/esm/icons/check-circle';
-import Eye from 'lucide-react/dist/esm/icons/eye';
-import MessageCircle from 'lucide-react/dist/esm/icons/message-circle';
-
+import { BookOpen, Download, Users, Search, Calendar, User, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram, ChevronDown, LogOut, ExternalLink, FileText, Globe, Database, Plus, Edit, Trash2, Menu, X, ImageIcon, Upload, CreditCard, Shield, CheckCircle, Eye, Clock, AlertCircle, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { SuperExecutiveModal } from '@/components/auth/SuperExecutiveModal';
@@ -68,22 +41,32 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   
-  // Use centralized data store instead of individual hooks
+  // Use live data hooks for real-time updates
   const { 
-    eResources: featuredResources, 
-    news: latestNews, 
-    userGuides,
-    isLoading 
-  } = useGlobalDataStore();
+    data: featuredResources, 
+    isLoading: resourcesLoading 
+  } = useLiveData<EResources>('E-Resources');
   
-  // File upload states - reduced state management
+  const { 
+    data: latestNews, 
+    isLoading: newsLoading 
+  } = useLiveData<NewsandEvents>('newsandnotifications');
+  
+  const { 
+    data: userGuides, 
+    isLoading: guidesLoading 
+  } = useLiveData<UserGuideArticles>('userguidearticles');
+  
+  const isLoading = resourcesLoading || newsLoading || guidesLoading;
+  
+  // File upload states
   const [uploads, setUploads] = useState<LibrarianFileUploads[]>([]);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
   const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
   const [selectedViewType, setSelectedViewType] = useState<string>('');
   
-  // Optimized search functionality with better performance
+  // Search functionality
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -147,8 +130,8 @@ export default function HomePage() {
     { id: 'search-help', title: 'Search Help', content: 'How to search for resources, advanced search tips, search filters, finding specific content', type: 'Site Content', category: 'Help' },
   ];
 
-  // Optimized search function with improved performance and caching
-  const performSearch = useCallback((query: string) => {
+  // Search function
+  const performSearch = (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
       setShowSearchResults(false);
@@ -162,99 +145,105 @@ export default function HomePage() {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Optimized debounce for faster search response
+    // Debounce search
     searchTimeoutRef.current = setTimeout(() => {
-      try {
+      const results = searchData.filter(item => {
         const searchTerm = query.toLowerCase();
-        const results = searchData.filter(item => {
-          return (
-            item.title.toLowerCase().includes(searchTerm) ||
-            item.content.toLowerCase().includes(searchTerm) ||
-            item.type.toLowerCase().includes(searchTerm) ||
-            item.year?.toLowerCase().includes(searchTerm) ||
-            item.provider?.toLowerCase().includes(searchTerm) ||
-            item.subject?.toLowerCase().includes(searchTerm) ||
-            item.category?.toLowerCase().includes(searchTerm)
-          );
-        });
+        return (
+          item.title.toLowerCase().includes(searchTerm) ||
+          item.content.toLowerCase().includes(searchTerm) ||
+          item.type.toLowerCase().includes(searchTerm) ||
+          item.year?.toLowerCase().includes(searchTerm) ||
+          item.provider?.toLowerCase().includes(searchTerm) ||
+          item.subject?.toLowerCase().includes(searchTerm) ||
+          item.category?.toLowerCase().includes(searchTerm)
+        );
+      });
 
-        // Optimized dynamic search with error handling
-        const dynamicResults: SearchResult[] = [];
-        
-        // Search in E-Resources with error boundary
-        if (featuredResources?.length > 0) {
-          featuredResources.slice(0, 2).forEach(resource => {
-            if (resource.title?.toLowerCase().includes(searchTerm)) {
-              dynamicResults.push({
-                id: `dynamic-resource-${resource._id}`,
-                title: `E-Resources ${resource.title}`,
-                content: resource.eJournals || resource.eBooks || 'E-Resource content',
-                type: 'E-Resources',
-                url: `/resources/${resource.title}`,
-                year: resource.title
-              });
-            }
+      // Add dynamic results from CMS data
+      const dynamicResults: SearchResult[] = [];
+      
+      // Search in E-Resources
+      featuredResources.forEach(resource => {
+        if (resource.title?.toLowerCase().includes(query.toLowerCase()) ||
+            resource.eJournals?.toLowerCase().includes(query.toLowerCase()) ||
+            resource.eBooks?.toLowerCase().includes(query.toLowerCase()) ||
+            resource.plagiarismDetectionSoftware?.toLowerCase().includes(query.toLowerCase())) {
+          dynamicResults.push({
+            id: `dynamic-resource-${resource._id}`,
+            title: `E-Resources ${resource.title}`,
+            content: resource.eJournals || resource.eBooks || 'E-Resource content',
+            type: 'E-Resources',
+            url: `/resources/${resource.title}`,
+            year: resource.title
           });
         }
+      });
 
-        // Search in News with error boundary
-        if (latestNews?.length > 0) {
-          latestNews.slice(0, 2).forEach(news => {
-            if (news.title?.toLowerCase().includes(searchTerm)) {
-              dynamicResults.push({
-                id: `dynamic-news-${news._id}`,
-                title: news.title || 'News Item',
-                content: news.content || 'News content',
-                type: 'News & Events',
-                url: news.externalLink || '/news'
-              });
-            }
+      // Search in News & Events
+      latestNews.forEach(news => {
+        if (news.title?.toLowerCase().includes(query.toLowerCase()) ||
+            news.content?.toLowerCase().includes(query.toLowerCase()) ||
+            news.author?.toLowerCase().includes(query.toLowerCase())) {
+          dynamicResults.push({
+            id: `dynamic-news-${news._id}`,
+            title: news.title || 'News Item',
+            content: news.content || 'News content',
+            type: 'News & Events',
+            url: news.externalLink || '/news'
           });
         }
+      });
 
-        const allResults = [...results, ...dynamicResults];
-        setSearchResults(allResults.slice(0, 5)); // Reduced to 5 results for better performance
-        setShowSearchResults(true);
-      } catch (error) {
-        console.warn('Search error:', error);
-        setSearchResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 200); // Optimized debounce timing
-  }, [featuredResources, latestNews, searchData]);
+      // Search in User Guides
+      userGuides.forEach(guide => {
+        if (guide.title?.toLowerCase().includes(query.toLowerCase()) ||
+            guide.content?.toLowerCase().includes(query.toLowerCase()) ||
+            guide.category?.toLowerCase().includes(query.toLowerCase())) {
+          dynamicResults.push({
+            id: `dynamic-guide-${guide._id}`,
+            title: guide.title || 'User Guide',
+            content: guide.content || 'Guide content',
+            type: 'User Guide',
+            url: `/guide#${guide.slug}`,
+            category: guide.category
+          });
+        }
+      });
 
-  // Handle search input change with error boundary
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+      const allResults = [...results, ...dynamicResults];
+      setSearchResults(allResults.slice(0, 10)); // Limit to 10 results
+      setShowSearchResults(true);
+      setIsSearching(false);
+    }, 300);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
     performSearch(query);
-  }, [performSearch]);
+  };
 
-  // Handle search result click with error handling
-  const handleSearchResultClick = useCallback((result: SearchResult) => {
-    try {
-      if (result.url) {
-        if (result.url.startsWith('http')) {
-          window.open(result.url, '_blank');
-        } else {
-          navigate(result.url);
-        }
+  // Handle search result click
+  const handleSearchResultClick = (result: SearchResult) => {
+    if (result.url) {
+      if (result.url.startsWith('http')) {
+        window.open(result.url, '_blank');
+      } else {
+        navigate(result.url);
       }
-      setShowSearchResults(false);
-      setSearchQuery('');
-    } catch (error) {
-      console.warn('Navigation error:', error);
     }
-  }, [navigate]);
+    setShowSearchResults(false);
+    setSearchQuery('');
+  };
 
-  // Handle search submit with error handling
-  const handleSearchSubmit = useCallback(() => {
+  // Handle search submit
+  const handleSearchSubmit = () => {
     if (searchResults.length > 0) {
       handleSearchResultClick(searchResults[0]);
     }
-  }, [searchResults, handleSearchResultClick]);
-
+  };
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLibrarianCornerLogin, setIsLibrarianCornerLogin] = useState(false);
   const [isSuperExecutiveModalOpen, setIsSuperExecutiveModalOpen] = useState(false);
@@ -267,7 +256,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const newsScrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Optimized fetch user's uploads with better error handling
+  // Fetch user's uploads if librarian
   useEffect(() => {
     const fetchUploads = async () => {
       if (user?.role === 'librarian' && user?.collegeName) {
@@ -276,16 +265,13 @@ export default function HomePage() {
           const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
           setUploads(filteredUploads);
         } catch (error) {
-          // Silently handle errors to avoid console spam
+          console.error('Error fetching uploads:', error);
         }
       }
     };
 
-    // Only fetch if user is a librarian and we don't already have uploads
-    if (user?.role === 'librarian' && uploads.length === 0) {
-      fetchUploads();
-    }
-  }, [user?.role, user?.collegeName, uploads.length]); // More specific dependencies
+    fetchUploads();
+  }, [user]);
 
   // Upload handlers
   const handleUploadClick = (uploadType: string) => {
@@ -299,16 +285,14 @@ export default function HomePage() {
   };
 
   const handleUploadSuccess = () => {
-    // Refresh uploads data with better error handling
+    // Refresh uploads data
     if (user?.role === 'librarian' && user?.collegeName) {
       BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
         .then(({ items }) => {
           const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
           setUploads(filteredUploads);
         })
-        .catch(() => {
-          // Silently handle errors to avoid console spam
-        });
+        .catch(console.error);
     }
   };
 
@@ -380,209 +364,72 @@ export default function HomePage() {
     navigate('/publisher');
   };
 
-  // Optimized infinite scroll effect with proper memory management
+  // Continuous infinite scroll effect for news cards - seamless endless loop
   useEffect(() => {
     const scrollContainer = newsScrollContainerRef.current;
-    if (!scrollContainer || !latestNews?.length) return;
+    if (!scrollContainer || latestNews.length === 0) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.3; // Optimized scroll speed
-    let animationId: number | null = null;
+    const scrollSpeed = 1; // Consistent scrolling speed
+    let animationId: number;
     let isPaused = false;
-    let isInitialized = false;
-    let cardWidth = 0;
-    let totalWidth = 0;
-    let initTimeout: NodeJS.Timeout | null = null;
-    let retryTimeout: NodeJS.Timeout | null = null;
-    let resizeTimeout: NodeJS.Timeout | null = null;
     
-    // Initialize dimensions with proper error handling
-    const initializeDimensions = () => {
-      try {
-        const cards = scrollContainer.querySelectorAll('.news-card');
-        if (cards.length > 0) {
-          const firstCard = cards[0] as HTMLElement;
-          const cardRect = firstCard.getBoundingClientRect();
-          cardWidth = cardRect.width + 24; // Include gap
-          totalWidth = cardWidth * latestNews.length;
-          isInitialized = true;
-          return true;
-        }
-      } catch (error) {
-        console.warn('Failed to initialize news scroll dimensions:', error);
-      }
-      return false;
-    };
-
-    // Optimized animation loop with proper cleanup checks
-    const animate = () => {
-      if (!isPaused && scrollContainer && isInitialized && animationId !== null) {
+    const scroll = () => {
+      if (!isPaused) {
         scrollPosition += scrollSpeed;
         
-        // Reset position for infinite loop
-        if (scrollPosition >= totalWidth) {
-          scrollPosition = 0;
+        // Get current measurements
+        const scrollWidth = scrollContainer.scrollWidth;
+        const clientWidth = scrollContainer.clientWidth;
+        
+        // Calculate the width of one set of content (original, not duplicated)
+        const singleSetWidth = scrollWidth / 2;
+        
+        // When we've scrolled past one complete set, seamlessly reset to beginning
+        // This creates the illusion of infinite scrolling
+        if (scrollPosition >= singleSetWidth) {
+          scrollPosition = scrollPosition - singleSetWidth;
         }
         
-        // Apply transform with performance optimization
-        scrollContainer.style.transform = `translate3d(-${scrollPosition}px, 0, 0)`;
+        scrollContainer.scrollLeft = scrollPosition;
       }
       
-      if (animationId !== null) {
-        animationId = requestAnimationFrame(animate);
-      }
+      animationId = requestAnimationFrame(scroll);
     };
 
-    // Start animation with proper initialization and cleanup
-    const startAnimation = () => {
-      initTimeout = setTimeout(() => {
-        if (initializeDimensions()) {
-          animationId = requestAnimationFrame(animate);
-        } else {
-          // Retry initialization with limit
-          retryTimeout = setTimeout(startAnimation, 100);
-        }
-      }, 300); // Reduced initial delay
+    // Start the continuous animation
+    animationId = requestAnimationFrame(scroll);
+
+    // Pause scrolling on hover for better user experience
+    const handleMouseEnter = () => {
+      isPaused = true;
     };
-
-    startAnimation();
-
-    // Event handlers with proper cleanup
-    const handleMouseEnter = () => { isPaused = true; };
-    const handleMouseLeave = () => { isPaused = false; };
+    
+    const handleMouseLeave = () => {
+      isPaused = false;
+    };
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
     scrollContainer.addEventListener('mouseleave', handleMouseLeave);
 
-    // Optimized resize handler
-    const handleResize = () => {
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        isInitialized = false;
-        scrollPosition = 0;
-        if (scrollContainer) {
-          scrollContainer.style.transform = 'translate3d(0, 0, 0)';
-        }
-        initializeDimensions();
-      }, 150);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Comprehensive cleanup function
     return () => {
-      // Clear all timeouts
-      if (initTimeout) clearTimeout(initTimeout);
-      if (retryTimeout) clearTimeout(retryTimeout);
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      
-      // Cancel animation frame
-      if (animationId !== null) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
-      
-      // Remove event listeners
-      try {
-        if (scrollContainer) {
-          scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-          scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
-          scrollContainer.style.transform = 'translate3d(0, 0, 0)';
-        }
-        window.removeEventListener('resize', handleResize);
-      } catch (error) {
-        console.warn('Cleanup error:', error);
-      }
+      cancelAnimationFrame(animationId);
+      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [latestNews]); // Dependency on latestNews only
+  }, [latestNews]);
 
-  // Cleanup search timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const [isInitialLoading, setIsInitialLoading] = useState(false);
-
-  if (isInitialLoading) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col items-center justify-center px-4">
-        <div className="text-center space-y-12 max-w-4xl mx-auto">
-          {/* Large VTU Logo - Centered and Prominent */}
-          <div className="flex justify-center">
-            <div className="relative">
-              <Image
-                src="https://static.wixstatic.com/media/e79745_90377b562fa24369a4eab8af2db85db8~mv2.jpeg"
-                alt="VTU Logo"
-                width={400}
-                className="mx-auto h-auto max-w-[280px] sm:max-w-[350px] lg:max-w-[400px] w-full object-contain drop-shadow-lg"
-              />
-              {/* Subtle glow effect behind logo */}
-              <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl scale-110 -z-10"></div>
-            </div>
-          </div>
-          
-          {/* Professional Welcome Text */}
-          <div className="space-y-6">
-            <h1 className="text-primary font-heading text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-wide">
-              Welcome to VTU Consortium
-            </h1>
-            <p className="text-gray-600 font-paragraph text-lg sm:text-xl lg:text-2xl font-medium max-w-3xl mx-auto leading-relaxed">
-              Visvesvaraya Technological University Library Consortium
-            </p>
-          </div>
-          
-          {/* Elegant Loading Indicator */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-center space-x-4">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary/20 border-t-primary"></div>
-                <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse"></div>
-              </div>
-              <div className="text-gray-700 font-paragraph text-base sm:text-lg font-medium">
-                Loading Resources...
-              </div>
-            </div>
-            
-            {/* Loading Progress Dots */}
-            <div className="flex justify-center space-x-2">
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-secondary rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        </div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-800 font-heading text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <ErrorBoundary>
-      <div className="min-h-screen bg-white">
-        {/* Loading state with skeleton */}
-        {isLoading && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-              <div className="text-center">
-                <div className="loading-skeleton w-16 h-16 rounded-full mx-auto mb-4"></div>
-                <h3 className="text-lg font-semibold mb-2">Loading VTU Consortium</h3>
-                <p className="text-gray-600">Please wait while we load the latest content...</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Rest of the component content */}
-        {/* Top Header Bar */}
+    <div className="min-h-screen bg-white">
+      {/* Top Header Bar */}
       <div className="bg-black text-white py-2">
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-4 text-sm">
@@ -668,17 +515,15 @@ export default function HomePage() {
                         {t('nav.home')}
                       </Link>
                       
-                      <Link 
-                        to="/about"
-                        className="block px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
-                        onClick={(e) => {
-                          e.preventDefault();
+                      <button 
+                        onClick={() => {
                           navigate('/about');
                           setIsMobileMenuOpen(false);
-                        }}
+                        }} 
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
                       >
                         {t('nav.about')}
-                      </Link>
+                      </button>
                       
                       <button 
                         onClick={() => {
@@ -1189,16 +1034,9 @@ export default function HomePage() {
             {/* Desktop Navigation - All Navigation Options in Single Line */}
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center flex-wrap">
               <Link to="/" className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap">{t('nav.home')}</Link>
-              <Link 
-                to="/about"
-                className="hover:text-orange-200 transition-colors font-semibold text-sm xl:text-base whitespace-nowrap"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/about');
-                }}
-              >
+              <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">
                 {t('nav.about')}
-              </Link>
+              </button>
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap"
@@ -1917,181 +1755,155 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Optimized News Scrolling Container */}
+            {/* Continuous Infinite Scrolling News Cards - Right to Left */}
             <div 
               ref={newsScrollContainerRef}
-              className="news-container flex gap-6 relative"
+              className="flex gap-4 sm:gap-6 overflow-x-hidden relative"
               style={{ 
-                overflow: 'hidden',
-                maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
-                width: '100%',
-                minHeight: '300px'
+                scrollBehavior: 'auto',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
               }}
             >
-              {/* Show optimized loading indicator with faster feedback */}
-              {isLoading && latestNews.length === 0 ? (
-                <div className="flex items-center justify-center w-full py-8">
-                  <div className="text-center space-y-3">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                    <p className="text-gray-600 text-sm font-medium">Loading latest news...</p>
-                    <div className="flex justify-center space-x-1">
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              {/* Original news cards */}
+              {latestNews.map((news, index) => (
+                <Card key={news._id || index} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                          {new Date(news.publicationDate || Date.now()).getDate()}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="font-medium">
+                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                          </div>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                        Coming Soon
+                      </Badge>
                     </div>
-                  </div>
-                </div>
-              ) : latestNews.length === 0 ? (
-                <div className="flex items-center justify-center w-full py-8">
-                  <div className="text-center space-y-3">
-                    <Calendar className="h-10 w-10 text-gray-400 mx-auto" />
-                    <p className="text-gray-600 text-sm">No news available</p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* Original news cards */}
-                  {latestNews.map((news, index) => (
-                    <Card key={news._id || index} className="news-card hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-base">
-                              {new Date(news.publicationDate || Date.now()).getDate()}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              <div className="font-medium">
-                                {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                              </div>
-                            </div>
-                          </div>
-                          <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                            Coming Soon
-                          </Badge>
-                        </div>
-                        <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
-                          {news.title || 'News Title'}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-base">
-                          <span className="font-bold text-green-600">Venue: </span>
-                          <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                      {news.title || 'News Title'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                      <span className="font-bold text-green-600">Venue: </span>
+                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                        onClick={() => {
+                          if (news.externalLink) {
+                            window.open(news.externalLink, '_blank');
+                          } else {
+                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                          }
+                        }}
+                      >
+                        Read More
+                      </Button>
+                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                        {/* Edit Button - Only visible to superadmin */}
+                        {isAuthenticated && (user?.role === 'superadmin') && (
+                          <Button
                             onClick={() => {
-                              if (news.externalLink) {
-                                window.open(news.externalLink, '_blank');
-                              } else {
-                                window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                              }
+                              setEditingNewsId(news._id);
+                              setIsEditNewsModalOpen(true);
                             }}
+                            size="sm"
+                            variant="outline"
+                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
                           >
-                            Read More
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
                           </Button>
-                          <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                            {/* Edit Button - Only visible to superadmin */}
-                            {isAuthenticated && (user?.role === 'superadmin') && (
-                              <Button
-                                onClick={() => {
-                                  setEditingNewsId(news._id);
-                                  setIsEditNewsModalOpen(true);
-                                }}
-                                size="sm"
-                                variant="outline"
-                                className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                              >
-                                <Edit className="h-3 w-3 mr-1" />
-                                Edit
-                              </Button>
-                            )}
-                            {news.author && (
-                              <span className="text-xs text-gray-500">
-                                By {news.author}
-                              </span>
-                            )}
+                        )}
+                        {news.author && (
+                          <span className="text-xs text-gray-500">
+                            By {news.author}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* Duplicate cards for seamless infinite scrolling */}
+              {latestNews.map((news, index) => (
+                <Card key={`duplicate-${news._id || index}`} className="hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[300px] sm:min-w-[350px] lg:min-w-[380px] max-w-[300px] sm:max-w-[350px] lg:max-w-[380px] flex-shrink-0 bg-white shadow-md">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
+                          {new Date(news.publicationDate || Date.now()).getDate()}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="font-medium">
+                            {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                  
-                  {/* Duplicate cards for seamless infinite scrolling */}
-                  {latestNews.map((news, index) => (
-                    <Card key={`duplicate-${news._id || index}`} className="news-card hover:shadow-xl transition-all duration-300 border-l-4 border-primary min-w-[350px] max-w-[380px] flex-shrink-0 bg-white shadow-md">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-base">
-                              {new Date(news.publicationDate || Date.now()).getDate()}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              <div className="font-medium">
-                                {new Date(news.publicationDate || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                              </div>
-                            </div>
-                          </div>
-                          <Badge variant="secondary" className="bg-green-500 text-white text-xs">
-                            Coming Soon
-                          </Badge>
-                        </div>
-                        <CardTitle className="font-heading text-xl text-gray-800 leading-tight line-clamp-2">
-                          {news.title || 'News Title'}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-base">
-                          <span className="font-bold text-green-600">Venue: </span>
-                          <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                      </div>
+                      <Badge variant="secondary" className="bg-green-500 text-white text-xs">
+                        Coming Soon
+                      </Badge>
+                    </div>
+                    <CardTitle className="font-heading text-lg sm:text-xl text-gray-800 leading-tight line-clamp-2">
+                      {news.title || 'News Title'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-paragraph text-gray-600 mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                      <span className="font-bold text-green-600">Venue: </span>
+                      <span className="font-bold text-green-600">{news.venue || news.content || 'News content...'}</span>
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-primary border-primary hover:bg-primary hover:text-white transition-colors w-full sm:w-auto"
+                        onClick={() => {
+                          if (news.externalLink) {
+                            window.open(news.externalLink, '_blank');
+                          } else {
+                            window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
+                          }
+                        }}
+                      >
+                        Read More
+                      </Button>
+                      <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                        {/* Edit Button - Only visible to superadmin */}
+                        {isAuthenticated && (user?.role === 'superadmin') && (
+                          <Button
                             onClick={() => {
-                              if (news.externalLink) {
-                                window.open(news.externalLink, '_blank');
-                              } else {
-                                window.open('https://drive.google.com/file/d/1NFEkvgYhIjVJBWunQJaQfyTXhphOB0tv/view?usp=sharing', '_blank');
-                              }
+                              setEditingNewsId(news._id);
+                              setIsEditNewsModalOpen(true);
                             }}
+                            size="sm"
+                            variant="outline"
+                            className="border-orange-500 text-orange-600 hover:bg-orange-50"
                           >
-                            Read More
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
                           </Button>
-                          <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-                            {/* Edit Button - Only visible to superadmin */}
-                            {isAuthenticated && (user?.role === 'superadmin') && (
-                              <Button
-                                onClick={() => {
-                                  setEditingNewsId(news._id);
-                                  setIsEditNewsModalOpen(true);
-                                }}
-                                size="sm"
-                                variant="outline"
-                                className="border-orange-500 text-orange-600 hover:bg-orange-50"
-                              >
-                                <Edit className="h-3 w-3 mr-1" />
-                                Edit
-                              </Button>
-                            )}
-                            {news.author && (
-                              <span className="text-xs text-gray-500">
-                                By {news.author}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </>
-              )}
+                        )}
+                        {news.author && (
+                          <span className="text-xs text-gray-500">
+                            By {news.author}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -2202,8 +2014,163 @@ export default function HomePage() {
         collegeName={user?.collegeName || ''}
       />
 
+      {/* HeyGen Streaming Script */}
+      <script 
+        dangerouslySetInnerHTML={{
+          __html: `
+            // HeyGen Streaming Avatar Widget
+            (function() {
+              // Load HeyGen streaming script
+              const script = document.createElement('script');
+              script.src = 'https://resource.heygen.ai/streaming-avatar/latest/streaming-avatar.js';
+              script.onload = function() {
+                // Create widget container
+                const widgetContainer = document.createElement('div');
+                widgetContainer.id = 'heygen-widget';
+                widgetContainer.style.cssText = \`
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  width: 400px;
+                  height: 300px;
+                  background: white;
+                  border-radius: 12px;
+                  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+                  z-index: 1000;
+                  display: none;
+                  overflow: hidden;
+                \`;
+                
+                // Create floating button
+                const floatingBtn = document.createElement('button');
+                floatingBtn.innerHTML = '🎥';
+                floatingBtn.style.cssText = \`
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  width: 60px;
+                  height: 60px;
+                  border-radius: 50%;
+                  background: #f97316;
+                  color: white;
+                  border: none;
+                  font-size: 24px;
+                  cursor: pointer;
+                  z-index: 1001;
+                  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+                  transition: all 0.3s ease;
+                \`;
+                
+                floatingBtn.onmouseover = function() {
+                  this.style.transform = 'scale(1.1)';
+                };
+                floatingBtn.onmouseout = function() {
+                  this.style.transform = 'scale(1)';
+                };
+                
+                // Toggle widget
+                let isOpen = false;
+                floatingBtn.onclick = function() {
+                  isOpen = !isOpen;
+                  widgetContainer.style.display = isOpen ? 'block' : 'none';
+                  floatingBtn.style.display = isOpen ? 'none' : 'block';
+                  
+                  if (isOpen && window.StreamingAvatar) {
+                    initializeAvatar();
+                  }
+                };
+                
+                // Close button for widget
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '×';
+                closeBtn.style.cssText = \`
+                  position: absolute;
+                  top: 10px;
+                  right: 10px;
+                  width: 30px;
+                  height: 30px;
+                  border: none;
+                  background: rgba(0,0,0,0.1);
+                  border-radius: 50%;
+                  cursor: pointer;
+                  font-size: 18px;
+                  z-index: 1002;
+                \`;
+                
+                closeBtn.onclick = function() {
+                  widgetContainer.style.display = 'none';
+                  floatingBtn.style.display = 'block';
+                  isOpen = false;
+                };
+                
+                widgetContainer.appendChild(closeBtn);
+                document.body.appendChild(widgetContainer);
+                document.body.appendChild(floatingBtn);
+                
+                // Initialize avatar function
+                function initializeAvatar() {
+                  try {
+                    const avatarContainer = document.createElement('div');
+                    avatarContainer.style.cssText = 'width: 100%; height: 100%;';
+                    widgetContainer.appendChild(avatarContainer);
+                    
+                    // Initialize HeyGen StreamingAvatar
+                    const avatar = new window.StreamingAvatar({
+                      token: 'your-api-token-here', // Replace with actual token
+                      avatarId: 'your-avatar-id-here', // Replace with actual avatar ID
+                      container: avatarContainer,
+                      width: 400,
+                      height: 300,
+                      quality: 'high'
+                    });
+                    
+                    avatar.createStartAvatar().then(() => {
+                      console.log('HeyGen avatar initialized successfully');
+                      avatar.speak({
+                        text: "Hello! I'm your AI library assistant. How can I help you today?",
+                        taskType: 'talk'
+                      });
+                    }).catch(error => {
+                      console.error('Failed to initialize avatar:', error);
+                      avatarContainer.innerHTML = '<div style="padding: 20px; text-align: center;">Unable to load avatar. Please check your configuration.</div>';
+                    });
+                  } catch (error) {
+                    console.error('Avatar initialization error:', error);
+                  }
+                }
+              };
+              
+              script.onerror = function() {
+                console.error('Failed to load HeyGen streaming script');
+              };
+              
+              document.head.appendChild(script);
+            })();
+          `
+        }}
+      />
 
+      {/* AI Assistant Floating Button */}
+      <div 
+        className="fixed bottom-6 right-6 z-50"
+        style={{ zIndex: 9999 }}
+      >
+        <Button
+          onClick={() => window.open('https://labs.heygen.com/interactive-avatar/share?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJBbGVzc2FuZHJhX0JsYWNrX1N1aXRfcHVi%0D%0AbGljIiwicHJldmlld0ltZyI6Imh0dHBzOi8vZmlsZXMyLmhleWdlbi5haS9hdmF0YXIvdjMvZWYz%0D%0AODkzY2YwYmY4NDQxMTg1MWQxZjM2MGEzNjQ2MmVfNTUzMTAvcHJldmlld190YXJnZXQud2VicCIs%0D%0AIm5lZWRSZW1vdmVCYWNrZ3JvdW5kIjp0cnVlLCJrbm93bGVkZ2VCYXNlSWQiOiJjYjAyMTUwMmVk%0D%0AMDY0ZGFhOTk5NDQ5ODE4OWVmODIzNyIsInVzZXJuYW1lIjoiOTNiYjQ4NmQ5NWYyNDE1NmFmZTlj%0D%0AZDA4YWVjZjhlYWQifQ%3D%3D', '_blank')}
+          className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group relative"
+        >
+          <MessageCircle className="h-8 w-8 text-white" />
+          
+          {/* Tooltip */}
+          <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            Need AI assistant or chatbot?
+            <div className="absolute left-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
+          </div>
+          
+          {/* Pulse animation */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 animate-ping opacity-20"></div>
+        </Button>
       </div>
-    </ErrorBoundary>
+    </div>
   );
 }
