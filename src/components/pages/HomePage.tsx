@@ -28,7 +28,7 @@ interface SearchResult {
   id: string;
   title: string;
   content: string;
-  type: 'E-Resources' | 'News & Events' | 'User Guide' | 'Committee' | 'Downloads' | 'Training' | 'Gallery' | 'ONOS' | 'Member Colleges' | 'Publisher' | 'Site Content';
+  type: 'E-Resources' | 'News & Events' | 'User Guide' | 'Committee' | 'Downloads' | 'Training' | 'Gallery' | 'ONOS' | 'Publisher' | 'Site Content';
   url?: string;
   year?: string;
   provider?: string;
@@ -111,9 +111,8 @@ export default function HomePage() {
     { id: 'training-programs', title: 'Training Programs', content: 'VTU Consortium e-resources training sessions, workshops, capacity building, librarian training, faculty development', type: 'Training', url: 'https://drive.google.com/drive/folders/128yGjX462SkXrmUDWrgEto8Q-9HdAtQ_?usp=sharing' },
     { id: 'gallery', title: 'Gallery & Events', content: 'Photos and media from consortium events, training sessions, workshops, conferences, meetings', type: 'Gallery', url: 'https://drive.google.com/drive/folders/13FHHx80oP0MiLChO1ms5E-PoBKl5CKjS?usp=sharing' },
     
-    // ONOS and Member Colleges (Enhanced)
+    // ONOS (Enhanced)
     { id: 'onos', title: 'ONOS - Online National Open Source', content: 'Online National Open Source platform, government initiative, open source resources, digital India', type: 'ONOS', url: 'https://www.onos.gov.in/' },
-    { id: 'member-colleges', title: 'Member Colleges & Institutions', content: 'List of VTU Consortium member institutions, affiliated colleges, participating universities, consortium members', type: 'Member Colleges', url: 'https://docs.google.com/spreadsheets/d/16M-0Q4yAtAw_vU_Nxb-3aIQv_UHkdAwJ/edit?usp=sharing&ouid=107772366690337000857&rtpof=true&sd=true' },
     
     // User Guide and Site Content (Enhanced)
     { id: 'user-guide', title: 'User Guide & Help', content: 'How to access and use consortium resources, step-by-step guides, tutorials, help documentation', type: 'User Guide', url: '/guide' },
