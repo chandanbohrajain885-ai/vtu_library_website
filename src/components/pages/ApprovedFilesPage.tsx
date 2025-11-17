@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
-import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye, Trash2 } from 'lucide-react';
+import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye, Trash2, RefreshCw } from 'lucide-react';
+import { useLiveData, dataUpdateEmitter } from '@/hooks/use-live-data';
 
 export default function ApprovedFilesPage() {
   const { uploadType } = useParams<{ uploadType: string }>();
@@ -24,6 +25,13 @@ export default function ApprovedFilesPage() {
   const targetCollege = collegeFromUrl || user?.collegeName;
   const isViewingOtherCollege = user?.role === 'superadmin' && collegeFromUrl;
 
+  // Use live data for real-time updates
+  const { 
+    data: liveUploads, 
+    refresh: refreshFiles,
+    isLoading: filesLoading 
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
+
   useEffect(() => {
     if (!isAuthorized) {
       navigate('/');
@@ -34,51 +42,45 @@ export default function ApprovedFilesPage() {
       navigate('/librarian');
       return;
     }
-
-    fetchApprovedFiles();
   }, [isAuthorized, uploadType, targetCollege, navigate]);
 
+  // Update files when live data changes
+  useEffect(() => {
+    if (!uploadType || !targetCollege || !liveUploads) return;
+
+    console.log('ApprovedFilesPage - Live data update for:', {
+      uploadType: decodeURIComponent(uploadType),
+      collegeName: targetCollege,
+      userRole: user?.role,
+      isViewingOtherCollege,
+      totalFiles: liveUploads.length
+    });
+
+    // Filter for approved files of the specific type and college
+    const approvedFiles = liveUploads.filter(
+      file => 
+        file.uploadType === decodeURIComponent(uploadType) && 
+        file.collegeName === targetCollege &&
+        file.approvalStatus === 'Approved'
+    );
+
+    console.log('ApprovedFilesPage - Filtered approved files:', approvedFiles.length);
+
+    // Sort by approval date (newest first)
+    approvedFiles.sort((a, b) => {
+      const dateA = new Date(a.approvalDate || a._createdDate || 0);
+      const dateB = new Date(b.approvalDate || b._createdDate || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    setFiles(approvedFiles);
+    setLoading(false);
+  }, [liveUploads, uploadType, targetCollege, user?.role, isViewingOtherCollege]);
+
   const fetchApprovedFiles = async () => {
-    if (!uploadType || !targetCollege) return;
-
-    setLoading(true);
-    try {
-      console.log('ApprovedFilesPage - Fetching files for:', {
-        uploadType: decodeURIComponent(uploadType),
-        collegeName: targetCollege,
-        userRole: user?.role,
-        isViewingOtherCollege
-      });
-
-      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      
-      console.log('ApprovedFilesPage - All files:', items.length);
-      console.log('ApprovedFilesPage - Sample files:', items.slice(0, 3));
-
-      // Filter for approved files of the specific type and college
-      const approvedFiles = items.filter(
-        file => 
-          file.uploadType === decodeURIComponent(uploadType) && 
-          file.collegeName === targetCollege &&
-          file.approvalStatus === 'Approved'
-      );
-
-      console.log('ApprovedFilesPage - Filtered approved files:', approvedFiles.length);
-      console.log('ApprovedFilesPage - Approved files:', approvedFiles);
-
-      // Sort by approval date (newest first)
-      approvedFiles.sort((a, b) => {
-        const dateA = new Date(a.approvalDate || a._createdDate || 0);
-        const dateB = new Date(b.approvalDate || b._createdDate || 0);
-        return dateB.getTime() - dateA.getTime();
-      });
-
-      setFiles(approvedFiles);
-    } catch (error) {
-      console.error('Error fetching approved files:', error);
-    } finally {
-      setLoading(false);
-    }
+    // This function is kept for backward compatibility but is no longer used
+    // Files are now updated automatically via live data
+    console.log('fetchApprovedFiles called - using live data instead');
   };
 
   const formatDate = (date: Date | string | undefined) => {
@@ -111,8 +113,8 @@ export default function ApprovedFilesPage() {
 
     try {
       await BaseCrudService.delete('librarianfileuploads', fileId);
-      // Refresh the files list
-      await fetchApprovedFiles();
+      // Trigger live data update to notify all components
+      dataUpdateEmitter.emit('librarianfileuploads');
       console.log('File deleted successfully');
     } catch (error) {
       console.error('Error deleting file:', error);
@@ -124,7 +126,7 @@ export default function ApprovedFilesPage() {
     return null;
   }
 
-  if (loading) {
+  if (loading || filesLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-gray-800 font-heading text-xl">Loading approved files...</div>
@@ -243,10 +245,12 @@ export default function ApprovedFilesPage() {
                   </p>
                 </div>
                 <Button
-                  onClick={fetchApprovedFiles}
+                  onClick={refreshFiles}
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white"
+                  disabled={filesLoading}
                 >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${filesLoading ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
               </div>

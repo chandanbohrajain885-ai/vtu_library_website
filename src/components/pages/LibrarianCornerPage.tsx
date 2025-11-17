@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle, Eye, Building, Search } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, BookOpen, FileText, Users, Calendar, Download, Database, User, LogOut, Upload, CreditCard, Shield, CheckCircle, Eye, Building, Search, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
 import { BaseCrudService } from '@/integrations';
 import { EResources, UserGuideArticles, NewsandEvents, LibrarianFileUploads, LibrarianAccounts } from '@/entities';
 import FileUploadModal from '@/components/modals/FileUploadModal';
 import ViewFilesModal from '@/components/modals/ViewFilesModal';
+import { useLiveData } from '@/hooks/use-live-data';
 
 interface LibrarianResource {
   id: string;
@@ -39,6 +40,13 @@ export default function LibrarianCornerPage() {
   const [selectedUploadType, setSelectedUploadType] = useState<string>('');
   const [viewFilesModalOpen, setViewFilesModalOpen] = useState(false);
   const [selectedViewType, setSelectedViewType] = useState<string>('');
+
+  // Use live data for file uploads to get real-time updates when files are approved
+  const { 
+    data: liveUploads, 
+    refresh: refreshUploads,
+    isLoading: uploadsLoading 
+  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 10000); // Poll every 10 seconds
 
   // Check if user is authorized (librarian or superadmin)
   const isAuthorized = isAuthenticated && (user?.role === 'librarian' || user?.role === 'superadmin');
@@ -69,13 +77,6 @@ export default function LibrarianCornerPage() {
         if (user?.role === 'superadmin') {
           const { items: allColleges } = await BaseCrudService.getAll<LibrarianAccounts>('librarianaccounts');
           setColleges(allColleges);
-        } else if (user?.role === 'librarian' && user?.collegeName) {
-          // Fetch user's uploads if librarian
-          const { items: userUploads } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-          console.log('LibrarianCornerPage - All uploads from DB:', userUploads);
-          const filteredUploads = userUploads.filter(upload => upload.collegeName === user.collegeName);
-          console.log('LibrarianCornerPage - Filtered uploads for college:', user.collegeName, filteredUploads);
-          setUploads(filteredUploads);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -86,6 +87,24 @@ export default function LibrarianCornerPage() {
 
     fetchData();
   }, [isAuthorized, navigate, user]);
+
+  // Update uploads when live data changes
+  useEffect(() => {
+    if (user?.role === 'librarian' && user?.collegeName && liveUploads) {
+      const filteredUploads = liveUploads.filter(upload => upload.collegeName === user.collegeName);
+      console.log('LibrarianCornerPage - Live data update: Filtered uploads for college:', user.collegeName, filteredUploads);
+      setUploads(filteredUploads);
+    }
+  }, [liveUploads, user?.role, user?.collegeName]);
+
+  // Update college files when live data changes (for superadmin)
+  useEffect(() => {
+    if (user?.role === 'superadmin' && selectedCollege && liveUploads) {
+      const collegeSpecificFiles = liveUploads.filter(file => file.collegeName === selectedCollege.collegeName);
+      console.log('LibrarianCornerPage - Live data update: College files for', selectedCollege.collegeName, collegeSpecificFiles);
+      setCollegeFiles(collegeSpecificFiles);
+    }
+  }, [liveUploads, user?.role, selectedCollege]);
 
   if (!isAuthorized) {
     return null;
@@ -114,13 +133,7 @@ export default function LibrarianCornerPage() {
 
   const handleCollegeSelect = async (college: LibrarianAccounts) => {
     setSelectedCollege(college);
-    try {
-      const { items: allFiles } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
-      const collegeSpecificFiles = allFiles.filter(file => file.collegeName === college.collegeName);
-      setCollegeFiles(collegeSpecificFiles);
-    } catch (error) {
-      console.error('Error fetching college files:', error);
-    }
+    // College files will be updated automatically via the useEffect hook that watches liveUploads
   };
 
   const handleBackToColleges = () => {
@@ -182,17 +195,8 @@ export default function LibrarianCornerPage() {
   };
 
   const handleUploadSuccess = () => {
-    // Refresh uploads data
-    if (user?.role === 'librarian' && user?.collegeName) {
-      BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads')
-        .then(({ items }) => {
-          console.log('LibrarianCornerPage - Refresh: All uploads from DB:', items);
-          const filteredUploads = items.filter(upload => upload.collegeName === user.collegeName);
-          console.log('LibrarianCornerPage - Refresh: Filtered uploads for college:', user.collegeName, filteredUploads);
-          setUploads(filteredUploads);
-        })
-        .catch(console.error);
-    }
+    // Trigger a refresh of live data to get the latest uploads
+    refreshUploads();
   };
 
   const getUploadStatus = (uploadType: string) => {
@@ -849,8 +853,20 @@ export default function LibrarianCornerPage() {
             <div className="mb-12">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-heading text-2xl font-bold text-gray-900">File Management</h2>
-                <div className="text-sm text-gray-500">
-                  Click on any card to view approved files
+                <div className="flex items-center space-x-4">
+                  <Button
+                    onClick={refreshUploads}
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                    disabled={uploadsLoading}
+                  >
+                    <RefreshCw className={`h-4 w-4 mr-2 ${uploadsLoading ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
+                  <div className="text-sm text-gray-500">
+                    Click on any card to view approved files
+                  </div>
                 </div>
               </div>
               

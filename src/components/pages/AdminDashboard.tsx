@@ -13,7 +13,7 @@ import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircl
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
-import { useLiveData } from '@/hooks/use-live-data';
+import { useLiveData, dataUpdateEmitter } from '@/hooks/use-live-data';
 
 const availablePermissions = [
   'view_resources',
@@ -142,6 +142,9 @@ export default function AdminDashboard() {
         superAdminComments: approvalComments
       });
       
+      // Trigger live data update to notify all components
+      dataUpdateEmitter.emit('librarianfileuploads');
+      
       // Refresh pending uploads
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
       const pending = items.filter(upload => upload.approvalStatus === 'Pending');
@@ -164,6 +167,9 @@ export default function AdminDashboard() {
         approvalDate: new Date().toISOString(),
         superAdminComments: approvalComments
       });
+      
+      // Trigger live data update to notify all components
+      dataUpdateEmitter.emit('librarianfileuploads');
       
       // Refresh pending uploads
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
