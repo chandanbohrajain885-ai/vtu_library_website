@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
 import { useAuth } from '@/components/auth/AuthContext';
-import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye } from 'lucide-react';
+import { ArrowLeft, Download, Calendar, User, FileText, ExternalLink, CheckCircle, LogOut, Eye, Trash2 } from 'lucide-react';
 
 export default function ApprovedFilesPage() {
   const { uploadType } = useParams<{ uploadType: string }>();
@@ -101,6 +101,22 @@ export default function ApprovedFilesPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+  };
+
+  const handleDeleteFile = async (fileId: string) => {
+    if (!window.confirm('Are you sure you want to delete this approved file? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await BaseCrudService.delete('librarianfileuploads', fileId);
+      // Refresh the files list
+      await fetchApprovedFiles();
+      console.log('File deleted successfully');
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('Failed to delete file. Please try again.');
     }
   };
 
@@ -317,6 +333,17 @@ export default function ApprovedFilesPage() {
                                 <ExternalLink className="h-4 w-4 mr-2" />
                                 View File
                               </Button>
+                              {/* Delete button - only show for college librarians viewing their own files */}
+                              {!isViewingOtherCollege && user?.role === 'librarian' && (
+                                <Button
+                                  onClick={() => handleDeleteFile(file._id)}
+                                  variant="outline"
+                                  className="text-red-600 border-red-600 hover:bg-red-50"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete
+                                </Button>
+                              )}
                             </>
                           )}
                         </div>

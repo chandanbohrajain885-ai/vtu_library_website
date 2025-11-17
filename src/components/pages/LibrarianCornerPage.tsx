@@ -218,6 +218,18 @@ export default function LibrarianCornerPage() {
     }
   };
 
+  const getApprovedFiles = (uploadType: string) => {
+    if (user?.role === 'superadmin' && selectedCollege) {
+      return collegeFiles.filter(u => u.uploadType === uploadType && u.approvalStatus === 'Approved');
+    } else {
+      return uploads.filter(u => u.uploadType === uploadType && u.approvalStatus === 'Approved');
+    }
+  };
+
+  const getApprovedFilesCount = (uploadType: string) => {
+    return getApprovedFiles(uploadType).length;
+  };
+
   const getStatusBadge = (status: string | null) => {
     if (!status) return null;
     
@@ -882,6 +894,11 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Membership Status').length})
                         </Button>
                       )}
+                      {getApprovedFilesCount('Membership Status') > 0 && (
+                        <div className="text-xs text-green-600 font-medium text-center">
+                          {getApprovedFilesCount('Membership Status')} approved file{getApprovedFilesCount('Membership Status') !== 1 ? 's' : ''}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -924,6 +941,11 @@ export default function LibrarianCornerPage() {
                           <Eye className="h-4 w-4 mr-2" />
                           View Files ({getUploadedFiles('Membership Fees Receipts').length})
                         </Button>
+                      )}
+                      {getApprovedFilesCount('Membership Fees Receipts') > 0 && (
+                        <div className="text-xs text-green-600 font-medium text-center">
+                          {getApprovedFilesCount('Membership Fees Receipts')} approved file{getApprovedFilesCount('Membership Fees Receipts') !== 1 ? 's' : ''}
+                        </div>
                       )}
                     </div>
                   </CardContent>
@@ -968,6 +990,11 @@ export default function LibrarianCornerPage() {
                           View Files ({getUploadedFiles('Current Year e-Resources').length})
                         </Button>
                       )}
+                      {getApprovedFilesCount('Current Year e-Resources') > 0 && (
+                        <div className="text-xs text-green-600 font-medium text-center">
+                          {getApprovedFilesCount('Current Year e-Resources')} approved file{getApprovedFilesCount('Current Year e-Resources') !== 1 ? 's' : ''}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -1010,6 +1037,11 @@ export default function LibrarianCornerPage() {
                           <Eye className="h-4 w-4 mr-2" />
                           View Files ({getUploadedFiles('Access Confirmation').length})
                         </Button>
+                      )}
+                      {getApprovedFilesCount('Access Confirmation') > 0 && (
+                        <div className="text-xs text-green-600 font-medium text-center">
+                          {getApprovedFilesCount('Access Confirmation')} approved file{getApprovedFilesCount('Access Confirmation') !== 1 ? 's' : ''}
+                        </div>
                       )}
                     </div>
                   </CardContent>
