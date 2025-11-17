@@ -81,6 +81,27 @@ export interface LibrarianFileUploads {
 
 
 /**
+ * Collection ID: membercolleges
+ * Interface for MemberColleges
+ */
+export interface MemberColleges {
+  _id: string;
+  _createdDate?: Date;
+  _updatedDate?: Date;
+  /** @wixFieldType text */
+  collegeName?: string;
+  /** @wixFieldType text */
+  communicationAddress?: string;
+  /** @wixFieldType text */
+  librarianName?: string;
+  /** @wixFieldType text */
+  email?: string;
+  /** @wixFieldType text */
+  phone?: string;
+}
+
+
+/**
  * Collection ID: newsandnotifications
  * Interface for NewsandEvents
  */
@@ -158,4 +179,25 @@ export interface UserGuideArticles {
   slug?: string;
   /** @wixFieldType image */
   featuredImage?: string;
+}
+
+
+/**
+ * Collection ID: membercolleges
+ * Interface for MemberColleges
+ */
+export interface MemberColleges {
+  _id: string;
+  _createdDate?: Date;
+  _updatedDate?: Date;
+  /** @wixFieldType text */
+  collegeName?: string;
+  /** @wixFieldType text */
+  communicationAddress?: string;
+  /** @wixFieldType text */
+  librarianName?: string;
+  /** @wixFieldType text */
+  email?: string;
+  /** @wixFieldType text */
+  phone?: string;
 }

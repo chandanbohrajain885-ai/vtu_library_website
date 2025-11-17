@@ -13,6 +13,7 @@ import LibrarianCornerPage from '@/components/pages/LibrarianCornerPage';
 import AboutPage from '@/components/pages/AboutPage';
 import LibrarianAccountsChecker from '@/components/pages/LibrarianAccountsChecker';
 import ApprovedFilesPage from '@/components/pages/ApprovedFilesPage';
+import MemberCollegesPage from '@/components/pages/MemberCollegesPage';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import DebugUploads from '@/debug-uploads';
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: "approved-files/:uploadType",
         element: <ApprovedFilesPage />,
+      },
+      {
+        path: "member-colleges",
+        element: <MemberCollegesPage />,
       },
       {
         path: "librarian-accounts-check",
