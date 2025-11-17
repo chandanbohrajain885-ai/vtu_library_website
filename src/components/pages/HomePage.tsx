@@ -524,9 +524,15 @@ export default function HomePage() {
                         {t('nav.about')}
                       </button>
                       
-                      <div className="block w-full text-left px-4 py-3 text-gray-800 rounded-md font-medium cursor-default">
+                      <button 
+                        onClick={() => {
+                          navigate('/member-colleges');
+                          setIsMobileMenuOpen(false);
+                        }} 
+                        className="block w-full text-left px-4 py-3 text-gray-800 hover:bg-primary hover:text-white rounded-md transition-colors font-medium"
+                      >
                         {t('nav.membercolleges')}
-                      </div>
+                      </button>
                       
                       {/* Committee Section */}
                       <div className="border border-gray-200 rounded-md p-3">
@@ -1030,9 +1036,12 @@ export default function HomePage() {
               <button onClick={() => navigate('/about')} className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap">
                 {t('nav.about')}
               </button>
-              <div className="text-white p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap cursor-default">
+              <button 
+                onClick={() => navigate('/member-colleges')} 
+                className="hover:text-orange-200 transition-colors bg-transparent border-none text-white cursor-pointer text-sm xl:text-base whitespace-nowrap"
+              >
                 {t('nav.membercolleges')}
-              </div>
+              </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-white hover:text-orange-200 transition-colors p-0 h-auto font-normal text-sm xl:text-base whitespace-nowrap">
