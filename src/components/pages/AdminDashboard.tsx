@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download, Key } from 'lucide-react';
+import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircle, Eye, FileText, Download, Key, History, User as UserIcon, Building, Calendar, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
@@ -59,6 +59,9 @@ export default function AdminDashboard() {
   const [approvalComments, setApprovalComments] = useState('');
   const [viewingPasswordRequest, setViewingPasswordRequest] = useState<PasswordChangeRequests | null>(null);
   const [passwordRequestComments, setPasswordRequestComments] = useState('');
+  const [approvedFiles, setApprovedFiles] = useState<LibrarianFileUploads[]>([]);
+  const [viewingHistoryFile, setViewingHistoryFile] = useState<LibrarianFileUploads | null>(null);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'history'>('dashboard');
   const [newUser, setNewUser] = useState({
     username: '',
     password: '',
@@ -66,20 +69,30 @@ export default function AdminDashboard() {
     permissions: [] as string[]
   });
 
-  // Fetch pending uploads on component mount
+  // Fetch pending uploads and approved files on component mount
   useEffect(() => {
-    const fetchPendingUploads = async () => {
+    const fetchData = async () => {
       try {
         const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
         const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+        const approved = items.filter(upload => upload.approvalStatus === 'Approved');
+        
+        // Sort approved files by approval date (newest first)
+        approved.sort((a, b) => {
+          const dateA = new Date(a.approvalDate || a._createdDate || 0);
+          const dateB = new Date(b.approvalDate || b._createdDate || 0);
+          return dateB.getTime() - dateA.getTime();
+        });
+        
         setPendingUploads(pending);
+        setApprovedFiles(approved);
       } catch (error) {
-        console.error('Error fetching pending uploads:', error);
+        console.error('Error fetching uploads:', error);
       }
     };
 
     if (user?.role === 'superadmin') {
-      fetchPendingUploads();
+      fetchData();
     }
   }, [user]);
 
@@ -145,10 +158,20 @@ export default function AdminDashboard() {
       // Trigger live data update to notify all components
       dataUpdateEmitter.emit('librarianfileuploads');
       
-      // Refresh pending uploads
+      // Refresh pending uploads and approved files
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
       const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      const approved = items.filter(upload => upload.approvalStatus === 'Approved');
+      
+      // Sort approved files by approval date (newest first)
+      approved.sort((a, b) => {
+        const dateA = new Date(a.approvalDate || a._createdDate || 0);
+        const dateB = new Date(b.approvalDate || b._createdDate || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
       setPendingUploads(pending);
+      setApprovedFiles(approved);
       
       setViewingUpload(null);
       setApprovalComments('');
@@ -171,10 +194,20 @@ export default function AdminDashboard() {
       // Trigger live data update to notify all components
       dataUpdateEmitter.emit('librarianfileuploads');
       
-      // Refresh pending uploads
+      // Refresh pending uploads and approved files
       const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
       const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      const approved = items.filter(upload => upload.approvalStatus === 'Approved');
+      
+      // Sort approved files by approval date (newest first)
+      approved.sort((a, b) => {
+        const dateA = new Date(a.approvalDate || a._createdDate || 0);
+        const dateB = new Date(b.approvalDate || b._createdDate || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
       setPendingUploads(pending);
+      setApprovedFiles(approved);
       
       setViewingUpload(null);
       setApprovalComments('');
@@ -203,8 +236,40 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteApprovedFile = async (fileId: string) => {
+    if (!window.confirm('Are you sure you want to delete this approved file? This action cannot be undone and will free up storage space.')) {
+      return;
+    }
+
+    try {
+      await BaseCrudService.delete('librarianfileuploads', fileId);
+      
+      // Trigger live data update to notify all components
+      dataUpdateEmitter.emit('librarianfileuploads');
+      
+      // Refresh approved files list
+      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const approved = items.filter(upload => upload.approvalStatus === 'Approved');
+      
+      // Sort approved files by approval date (newest first)
+      approved.sort((a, b) => {
+        const dateA = new Date(a.approvalDate || a._createdDate || 0);
+        const dateB = new Date(b.approvalDate || b._createdDate || 0);
+        return dateB.getTime() - dateA.getTime();
+      });
+      
+      setApprovedFiles(approved);
+      setViewingHistoryFile(null);
+      
+      console.log('Approved file deleted successfully');
+    } catch (error) {
+      console.error('Error deleting approved file:', error);
+      alert('Failed to delete file. Please try again.');
+    }
+  };
   const pendingRequests = registrationRequests.filter(r => r.status === 'pending');
   const pendingPasswordRequests = passwordChangeRequests.filter(r => r.status === 'pending');
+  
   const togglePermission = (permission: string, isEditing: boolean = false) => {
     if (isEditing && editingUser) {
       const updatedPermissions = editingUser.permissions.includes(permission)
@@ -240,8 +305,39 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-8">
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'dashboard'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => setActiveTab('history')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                  activeTab === 'history'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <History className="h-4 w-4" />
+                History ({approvedFiles.length})
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {activeTab === 'dashboard' && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -859,6 +955,174 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+          </>
+        )}
+
+        {activeTab === 'history' && (
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5 text-green-500" />
+                  Approved Files History
+                </CardTitle>
+                <Badge variant="secondary">{approvedFiles.length} approved files</Badge>
+              </div>
+              <p className="text-sm text-gray-600">
+                Review and manage all previously approved files. You can view file details or remove files to free up storage space.
+              </p>
+            </CardHeader>
+            <CardContent>
+              {approvedFiles.length === 0 ? (
+                <div className="text-center py-8">
+                  <History className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Approved Files</h3>
+                  <p className="text-gray-500">There are no approved files in the history yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {approvedFiles.map((file) => (
+                    <div key={file._id} className="flex items-center justify-between p-4 border rounded-lg bg-green-50 hover:bg-green-100 transition-colors">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <CheckCircle className="h-8 w-8 text-green-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-gray-900 truncate">
+                            {file.uploadType}
+                          </h3>
+                          <div className="flex items-center space-x-4 text-sm text-gray-500">
+                            <span className="flex items-center">
+                              <UserIcon className="h-4 w-4 mr-1" />
+                              {file.librarianName}
+                            </span>
+                            <span className="flex items-center">
+                              <Building className="h-4 w-4 mr-1" />
+                              {file.collegeName}
+                            </span>
+                            <span className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-1" />
+                              Approved: {new Date(file.approvalDate || file._createdDate || '').toLocaleDateString()}
+                            </span>
+                          </div>
+                          {file.superAdminComments && (
+                            <p className="text-sm text-gray-600 mt-1 italic">
+                              "{file.superAdminComments}"
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50">
+                          Approved
+                        </Badge>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => setViewingHistoryFile(file)}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-md">
+                            <DialogHeader>
+                              <DialogTitle>Approved File Details</DialogTitle>
+                            </DialogHeader>
+                            {viewingHistoryFile && (
+                              <div className="space-y-4">
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Type</Label>
+                                  <p className="text-sm">{viewingHistoryFile.uploadType}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Librarian</Label>
+                                  <p className="text-sm">{viewingHistoryFile.librarianName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">College</Label>
+                                  <p className="text-sm">{viewingHistoryFile.collegeName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Email</Label>
+                                  <p className="text-sm">{viewingHistoryFile.librarianEmail}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Date</Label>
+                                  <p className="text-sm">
+                                    {new Date(viewingHistoryFile.uploadDate || viewingHistoryFile._createdDate || '').toLocaleString()}
+                                  </p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Approval Date</Label>
+                                  <p className="text-sm">
+                                    {new Date(viewingHistoryFile.approvalDate || '').toLocaleString()}
+                                  </p>
+                                </div>
+                                {viewingHistoryFile.superAdminComments && (
+                                  <div>
+                                    <Label className="text-sm font-medium">Admin Comments</Label>
+                                    <p className="text-sm bg-gray-50 p-2 rounded">
+                                      {viewingHistoryFile.superAdminComments}
+                                    </p>
+                                  </div>
+                                )}
+                                <div>
+                                  <Label className="text-sm font-medium">File URL</Label>
+                                  <div className="flex items-center space-x-2">
+                                    <p className="text-sm text-blue-600 truncate flex-1">
+                                      {viewingHistoryFile.fileUrl}
+                                    </p>
+                                    {viewingHistoryFile.fileUrl && (
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => window.open(viewingHistoryFile.fileUrl, '_blank')}
+                                      >
+                                        <ExternalLink className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex justify-end space-x-2 pt-4 border-t">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setViewingHistoryFile(null)}
+                                  >
+                                    Close
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={() => handleDeleteApprovedFile(viewingHistoryFile._id)}
+                                    className="flex items-center"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Remove
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </DialogContent>
+                        </Dialog>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteApprovedFile(file._id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
       
       {/* Footer */}
