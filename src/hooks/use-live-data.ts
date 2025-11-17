@@ -55,19 +55,15 @@ export function useLiveData<T extends WixDataItem>(
   const pollIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(true);
 
-  // Fetch data function with better error handling
+  // Fetch data function
   const fetchData = useCallback(async (showLoading = false) => {
     try {
       if (showLoading) setIsLoading(true);
       setError(null);
 
-      console.log(`useLiveData - Fetching ${collectionId}...`);
-      
       const response = references && references.length > 0
         ? await BaseCrudService.getAll<T>(collectionId, references)
         : await BaseCrudService.getAll<T>(collectionId);
-
-      console.log(`useLiveData - ${collectionId} fetched:`, response.items.length, 'items');
 
       if (mountedRef.current) {
         setData(response.items);
@@ -75,11 +71,10 @@ export function useLiveData<T extends WixDataItem>(
         setIsLoading(false);
       }
     } catch (err) {
-      console.error(`useLiveData - Error fetching ${collectionId}:`, err);
+      console.error(`Error fetching ${collectionId}:`, err);
       if (mountedRef.current) {
         setError(err instanceof Error ? err.message : 'Failed to fetch data');
         setIsLoading(false);
-        // Don't clear data on error, keep the last successful fetch
       }
     }
   }, [collectionId, references]);

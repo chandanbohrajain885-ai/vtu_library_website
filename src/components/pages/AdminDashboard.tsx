@@ -13,7 +13,7 @@ import { Trash2, Edit, Plus, Users, Settings, Shield, Clock, CheckCircle, XCircl
 import { Link } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads, PasswordChangeRequests } from '@/entities';
-import { useLiveData, useDataUpdater } from '@/hooks/use-live-data';
+import { useLiveData } from '@/hooks/use-live-data';
 
 const availablePermissions = [
   'view_resources',
@@ -44,47 +44,17 @@ export default function AdminDashboard() {
     rejectPasswordChangeRequest
   } = useAuth();
   
-  const { triggerUpdate } = useDataUpdater();
-  
-  // Use live data for password change requests and file uploads with error handling
+  // Use live data for password change requests
   const { 
     data: passwordChangeRequests, 
-    isLoading: passwordRequestsLoading,
-    error: passwordRequestsError 
-  } = useLiveData<PasswordChangeRequests>('passwordchangerequests', [], 10000); // Poll every 10 seconds
-  
-  const { 
-    data: allUploads, 
-    refresh: refreshUploads,
-    isLoading: uploadsLoading,
-    error: uploadsError,
-    lastUpdated: uploadsLastUpdated
-  } = useLiveData<LibrarianFileUploads>('librarianfileuploads', [], 5000); // Poll every 5 seconds
-  
-  // Filter pending uploads from live data with error handling
-  const pendingUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Pending') : [];
-  const approvedUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Approved') : [];
-  const rejectedUploads = allUploads ? allUploads.filter(upload => upload.approvalStatus === 'Rejected') : [];
-  
-  // Debug logging
-  useEffect(() => {
-    console.log('AdminDashboard - Debug Info:', {
-      totalUploads: allUploads.length,
-      pendingUploads: pendingUploads.length,
-      approvedUploads: approvedUploads.length,
-      rejectedUploads: rejectedUploads.length,
-      uploadsLastUpdated,
-      uploadsError,
-      uploadsLoading,
-      passwordRequestsError,
-      passwordRequestsLoading
-    });
-  }, [allUploads, pendingUploads, approvedUploads, rejectedUploads, uploadsLastUpdated, uploadsError, uploadsLoading, passwordRequestsError, passwordRequestsLoading]);
+    isLoading: passwordRequestsLoading 
+  } = useLiveData<PasswordChangeRequests>('passwordchangerequests');
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [viewingRequest, setViewingRequest] = useState<RegistrationRequest | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [pendingUploads, setPendingUploads] = useState<LibrarianFileUploads[]>([]);
   const [viewingUpload, setViewingUpload] = useState<LibrarianFileUploads | null>(null);
   const [approvalComments, setApprovalComments] = useState('');
   const [viewingPasswordRequest, setViewingPasswordRequest] = useState<PasswordChangeRequests | null>(null);
@@ -96,24 +66,22 @@ export default function AdminDashboard() {
     permissions: [] as string[]
   });
 
-  // Force refresh function for debugging
-  const handleForceRefresh = async () => {
-    console.log('AdminDashboard - Force refreshing all data...');
-    try {
-      await refreshUploads();
-      triggerUpdate('librarianfileuploads');
-      triggerUpdate('passwordchangerequests');
-      console.log('AdminDashboard - Refresh completed');
-    } catch (error) {
-      console.error('AdminDashboard - Error during refresh:', error);
+  // Fetch pending uploads on component mount
+  useEffect(() => {
+    const fetchPendingUploads = async () => {
+      try {
+        const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+        const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+        setPendingUploads(pending);
+      } catch (error) {
+        console.error('Error fetching pending uploads:', error);
+      }
+    };
+
+    if (user?.role === 'superadmin') {
+      fetchPendingUploads();
     }
-  };
-
-  // Remove the useEffect that fetches pending uploads since we're using live data
-  // The pendingUploads are now automatically updated via useLiveData
-
-  // Filter pending password requests with null check
-  const pendingPasswordRequests = passwordChangeRequests ? passwordChangeRequests.filter(r => r.status === 'pending') : [];
+  }, [user]);
 
   if (user?.role !== 'superadmin') {
     return (
@@ -133,28 +101,6 @@ export default function AdminDashboard() {
       </div>
     );
   }
-
-  const togglePermission = (permission: string, isEditing = false) => {
-    if (isEditing && editingUser) {
-      const updatedPermissions = editingUser.permissions.includes(permission)
-        ? editingUser.permissions.filter(p => p !== permission)
-        : [...editingUser.permissions, permission];
-      
-      setEditingUser({
-        ...editingUser,
-        permissions: updatedPermissions
-      });
-    } else {
-      const updatedPermissions = newUser.permissions.includes(permission)
-        ? newUser.permissions.filter(p => p !== permission)
-        : [...newUser.permissions, permission];
-      
-      setNewUser({
-        ...newUser,
-        permissions: updatedPermissions
-      });
-    }
-  };
 
   const handleCreateUser = () => {
     if (!newUser.username || !newUser.password) return;
@@ -189,7 +135,6 @@ export default function AdminDashboard() {
 
   const handleApproveUpload = async (uploadId: string) => {
     try {
-      console.log('AdminDashboard - Approving upload:', uploadId);
       await BaseCrudService.update('librarianfileuploads', {
         _id: uploadId,
         approvalStatus: 'Approved',
@@ -197,28 +142,22 @@ export default function AdminDashboard() {
         superAdminComments: approvalComments
       });
       
-      console.log('AdminDashboard - Upload approved successfully');
-      
-      // Trigger live data update and force refresh
-      triggerUpdate('librarianfileuploads');
-      await refreshUploads();
+      // Refresh pending uploads
+      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      setPendingUploads(pending);
       
       setViewingUpload(null);
       setApprovalComments('');
     } catch (error) {
       console.error('Error approving upload:', error);
-      alert('Error approving upload. Please try again.');
     }
   };
 
   const handleRejectUpload = async (uploadId: string) => {
-    if (!approvalComments.trim()) {
-      alert('Please provide comments for rejection.');
-      return;
-    }
+    if (!approvalComments.trim()) return;
     
     try {
-      console.log('AdminDashboard - Rejecting upload:', uploadId);
       await BaseCrudService.update('librarianfileuploads', {
         _id: uploadId,
         approvalStatus: 'Rejected',
@@ -226,39 +165,15 @@ export default function AdminDashboard() {
         superAdminComments: approvalComments
       });
       
-      console.log('AdminDashboard - Upload rejected successfully');
-      
-      // Trigger live data update and force refresh
-      triggerUpdate('librarianfileuploads');
-      await refreshUploads();
+      // Refresh pending uploads
+      const { items } = await BaseCrudService.getAll<LibrarianFileUploads>('librarianfileuploads');
+      const pending = items.filter(upload => upload.approvalStatus === 'Pending');
+      setPendingUploads(pending);
       
       setViewingUpload(null);
       setApprovalComments('');
     } catch (error) {
       console.error('Error rejecting upload:', error);
-      alert('Error rejecting upload. Please try again.');
-    }
-  };
-
-  const handleRemoveUpload = async (uploadId: string, uploadType: string, collegeName: string) => {
-    if (!confirm(`Are you sure you want to permanently delete this ${uploadType} file from ${collegeName}? This action cannot be undone and will free up storage space.`)) {
-      return;
-    }
-    
-    try {
-      console.log('AdminDashboard - Removing upload:', uploadId);
-      await BaseCrudService.delete('librarianfileuploads', uploadId);
-      
-      console.log('AdminDashboard - Upload removed successfully');
-      
-      // Trigger live data update and force refresh
-      triggerUpdate('librarianfileuploads');
-      await refreshUploads();
-      
-      alert('File removed successfully and storage space freed.');
-    } catch (error) {
-      console.error('Error removing upload:', error);
-      alert('Error removing file. Please try again.');
     }
   };
 
@@ -281,8 +196,22 @@ export default function AdminDashboard() {
       console.error('Error rejecting password change request:', error);
     }
   };
-  
-  const pendingRequests = registrationRequests ? registrationRequests.filter(r => r.status === 'pending') : [];
+
+  const pendingRequests = registrationRequests.filter(r => r.status === 'pending');
+  const pendingPasswordRequests = passwordChangeRequests.filter(r => r.status === 'pending');
+  const togglePermission = (permission: string, isEditing: boolean = false) => {
+    if (isEditing && editingUser) {
+      const updatedPermissions = editingUser.permissions.includes(permission)
+        ? editingUser.permissions.filter(p => p !== permission)
+        : [...editingUser.permissions, permission];
+      setEditingUser({ ...editingUser, permissions: updatedPermissions });
+    } else {
+      const updatedPermissions = newUser.permissions.includes(permission)
+        ? newUser.permissions.filter(p => p !== permission)
+        : [...newUser.permissions, permission];
+      setNewUser({ ...newUser, permissions: updatedPermissions });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -298,9 +227,6 @@ export default function AdminDashboard() {
               <Link to="/">
                 <Button variant="outline">Back to Site</Button>
               </Link>
-              <Button onClick={handleForceRefresh} variant="secondary" size="sm" disabled={uploadsLoading}>
-                {uploadsLoading ? 'Refreshing...' : 'Refresh Data'}
-              </Button>
               <Button onClick={logout} variant="destructive">Logout</Button>
             </div>
           </div>
@@ -356,14 +282,11 @@ export default function AdminDashboard() {
           
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Uploads</CardTitle>
+              <CardTitle className="text-sm font-medium">File Uploads</CardTitle>
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{allUploads.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {pendingUploads.length} pending, {approvedUploads.length} approved, {rejectedUploads.length} rejected
-              </p>
+              <div className="text-2xl font-bold">{pendingUploads.length}</div>
             </CardContent>
           </Card>
           
@@ -492,222 +415,142 @@ export default function AdminDashboard() {
           </Card>
         )}
 
-        {/* All File Uploads Section - Always Show */}
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-blue-500" />
-                All File Upload Requests
-              </CardTitle>
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="text-blue-600">
-                  {allUploads.length} total
-                </Badge>
-                <Badge variant="secondary" className="text-yellow-600">
-                  {pendingUploads.length} pending
-                </Badge>
-                <Badge variant="outline" className="text-green-600">
-                  {approvedUploads.length} approved
-                </Badge>
-                <Badge variant="outline" className="text-red-600">
-                  {rejectedUploads.length} rejected
-                </Badge>
+        {/* Pending File Uploads Section */}
+        {pendingUploads.length > 0 && (
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-blue-500" />
+                  Pending File Upload Approvals
+                </CardTitle>
+                <Badge variant="secondary">{pendingUploads.length} pending</Badge>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {allUploads.length === 0 ? (
-              <div className="text-center py-8">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No File Uploads</h3>
-                <p className="text-gray-500">No file upload requests have been submitted yet.</p>
-                <Button onClick={handleForceRefresh} variant="outline" className="mt-4" disabled={uploadsLoading}>
-                  {uploadsLoading ? 'Refreshing...' : 'Refresh Data'}
-                </Button>
-              </div>
-            ) : (
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
-                {allUploads
-                  .sort((a, b) => {
-                    // Sort by status priority (Pending first), then by date
-                    if (a.approvalStatus === 'Pending' && b.approvalStatus !== 'Pending') return -1;
-                    if (a.approvalStatus !== 'Pending' && b.approvalStatus === 'Pending') return 1;
-                    const dateA = new Date(a.uploadDate || a._createdDate || 0);
-                    const dateB = new Date(b.uploadDate || b._createdDate || 0);
-                    return dateB.getTime() - dateA.getTime();
-                  })
-                  .map((upload) => (
-                    <div 
-                      key={upload._id} 
-                      className={`flex items-center justify-between p-4 border rounded-lg ${
-                        upload.approvalStatus === 'Pending' ? 'bg-yellow-50 border-yellow-200' :
-                        upload.approvalStatus === 'Approved' ? 'bg-green-50 border-green-200' :
-                        upload.approvalStatus === 'Rejected' ? 'bg-red-50 border-red-200' :
-                        'bg-gray-50 border-gray-200'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <h3 className="font-medium">{upload.uploadType}</h3>
-                          <p className="text-sm text-gray-500">{upload.collegeName}</p>
-                          <p className="text-sm text-gray-500">Librarian: {upload.librarianName}</p>
-                          <p className="text-xs text-gray-400">
-                            Uploaded: {upload.uploadDate ? new Date(upload.uploadDate).toLocaleDateString() : 'Unknown'}
-                          </p>
-                          {upload.approvalDate && (
-                            <p className="text-xs text-gray-400">
-                              {upload.approvalStatus}: {new Date(upload.approvalDate).toLocaleDateString()}
-                            </p>
-                          )}
-                        </div>
-                        <Badge 
-                          variant="outline" 
-                          className={
-                            upload.approvalStatus === 'Pending' ? 'text-yellow-600 border-yellow-600' :
-                            upload.approvalStatus === 'Approved' ? 'text-green-600 border-green-600' :
-                            upload.approvalStatus === 'Rejected' ? 'text-red-600 border-red-600' :
-                            'text-gray-600 border-gray-600'
-                          }
-                        >
-                          {upload.approvalStatus || 'Unknown'}
-                        </Badge>
+                {pendingUploads.map((upload) => (
+                  <div key={upload._id} className="flex items-center justify-between p-4 border rounded-lg bg-blue-50">
+                    <div className="flex items-center space-x-4">
+                      <div>
+                        <h3 className="font-medium">{upload.uploadType}</h3>
+                        <p className="text-sm text-gray-500">{upload.collegeName}</p>
+                        <p className="text-sm text-gray-500">Librarian: {upload.librarianName}</p>
+                        <p className="text-xs text-gray-400">
+                          Uploaded: {upload.uploadDate ? new Date(upload.uploadDate).toLocaleDateString() : 'Unknown'}
+                        </p>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        {upload.fileUrl && (
+                      <Badge variant="outline" className="text-blue-600 border-blue-600">
+                        {upload.approvalStatus}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => window.open(upload.fileUrl, '_blank')}
-                            title="View the uploaded file"
+                            onClick={() => setViewingUpload(upload)}
                           >
                             <Eye className="h-4 w-4 mr-1" />
-                            View
+                            Review
                           </Button>
-                        )}
-                        {upload.approvalStatus === 'Pending' && (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setViewingUpload(upload)}
-                                className="bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100"
-                                title="Review and approve/reject this upload"
-                              >
-                                <Eye className="h-4 w-4 mr-1" />
-                                Review
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-lg">
-                              <DialogHeader>
-                                <DialogTitle>Review File Upload</DialogTitle>
-                              </DialogHeader>
-                              {viewingUpload && (
-                                <div className="space-y-4">
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <Label className="text-sm font-medium">Upload Type</Label>
-                                      <p className="text-sm">{viewingUpload.uploadType}</p>
-                                    </div>
-                                    <div>
-                                      <Label className="text-sm font-medium">College</Label>
-                                      <p className="text-sm">{viewingUpload.collegeName}</p>
-                                    </div>
-                                    <div>
-                                      <Label className="text-sm font-medium">Librarian</Label>
-                                      <p className="text-sm">{viewingUpload.librarianName}</p>
-                                    </div>
-                                    <div>
-                                      <Label className="text-sm font-medium">Upload Date</Label>
-                                      <p className="text-sm">
-                                        {viewingUpload.uploadDate ? new Date(viewingUpload.uploadDate).toLocaleDateString() : 'Unknown'}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  
-                                  <div>
-                                    <Label className="text-sm font-medium">File</Label>
-                                    <div className="mt-2 p-3 border rounded-lg bg-gray-50">
-                                      <div className="flex items-center space-x-2">
-                                        <FileText className="h-4 w-4 text-blue-600" />
-                                        <span className="text-sm text-blue-800">
-                                          {viewingUpload.uploadType} Document
-                                        </span>
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          onClick={() => window.open(viewingUpload.fileUrl, '_blank')}
-                                        >
-                                          <Download className="h-4 w-4 mr-1" />
-                                          View File
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  
-                                  <div className="space-y-2">
-                                    <Label htmlFor="approvalComments">Comments</Label>
-                                    <Textarea
-                                      id="approvalComments"
-                                      value={approvalComments}
-                                      onChange={(e) => setApprovalComments(e.target.value)}
-                                      placeholder="Enter comments for approval/rejection..."
-                                      rows={3}
-                                    />
-                                  </div>
-                                  
-                                  <div className="flex justify-end space-x-2 pt-4">
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>Review File Upload</DialogTitle>
+                          </DialogHeader>
+                          {viewingUpload && (
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Type</Label>
+                                  <p className="text-sm">{viewingUpload.uploadType}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">College</Label>
+                                  <p className="text-sm">{viewingUpload.collegeName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Librarian</Label>
+                                  <p className="text-sm">{viewingUpload.librarianName}</p>
+                                </div>
+                                <div>
+                                  <Label className="text-sm font-medium">Upload Date</Label>
+                                  <p className="text-sm">
+                                    {viewingUpload.uploadDate ? new Date(viewingUpload.uploadDate).toLocaleDateString() : 'Unknown'}
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <Label className="text-sm font-medium">File</Label>
+                                <div className="mt-2 p-3 border rounded-lg bg-gray-50">
+                                  <div className="flex items-center space-x-2">
+                                    <FileText className="h-4 w-4 text-blue-600" />
+                                    <span className="text-sm text-blue-800">
+                                      {viewingUpload.uploadType} Document
+                                    </span>
                                     <Button
                                       variant="outline"
-                                      onClick={() => {
-                                        setViewingUpload(null);
-                                        setApprovalComments('');
-                                      }}
+                                      size="sm"
+                                      onClick={() => window.open(viewingUpload.fileUrl, '_blank')}
                                     >
-                                      Cancel
-                                    </Button>
-                                    <Button
-                                      variant="destructive"
-                                      onClick={() => handleRejectUpload(viewingUpload._id)}
-                                      disabled={!approvalComments.trim()}
-                                    >
-                                      <XCircle className="h-4 w-4 mr-1" />
-                                      Reject
-                                    </Button>
-                                    <Button
-                                      onClick={() => handleApproveUpload(viewingUpload._id)}
-                                      className="bg-green-600 hover:bg-green-700"
-                                    >
-                                      <CheckCircle className="h-4 w-4 mr-1" />
-                                      Approve
+                                      <Download className="h-4 w-4 mr-1" />
+                                      View File
                                     </Button>
                                   </div>
                                 </div>
-                              )}
-                            </DialogContent>
-                          </Dialog>
-                        )}
-                        {/* Remove button for all files (approved/rejected) to save storage */}
-                        {(upload.approvalStatus === 'Approved' || upload.approvalStatus === 'Rejected') && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRemoveUpload(upload._id, upload.uploadType || 'Unknown', upload.collegeName || 'Unknown')}
-                            className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                            title="Permanently delete this file to save storage space"
-                          >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Remove
-                          </Button>
-                        )}
-                      </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="approvalComments">Comments</Label>
+                                <Textarea
+                                  id="approvalComments"
+                                  value={approvalComments}
+                                  onChange={(e) => setApprovalComments(e.target.value)}
+                                  placeholder="Enter comments for approval/rejection..."
+                                  rows={3}
+                                />
+                              </div>
+                              
+                              <div className="flex justify-end space-x-2 pt-4">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setViewingUpload(null);
+                                    setApprovalComments('');
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => handleRejectUpload(viewingUpload._id)}
+                                  disabled={!approvalComments.trim()}
+                                >
+                                  <XCircle className="h-4 w-4 mr-1" />
+                                  Reject
+                                </Button>
+                                <Button
+                                  onClick={() => handleApproveUpload(viewingUpload._id)}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Approve
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                  ))}
+                  </div>
+                ))}
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Registration Requests Section */}
         {pendingRequests.length > 0 && (

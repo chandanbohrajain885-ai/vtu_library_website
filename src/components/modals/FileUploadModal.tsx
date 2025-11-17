@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Upload, FileText, X } from 'lucide-react';
 import { BaseCrudService } from '@/integrations';
 import { LibrarianFileUploads } from '@/entities';
-import { useDataUpdater } from '@/hooks/use-live-data';
 
 interface FileUploadModalProps {
   isOpen: boolean;
@@ -31,7 +30,6 @@ export default function FileUploadModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const { triggerUpdate } = useDataUpdater();
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -76,9 +74,6 @@ export default function FileUploadModal({
 
       await BaseCrudService.create('librarianfileuploads', uploadRecord);
       console.log('FileUploadModal - Successfully created upload record:', uploadRecord);
-
-      // Trigger live data update
-      triggerUpdate('librarianfileuploads');
 
       // Reset form
       setSelectedFile(null);
