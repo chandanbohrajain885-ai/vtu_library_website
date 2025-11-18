@@ -17,7 +17,7 @@ export default function MemberCollegesPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [itemsToShow, setItemsToShow] = useState(50);
+  const [itemsToShow, setItemsToShow] = useState(100);
   const [totalItems, setTotalItems] = useState(0);
 
   const handleBackClick = () => {
@@ -71,7 +71,7 @@ export default function MemberCollegesPage() {
     try {
       setLoadingMore(true);
       setTimeout(() => {
-        const newItemsToShow = itemsToShow + 50;
+        const newItemsToShow = itemsToShow + 100;
         setItemsToShow(newItemsToShow);
         setDisplayedColleges(colleges.slice(0, newItemsToShow));
         setLoadingMore(false);
@@ -221,114 +221,147 @@ export default function MemberCollegesPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-primary/10">
-                      <TableHead className="font-heading font-semibold text-primary w-16">
-                        Sl.No
-                      </TableHead>
-                      <TableHead className="font-heading font-semibold text-primary min-w-[200px]">
-                        College Name & Website
-                      </TableHead>
-                      <TableHead className="font-heading font-semibold text-primary min-w-[250px]">
-                        Communication Address
-                      </TableHead>
-                      <TableHead className="font-heading font-semibold text-primary min-w-[150px]">
-                        Librarian Name
-                      </TableHead>
-                      <TableHead className="font-heading font-semibold text-primary min-w-[200px]">
-                        Email
-                      </TableHead>
-                      <TableHead className="font-heading font-semibold text-primary min-w-[150px]">
-                        Phone
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayedColleges.map((college, index) => (
-                      <TableRow 
-                        key={college._id} 
-                        className={`transition-colors hover:bg-primary/10 ${
-                          index % 2 === 0 
-                            ? 'bg-white' 
-                            : 'bg-gray-50/50'
-                        }`}
-                      >
-                        <TableCell className="font-paragraph font-medium text-center">
-                          {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
-                        </TableCell>
-                        <TableCell className="font-paragraph font-semibold text-primary">
-                          <div className="flex flex-col">
-                            <span>
-                              {college.collegeName || (
-                                <span className="text-red-500 italic">Missing college name</span>
-                              )}
-                            </span>
-                            {college.url && (
-                              <a 
-                                href={college.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-xs text-blue-600 hover:text-blue-800 underline mt-1"
-                              >
-                                Visit Website
-                              </a>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-paragraph">
-                          {(college.communicationAddress || college.communicationAdress) ? (
-                            <div className="flex items-start gap-2">
-                              <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                              <span className="text-sm leading-relaxed">
-                                {college.communicationAddress || college.communicationAdress}
+            <CardContent className="p-6">
+              {/* Card Grid Layout */}
+              <div className="grid gap-6">
+                {displayedColleges.map((college, index) => {
+                  // Array of vibrant gradient backgrounds for cards
+                  const cardColors = [
+                    'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200',
+                    'bg-gradient-to-br from-green-50 to-green-100 border-green-200',
+                    'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200',
+                    'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200',
+                    'bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200',
+                    'bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200',
+                    'bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200',
+                    'bg-gradient-to-br from-red-50 to-red-100 border-red-200',
+                    'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200',
+                    'bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200',
+                    'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200',
+                    'bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200',
+                  ];
+                  
+                  const cardColorClass = cardColors[index % cardColors.length];
+                  
+                  return (
+                    <Card 
+                      key={college._id} 
+                      className={`${cardColorClass} border-2 hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]`}
+                    >
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 items-start">
+                          {/* Serial Number */}
+                          <div className="lg:col-span-1">
+                            <div className="flex items-center justify-center w-12 h-12 bg-white/70 rounded-full border-2 border-white/50 shadow-sm">
+                              <span className="font-heading font-bold text-primary text-lg">
+                                {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
                               </span>
                             </div>
-                          ) : (
-                            <span className="text-red-500 italic">Missing address</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-paragraph font-medium">
-                          {college.librarianName || (
-                            <span className="text-red-500 italic">Missing librarian name</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-paragraph">
-                          {college.email ? (
-                            <div className="flex items-center gap-2">
-                              <Mail className="w-4 h-4 text-primary" />
-                              <a 
-                                href={`mailto:${college.email}`}
-                                className="text-primary hover:text-secondary transition-colors text-sm"
-                              >
-                                {college.email}
-                              </a>
+                          </div>
+                          
+                          {/* College Name & Website */}
+                          <div className="lg:col-span-2">
+                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                              <h3 className="font-heading font-bold text-primary text-lg mb-2 leading-tight">
+                                {college.collegeName || (
+                                  <span className="text-red-500 italic">Missing college name</span>
+                                )}
+                              </h3>
+                              {college.url && (
+                                <a 
+                                  href={college.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-paragraph underline transition-colors"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                  Visit Website
+                                </a>
+                              )}
                             </div>
-                          ) : (
-                            <span className="text-red-500 italic">Missing email</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-paragraph">
-                          {college.phone ? (
-                            <div className="flex items-center gap-2">
-                              <Phone className="w-4 h-4 text-primary" />
-                              <a 
-                                href={`tel:${college.phone}`}
-                                className="text-primary hover:text-secondary transition-colors text-sm"
-                              >
-                                {college.phone}
-                              </a>
+                          </div>
+                          
+                          {/* Communication Address */}
+                          <div className="lg:col-span-1">
+                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                              <div className="flex items-start gap-2">
+                                <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
+                                <div>
+                                  <p className="font-paragraph text-sm text-gray-700 leading-relaxed">
+                                    {(college.communicationAddress || college.communicationAdress) || (
+                                      <span className="text-red-500 italic">Missing address</span>
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                          ) : (
-                            <span className="text-red-500 italic">Missing phone</span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                          </div>
+                          
+                          {/* Librarian Name */}
+                          <div className="lg:col-span-1">
+                            <div className="bg-white/50 rounded-lg p-4 h-full flex items-center">
+                              <div className="w-full">
+                                <p className="font-paragraph font-semibold text-primary text-sm">
+                                  {college.librarianName || (
+                                    <span className="text-red-500 italic">Missing librarian name</span>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Contact Information */}
+                          <div className="lg:col-span-1">
+                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                              <div className="space-y-3">
+                                {/* Email */}
+                                <div>
+                                  {college.email ? (
+                                    <div className="flex items-center gap-2">
+                                      <Mail className="w-4 h-4 text-primary flex-shrink-0" />
+                                      <a 
+                                        href={`mailto:${college.email}`}
+                                        className="text-primary hover:text-secondary transition-colors text-xs font-paragraph truncate"
+                                        title={college.email}
+                                      >
+                                        {college.email}
+                                      </a>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-2">
+                                      <Mail className="w-4 h-4 text-gray-400" />
+                                      <span className="text-red-500 italic text-xs">Missing email</span>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {/* Phone */}
+                                <div>
+                                  {college.phone ? (
+                                    <div className="flex items-center gap-2">
+                                      <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+                                      <a 
+                                        href={`tel:${college.phone}`}
+                                        className="text-primary hover:text-secondary transition-colors text-xs font-paragraph"
+                                      >
+                                        {college.phone}
+                                      </a>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-2">
+                                      <Phone className="w-4 h-4 text-gray-400" />
+                                      <span className="text-red-500 italic text-xs">Missing phone</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
@@ -375,7 +408,7 @@ export default function MemberCollegesPage() {
                 </Button>
                 
                 <p className="text-xs text-gray-500 mt-3 font-paragraph">
-                  Click to load {Math.min(50, totalItems - displayedColleges.length)} more colleges
+                  Click to load {Math.min(100, totalItems - displayedColleges.length)} more colleges
                 </p>
               </div>
             </div>
