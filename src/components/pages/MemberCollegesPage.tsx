@@ -520,34 +520,7 @@ export default function MemberCollegesPage() {
         </div>
       </section>
 
-      {/* Contact Information Section */}
-      <section className="bg-primary/5 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-heading text-2xl md:text-3xl font-bold text-primary mb-4">
-            Join Our Network
-          </h2>
-          <p className="font-paragraph text-lg text-gray-700 max-w-2xl mx-auto">
-            Interested in becoming a member college? Contact us to learn more about the benefits 
-            and requirements of joining our academic consortium.
-          </p>
-          <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="mailto:info@consortium.edu"
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-paragraph"
-            >
-              <Mail className="w-5 h-5" />
-              Contact Us
-            </a>
-            <a 
-              href="/about"
-              className="inline-flex items-center gap-2 bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg hover:bg-primary/5 transition-colors font-paragraph"
-            >
-              <GraduationCap className="w-5 h-5" />
-              Learn More
-            </a>
-          </div>
-        </div>
-      </section>
+
     </div>
   );
 }
