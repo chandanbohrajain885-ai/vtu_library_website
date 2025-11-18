@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BaseCrudService } from '@/integrations';
 import { MemberColleges } from '@/entities';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,9 +7,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown, ExternalLink } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown, ExternalLink, ArrowLeft } from 'lucide-react';
 
 export default function MemberCollegesPage() {
+  const navigate = useNavigate();
   const [colleges, setColleges] = useState<MemberColleges[]>([]);
   const [displayedColleges, setDisplayedColleges] = useState<MemberColleges[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +19,16 @@ export default function MemberCollegesPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [itemsToShow, setItemsToShow] = useState(50);
   const [totalItems, setTotalItems] = useState(0);
+
+  const handleBackClick = () => {
+    // Check if there's a previous page in history
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      // If no history, go to home page
+      navigate('/');
+    }
+  };
 
   const fetchColleges = async () => {
     try {
@@ -114,6 +126,18 @@ export default function MemberCollegesPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Back Button */}
+      <div className="container mx-auto px-4 pt-6">
+        <Button 
+          onClick={handleBackClick}
+          variant="outline"
+          className="flex items-center gap-2 mb-4 hover:bg-primary/5 border-primary/20"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
+      </div>
+
       {/* Header Section */}
       <section className="bg-gradient-to-r from-primary to-primary/90 text-white py-16">
         <div className="container mx-auto px-4 text-center">
