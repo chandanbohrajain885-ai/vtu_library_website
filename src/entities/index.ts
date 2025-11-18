@@ -98,6 +98,16 @@ export interface MemberColleges {
   email?: string;
   /** @wixFieldType text */
   phone?: string;
+  /** @wixFieldType number */
+  sl_no?: number;
+  /** @wixFieldType text */
+  communicationAdress?: string;
+  /** @wixFieldType number */
+  sl_nno?: number;
+  /** @wixFieldType number */
+  sl_noo?: number;
+  /** @wixFieldType url */
+  url?: string;
 }
 
 

@@ -6,13 +6,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown } from 'lucide-react';
 
 export default function MemberCollegesPage() {
   const [colleges, setColleges] = useState<MemberColleges[]>([]);
+  const [displayedColleges, setDisplayedColleges] = useState<MemberColleges[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [itemsToShow, setItemsToShow] = useState(50);
+  const [totalItems, setTotalItems] = useState(0);
 
   const fetchColleges = async () => {
     try {
@@ -25,6 +29,8 @@ export default function MemberCollegesPage() {
       console.log('📊 Data preview:', items.slice(0, 2)); // Log first 2 items for debugging
       
       setColleges(items);
+      setTotalItems(items.length);
+      setDisplayedColleges(items.slice(0, itemsToShow));
       setLastUpdated(new Date());
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
@@ -33,6 +39,23 @@ export default function MemberCollegesPage() {
       setLoading(false);
     }
   };
+
+  const loadMoreColleges = async () => {
+    try {
+      setLoadingMore(true);
+      const newItemsToShow = itemsToShow + 50;
+      setItemsToShow(newItemsToShow);
+      setDisplayedColleges(colleges.slice(0, newItemsToShow));
+    } catch (err) {
+      console.error('❌ Error loading more colleges:', err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    setDisplayedColleges(colleges.slice(0, itemsToShow));
+  }, [colleges, itemsToShow]);
 
   useEffect(() => {
     fetchColleges();
@@ -86,8 +109,13 @@ export default function MemberCollegesPage() {
           <div className="mt-6">
             <Badge variant="secondary" className="text-lg px-4 py-2">
               <GraduationCap className="w-5 h-5 mr-2" />
-              {colleges.length} Member Institutions
+              {totalItems} Member Institutions
             </Badge>
+            {displayedColleges.length < totalItems && (
+              <Badge variant="outline" className="text-sm px-3 py-1 ml-2">
+                Showing {displayedColleges.length} of {totalItems}
+              </Badge>
+            )}
           </div>
         </div>
       </section>
@@ -146,7 +174,7 @@ export default function MemberCollegesPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {colleges.map((college, index) => (
+                    {displayedColleges.map((college, index) => (
                       <TableRow 
                         key={college._id} 
                         className="hover:bg-primary/5 transition-colors"
@@ -213,6 +241,33 @@ export default function MemberCollegesPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Load More Button */}
+          {displayedColleges.length < totalItems && (
+            <div className="mt-8 text-center">
+              <Button 
+                onClick={loadMoreColleges}
+                disabled={loadingMore}
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-paragraph"
+                size="lg"
+              >
+                {loadingMore ? (
+                  <>
+                    <LoadingSpinner className="w-4 h-4 mr-2" />
+                    Loading More...
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-5 h-5 mr-2" />
+                    Load More Colleges ({totalItems - displayedColleges.length} remaining)
+                  </>
+                )}
+              </Button>
+              <p className="text-sm text-gray-600 mt-2">
+                Showing {displayedColleges.length} of {totalItems} colleges
+              </p>
+            </div>
+          )}
 
           {colleges.length === 0 && !loading && (
             <Card className="mt-8">
