@@ -98,10 +98,12 @@ export default function MemberCollegesPage() {
       setFilteredColleges(sortedItems);
       setTotalItems(sortedItems.length);
       setDisplayedColleges(sortedItems.slice(0, 50)); // Always start with 50
+      setItemsToShow(50); // Reset items to show
       setLastUpdated(new Date());
       
       // Log for debugging
       console.log(`✅ Loaded ${sortedItems.length} colleges, displaying first 50`);
+      console.log(`📊 Load More Button should ${sortedItems.length > 50 ? 'be visible' : 'be hidden'} (${sortedItems.length} total items)`);
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
       setError('Failed to load member colleges. Please try refreshing the page.');
@@ -124,6 +126,7 @@ export default function MemberCollegesPage() {
         
         // Log for debugging
         console.log(`📊 Load More: Showing ${Math.min(newItemsToShow, sourceData.length)} of ${sourceData.length} colleges`);
+        console.log(`📊 Load More Button should ${newItemsToShow < sourceData.length ? 'remain visible' : 'be hidden'} after this load`);
       }, 200); // Reduced delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
@@ -134,6 +137,8 @@ export default function MemberCollegesPage() {
   useEffect(() => {
     const sourceData = isSearchActive ? filteredColleges : colleges;
     setDisplayedColleges(sourceData.slice(0, itemsToShow));
+    // Ensure totalItems is always in sync with the current data source
+    setTotalItems(sourceData.length);
   }, [colleges, filteredColleges, itemsToShow, isSearchActive]);
 
   useEffect(() => {
@@ -431,8 +436,13 @@ export default function MemberCollegesPage() {
           </Card>
 
           {/* Enhanced Load More Button - Highly Visible & Always at Bottom */}
-          {displayedColleges.length < totalItems && (
+          {displayedColleges.length < totalItems && totalItems > 0 && (
             <div className="mt-12 mb-12 text-center">
+              {/* Debug information - remove in production */}
+              <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
+                Debug: Displayed={displayedColleges.length}, Total={totalItems}, Should show button={displayedColleges.length < totalItems}
+              </div>
+              
               {/* Attention-grabbing container with enhanced visibility */}
               <div className="bg-gradient-to-br from-primary/8 via-secondary/5 to-primary/8 rounded-2xl p-8 max-w-2xl mx-auto border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
                 {/* Subtle background pattern for visual appeal */}
