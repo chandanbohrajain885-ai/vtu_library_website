@@ -225,20 +225,20 @@ export default function MemberCollegesPage() {
               {/* Card Grid Layout */}
               <div className="grid gap-6">
                 {displayedColleges.map((college, index) => {
-                  // Array of vibrant gradient backgrounds for cards
+                  // Array of elegant gradient backgrounds for cards with enhanced visual appeal
                   const cardColors = [
-                    'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200',
-                    'bg-gradient-to-br from-green-50 to-green-100 border-green-200',
-                    'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200',
-                    'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200',
-                    'bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200',
-                    'bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200',
-                    'bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200',
-                    'bg-gradient-to-br from-red-50 to-red-100 border-red-200',
-                    'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200',
-                    'bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200',
-                    'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200',
-                    'bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200',
+                    'bg-gradient-to-br from-rose-100 to-rose-200 border-rose-300 shadow-rose-100/50',
+                    'bg-gradient-to-br from-amber-100 to-amber-200 border-amber-300 shadow-amber-100/50',
+                    'bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300 shadow-emerald-100/50',
+                    'bg-gradient-to-br from-sky-100 to-sky-200 border-sky-300 shadow-sky-100/50',
+                    'bg-gradient-to-br from-violet-100 to-violet-200 border-violet-300 shadow-violet-100/50',
+                    'bg-gradient-to-br from-orange-100 to-orange-200 border-orange-300 shadow-orange-100/50',
+                    'bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300 shadow-teal-100/50',
+                    'bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-300 shadow-indigo-100/50',
+                    'bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300 shadow-pink-100/50',
+                    'bg-gradient-to-br from-lime-100 to-lime-200 border-lime-300 shadow-lime-100/50',
+                    'bg-gradient-to-br from-cyan-100 to-cyan-200 border-cyan-300 shadow-cyan-100/50',
+                    'bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300 shadow-purple-100/50',
                   ];
                   
                   const cardColorClass = cardColors[index % cardColors.length];
@@ -246,13 +246,13 @@ export default function MemberCollegesPage() {
                   return (
                     <Card 
                       key={college._id} 
-                      className={`${cardColorClass} border-2 hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]`}
+                      className={`${cardColorClass} border-2 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg`}
                     >
                       <CardContent className="p-6">
                         <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 items-start">
                           {/* Serial Number */}
                           <div className="lg:col-span-1">
-                            <div className="flex items-center justify-center w-12 h-12 bg-white/70 rounded-full border-2 border-white/50 shadow-sm">
+                            <div className="flex items-center justify-center w-12 h-12 bg-white/80 rounded-full border-2 border-white/70 shadow-md">
                               <span className="font-heading font-bold text-primary text-lg">
                                 {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
                               </span>
@@ -261,7 +261,7 @@ export default function MemberCollegesPage() {
                           
                           {/* College Name & Website */}
                           <div className="lg:col-span-2">
-                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                            <div className="bg-white/60 rounded-lg p-4 h-full">
                               <h3 className="font-heading font-bold text-primary text-lg mb-2 leading-tight">
                                 {college.collegeName || (
                                   <span className="text-red-500 italic">Missing college name</span>
@@ -283,7 +283,7 @@ export default function MemberCollegesPage() {
                           
                           {/* Communication Address */}
                           <div className="lg:col-span-1">
-                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                            <div className="bg-white/60 rounded-lg p-4 h-full">
                               <div className="flex items-start gap-2">
                                 <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                                 <div>
@@ -299,7 +299,7 @@ export default function MemberCollegesPage() {
                           
                           {/* Librarian Name */}
                           <div className="lg:col-span-1">
-                            <div className="bg-white/50 rounded-lg p-4 h-full flex items-center">
+                            <div className="bg-white/60 rounded-lg p-4 h-full flex items-center">
                               <div className="w-full">
                                 <p className="font-paragraph font-semibold text-primary text-sm">
                                   {college.librarianName || (
@@ -312,7 +312,7 @@ export default function MemberCollegesPage() {
                           
                           {/* Contact Information */}
                           <div className="lg:col-span-1">
-                            <div className="bg-white/50 rounded-lg p-4 h-full">
+                            <div className="bg-white/60 rounded-lg p-4 h-full">
                               <div className="space-y-3">
                                 {/* Email */}
                                 <div>
