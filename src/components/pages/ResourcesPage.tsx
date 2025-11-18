@@ -48,6 +48,9 @@ export default function ResourcesPage() {
   
   // Check if this is the 2015-16 year (styled content)
   const is2015Year = year === '2015-16';
+  
+  // Check if this is the 2014-15 year (styled content)
+  const is2014Year = year === '2014-15';
 
   // Fetch E-Resources data from CMS
   // Remove the useEffect since we're using useLiveData now
@@ -2005,6 +2008,144 @@ export default function ResourcesPage() {
                     </ul>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-12">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center">
+              <p className="font-paragraph text-gray-400">
+                © 2025 VTU Consortium Portal. All Rights Reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // Render original 2014-15 data exactly as provided
+  if (is2014Year) {
+    // Find the 2014-15 data from CMS
+    const year2014Data = eResourcesData.find(item => item.title === '2014-15');
+    
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Navigation */}
+        <header className="bg-primary text-primary-foreground shadow-lg">
+          <div className="max-w-[120rem] mx-auto px-6 py-4">
+            <nav className="flex items-center justify-between">
+              <Link to="/" className="font-heading text-2xl font-bold">
+                VTU Consortium
+              </Link>
+              <Button 
+                onClick={() => window.location.href = '/'}
+                variant="outline" 
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
+            </nav>
+          </div>
+        </header>
+
+        {/* Page Header */}
+        <section className="bg-primary/5 py-16">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="text-center space-y-4">
+              <h1 className="font-heading text-5xl font-bold text-primary">
+                E-RESOURCES - {year}
+              </h1>
+              <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
+                Academic Year {year} Resources
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 2014-15 Content Section */}
+        <section className="py-20">
+          <div className="max-w-[120rem] mx-auto px-6">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="prose prose-lg max-w-none">
+                <h1 className="font-heading text-4xl font-bold text-primary text-center mb-12">
+                  VTU CONSORTIUM SUBSCRIBED E-RESOURCES FOR THE YEAR 2014-15
+                </h1>
+                
+                {/* Display CMS Data if available */}
+                {year2014Data ? (
+                  <div className="space-y-8">
+                    {/* E-Journals Section */}
+                    {year2014Data.eJournals && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-2xl font-bold text-primary mb-6">E-Journals</h2>
+                        <div className="p-4 border border-gray-200 rounded">
+                          <div className="font-paragraph text-gray-700 whitespace-pre-line">
+                            {year2014Data.eJournals}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* E-Books Section */}
+                    {year2014Data.eBooks && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-2xl font-bold text-primary mb-6">E-Books</h2>
+                        <div className="p-4 border border-gray-200 rounded">
+                          <div className="font-paragraph text-gray-700 whitespace-pre-line">
+                            {year2014Data.eBooks}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Resource List Section */}
+                    {year2014Data.resourceList && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-2xl font-bold text-primary mb-6">Resource List</h2>
+                        <div className="p-4 border border-gray-200 rounded">
+                          <div className="font-paragraph text-gray-700 whitespace-pre-line">
+                            {year2014Data.resourceList}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Language Labs & E-Learning Section */}
+                    {year2014Data.languageLabsAndElearning && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-2xl font-bold text-primary mb-6">Language Labs & E-Learning</h2>
+                        <div className="p-4 border border-gray-200 rounded">
+                          <div className="font-paragraph text-gray-700 whitespace-pre-line">
+                            {year2014Data.languageLabsAndElearning}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Plagiarism Detection Software Section */}
+                    {year2014Data.plagiarismDetectionSoftware && (
+                      <div className="mb-12">
+                        <h2 className="font-heading text-2xl font-bold text-primary mb-6">Plagiarism Detection Software</h2>
+                        <div className="p-4 border border-gray-200 rounded">
+                          <div className="font-paragraph text-gray-700 whitespace-pre-line">
+                            {year2014Data.plagiarismDetectionSoftware}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="font-paragraph text-gray-600">
+                      {isLoading ? 'Loading E-Resources data...' : 'No E-Resources data available for 2014-15.'}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
