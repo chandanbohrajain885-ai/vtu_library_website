@@ -288,147 +288,131 @@ export default function MemberCollegesPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-8">
-              {/* Card Grid Layout */}
-              <div className="grid gap-8">
-                {displayedColleges.map((college, index) => {
-                  // Array of elegant gradient backgrounds for cards with enhanced visual appeal
-                  const cardColors = [
-                    'bg-gradient-to-br from-rose-100 to-rose-200 border-rose-300 shadow-rose-100/50',
-                    'bg-gradient-to-br from-amber-100 to-amber-200 border-amber-300 shadow-amber-100/50',
-                    'bg-gradient-to-br from-emerald-100 to-emerald-200 border-emerald-300 shadow-emerald-100/50',
-                    'bg-gradient-to-br from-sky-100 to-sky-200 border-sky-300 shadow-sky-100/50',
-                    'bg-gradient-to-br from-violet-100 to-violet-200 border-violet-300 shadow-violet-100/50',
-                    'bg-gradient-to-br from-orange-100 to-orange-200 border-orange-300 shadow-orange-100/50',
-                    'bg-gradient-to-br from-teal-100 to-teal-200 border-teal-300 shadow-teal-100/50',
-                    'bg-gradient-to-br from-indigo-100 to-indigo-200 border-indigo-300 shadow-indigo-100/50',
-                    'bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300 shadow-pink-100/50',
-                    'bg-gradient-to-br from-lime-100 to-lime-200 border-lime-300 shadow-lime-100/50',
-                    'bg-gradient-to-br from-cyan-100 to-cyan-200 border-cyan-300 shadow-cyan-100/50',
-                    'bg-gradient-to-br from-purple-100 to-purple-200 border-purple-300 shadow-purple-100/50',
-                  ];
-                  
-                  const cardColorClass = cardColors[index % cardColors.length];
-                  
-                  return (
-                    <Card 
-                      key={college._id} 
-                      className={`${cardColorClass} border-2 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg`}
-                    >
-                      <CardContent className="p-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 items-start">
-                          {/* Serial Number */}
-                          <div className="lg:col-span-1">
-                            <div className="flex items-center justify-center w-16 h-16 bg-white/80 rounded-full border-2 border-white/70 shadow-md">
-                              <span className="font-heading font-bold text-primary text-xl">
-                                {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
-                              </span>
-                            </div>
+            <CardContent className="p-6">
+              {/* Compact Card Grid Layout */}
+              <div className="space-y-4">
+                {displayedColleges.map((college, index) => (
+                  <Card 
+                    key={college._id} 
+                    className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+                  >
+                    <CardContent className="p-4">
+                      <div className="grid grid-cols-12 gap-4 items-center">
+                        {/* Serial Number - Compact */}
+                        <div className="col-span-1">
+                          <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg border border-primary/20">
+                            <span className="font-heading font-bold text-primary text-sm">
+                              {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
+                            </span>
                           </div>
-                          
-                          {/* College Name & Website */}
-                          <div className="lg:col-span-2">
-                            <div className="bg-white/60 rounded-lg p-6 h-full">
-                              <h3 className="font-heading font-bold text-primary text-xl mb-3 leading-tight">
-                                {college.collegeName || (
-                                  <span className="text-red-500 italic">Missing college name</span>
-                                )}
-                              </h3>
-                              {college.url && (
-                                <a 
-                                  href={college.url} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-base font-paragraph underline transition-colors"
-                                >
-                                  <ExternalLink className="w-4 h-4" />
-                                  Visit Website
-                                </a>
+                        </div>
+                        
+                        {/* College Name & Website - Left aligned */}
+                        <div className="col-span-4">
+                          <div className="text-left">
+                            <h3 className="font-heading font-bold text-primary text-lg mb-1 leading-tight">
+                              {college.collegeName || (
+                                <span className="text-red-500 italic text-base">Missing college name</span>
                               )}
-                            </div>
+                            </h3>
+                            {college.url && (
+                              <a 
+                                href={college.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-paragraph underline transition-colors"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                Visit Website
+                              </a>
+                            )}
                           </div>
-                          
-                          {/* Communication Address */}
-                          <div className="lg:col-span-1">
-                            <div className="bg-white/60 rounded-lg p-6 h-full">
-                              <div className="flex items-start gap-3">
-                                <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                                <div>
-                                  <p className="font-paragraph text-base text-gray-700 leading-relaxed">
-                                    {(college.communicationAddress || college.communicationAdress) || (
-                                      <span className="text-red-500 italic">Missing address</span>
-                                    )}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Librarian Name */}
-                          <div className="lg:col-span-1">
-                            <div className="bg-white/60 rounded-lg p-6 h-full flex items-center">
-                              <div className="w-full">
-                                <p className="font-paragraph font-semibold text-primary text-base">
-                                  {college.librarianName || (
-                                    <span className="text-red-500 italic">Missing librarian name</span>
-                                  )}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Contact Information */}
-                          <div className="lg:col-span-1">
-                            <div className="bg-white/60 rounded-lg p-6 h-full">
-                              <div className="space-y-4">
-                                {/* Email */}
-                                <div>
-                                  {college.email ? (
-                                    <div className="flex items-center gap-3">
-                                      <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                                      <a 
-                                        href={`mailto:${college.email}`}
-                                        className="text-primary hover:text-secondary transition-colors text-sm font-paragraph truncate"
-                                        title={college.email}
-                                      >
-                                        {college.email}
-                                      </a>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center gap-3">
-                                      <Mail className="w-5 h-5 text-gray-400" />
-                                      <span className="text-red-500 italic text-sm">Missing email</span>
-                                    </div>
-                                  )}
-                                </div>
-                                
-                                {/* Phone */}
-                                <div>
-                                  {college.phone ? (
-                                    <div className="flex items-center gap-3">
-                                      <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                                      <a 
-                                        href={`tel:${college.phone}`}
-                                        className="text-primary hover:text-secondary transition-colors text-sm font-paragraph"
-                                      >
-                                        {college.phone}
-                                      </a>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center gap-3">
-                                      <Phone className="w-5 h-5 text-gray-400" />
-                                      <span className="text-red-500 italic text-sm">Missing phone</span>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
+                        </div>
+                        
+                        {/* Communication Address - Compact */}
+                        <div className="col-span-3">
+                          <div className="text-left">
+                            <div className="flex items-start gap-2">
+                              <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                              <p className="font-paragraph text-sm text-gray-700 leading-relaxed">
+                                {(college.communicationAddress || college.communicationAdress) || (
+                                  <span className="text-red-500 italic">Missing address</span>
+                                )}
+                              </p>
                             </div>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+                        
+                        {/* Librarian Name - Compact */}
+                        <div className="col-span-2">
+                          <div className="text-left">
+                            <p className="font-paragraph font-semibold text-primary text-sm">
+                              {college.librarianName || (
+                                <span className="text-red-500 italic">Missing librarian</span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Contact Information - Compact */}
+                        <div className="col-span-2">
+                          <div className="text-left space-y-1">
+                            {/* Email */}
+                            <div>
+                              {college.email ? (
+                                <div className="flex items-center gap-2">
+                                  <Mail className="w-3 h-3 text-primary flex-shrink-0" />
+                                  <a 
+                                    href={`mailto:${college.email}`}
+                                    className="text-primary hover:text-secondary transition-colors text-xs font-paragraph truncate"
+                                    title={college.email}
+                                  >
+                                    {college.email}
+                                  </a>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <Mail className="w-3 h-3 text-gray-400" />
+                                  <span className="text-red-500 italic text-xs">No email</span>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Phone */}
+                            <div>
+                              {college.phone ? (
+                                <div className="flex items-center gap-2">
+                                  <Phone className="w-3 h-3 text-primary flex-shrink-0" />
+                                  <a 
+                                    href={`tel:${college.phone}`}
+                                    className="text-primary hover:text-secondary transition-colors text-xs font-paragraph"
+                                  >
+                                    {college.phone}
+                                  </a>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <Phone className="w-3 h-3 text-gray-400" />
+                                  <span className="text-red-500 italic text-xs">No phone</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Status Badge - Only show if incomplete */}
+                      {(!college.collegeName || !college.email || !college.phone) && (
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          <Badge variant="destructive" className="text-xs">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            Incomplete Record
+                          </Badge>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </CardContent>
           </Card>
