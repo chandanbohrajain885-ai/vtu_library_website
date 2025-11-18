@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown, ExternalLink } from 'lucide-react';
 
 export default function MemberCollegesPage() {
   const [colleges, setColleges] = useState<MemberColleges[]>([]);
@@ -28,9 +28,24 @@ export default function MemberCollegesPage() {
       console.log('✅ Successfully fetched colleges:', items.length, 'items');
       console.log('📊 Data preview:', items.slice(0, 2)); // Log first 2 items for debugging
       
-      setColleges(items);
-      setTotalItems(items.length);
-      setDisplayedColleges(items.slice(0, itemsToShow));
+      // Sort colleges by serial number if available, otherwise by college name
+      const sortedItems = items.sort((a, b) => {
+        const aSerial = a.sl_no || a.sl_nno || a.sl_noo || 0;
+        const bSerial = b.sl_no || b.sl_nno || b.sl_noo || 0;
+        
+        if (aSerial && bSerial) {
+          return aSerial - bSerial;
+        }
+        
+        // Fallback to alphabetical sorting by college name
+        const aName = a.collegeName || '';
+        const bName = b.collegeName || '';
+        return aName.localeCompare(bName);
+      });
+      
+      setColleges(sortedItems);
+      setTotalItems(sortedItems.length);
+      setDisplayedColleges(sortedItems.slice(0, itemsToShow));
       setLastUpdated(new Date());
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
@@ -40,15 +55,17 @@ export default function MemberCollegesPage() {
     }
   };
 
-  const loadMoreColleges = async () => {
+  const loadMoreColleges = () => {
     try {
       setLoadingMore(true);
-      const newItemsToShow = itemsToShow + 50;
-      setItemsToShow(newItemsToShow);
-      setDisplayedColleges(colleges.slice(0, newItemsToShow));
+      setTimeout(() => {
+        const newItemsToShow = itemsToShow + 50;
+        setItemsToShow(newItemsToShow);
+        setDisplayedColleges(colleges.slice(0, newItemsToShow));
+        setLoadingMore(false);
+      }, 300); // Small delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
-    } finally {
       setLoadingMore(false);
     }
   };
@@ -123,6 +140,38 @@ export default function MemberCollegesPage() {
       {/* Colleges Table Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
+          {/* Data Quality Summary */}
+          {colleges.length > 0 && (
+            <Card className="mb-6">
+              <CardContent className="p-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-primary">{totalItems}</div>
+                    <div className="text-sm text-gray-600">Total Colleges</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-green-600">
+                      {colleges.filter(c => c.collegeName && c.email && c.phone).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Complete Records</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-blue-600">
+                      {colleges.filter(c => c.url).length}
+                    </div>
+                    <div className="text-sm text-gray-600">With Websites</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-orange-600">
+                      {colleges.filter(c => !c.collegeName || !c.email || !c.phone).length}
+                    </div>
+                    <div className="text-sm text-gray-600">Incomplete Records</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card className="shadow-lg">
             <CardHeader className="bg-primary/5 border-b">
               <div className="flex justify-between items-center">
@@ -157,7 +206,7 @@ export default function MemberCollegesPage() {
                         Sl.No
                       </TableHead>
                       <TableHead className="font-heading font-semibold text-primary min-w-[200px]">
-                        College Name
+                        College Name & Website
                       </TableHead>
                       <TableHead className="font-heading font-semibold text-primary min-w-[250px]">
                         Communication Address
@@ -184,19 +233,33 @@ export default function MemberCollegesPage() {
                         }`}
                       >
                         <TableCell className="font-paragraph font-medium text-center">
-                          {index + 1}
+                          {college.sl_no || college.sl_nno || college.sl_noo || (index + 1)}
                         </TableCell>
                         <TableCell className="font-paragraph font-semibold text-primary">
-                          {college.collegeName || (
-                            <span className="text-red-500 italic">Missing college name</span>
-                          )}
+                          <div className="flex flex-col">
+                            <span>
+                              {college.collegeName || (
+                                <span className="text-red-500 italic">Missing college name</span>
+                              )}
+                            </span>
+                            {college.url && (
+                              <a 
+                                href={college.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-xs text-blue-600 hover:text-blue-800 underline mt-1"
+                              >
+                                Visit Website
+                              </a>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="font-paragraph">
-                          {college.communicationAddress ? (
+                          {(college.communicationAddress || college.communicationAdress) ? (
                             <div className="flex items-start gap-2">
                               <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                               <span className="text-sm leading-relaxed">
-                                {college.communicationAddress}
+                                {college.communicationAddress || college.communicationAdress}
                               </span>
                             </div>
                           ) : (
