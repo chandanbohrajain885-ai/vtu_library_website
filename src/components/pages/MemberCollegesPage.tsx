@@ -19,7 +19,7 @@ export default function MemberCollegesPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [itemsToShow, setItemsToShow] = useState(100);
+  const [itemsToShow, setItemsToShow] = useState(50);
   const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -106,7 +106,7 @@ export default function MemberCollegesPage() {
     try {
       setLoadingMore(true);
       setTimeout(() => {
-        const newItemsToShow = itemsToShow + 100;
+        const newItemsToShow = itemsToShow + 50;
         setItemsToShow(newItemsToShow);
         const sourceData = isSearchActive ? filteredColleges : colleges;
         setDisplayedColleges(sourceData.slice(0, newItemsToShow));
@@ -417,24 +417,26 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* New Load More Button - Enhanced Design */}
+          {/* Enhanced Load More Button - Optimized for 211 colleges */}
           {displayedColleges.length < totalItems && (
-            <div className="mt-12 text-center">
-              <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-8 max-w-md mx-auto border border-primary/10">
+            <div className="mt-8 text-center">
+              <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-6 max-w-lg mx-auto border border-primary/10 shadow-sm">
                 <div className="mb-4">
-                  <h3 className="font-heading text-xl font-bold text-primary mb-2">
+                  <h3 className="font-heading text-lg font-bold text-primary mb-2">
                     More Colleges Available
                   </h3>
-                  <p className="font-paragraph text-gray-600 text-sm">
+                  <p className="font-paragraph text-gray-600 text-sm mb-3">
                     Showing {displayedColleges.length} of {totalItems} member colleges
                   </p>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                  
+                  {/* Progress Bar */}
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                     <div 
-                      className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
                       style={{ width: `${(displayedColleges.length / totalItems) * 100}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500">
                     {Math.round((displayedColleges.length / totalItems) * 100)}% loaded
                   </p>
                 </div>
@@ -442,24 +444,24 @@ export default function MemberCollegesPage() {
                 <Button 
                   onClick={loadMoreColleges}
                   disabled={loadingMore}
-                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-4 text-lg font-paragraph font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-6 py-3 text-base font-paragraph font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70"
                   size="lg"
                 >
                   {loadingMore ? (
                     <>
-                      <LoadingSpinner className="w-5 h-5 mr-3" />
-                      Loading More Colleges...
+                      <LoadingSpinner className="w-4 h-4 mr-2" />
+                      Loading More...
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="w-5 h-5 mr-3" />
+                      <ChevronDown className="w-4 h-4 mr-2" />
                       Load More ({totalItems - displayedColleges.length} remaining)
                     </>
                   )}
                 </Button>
                 
                 <p className="text-xs text-gray-500 mt-3 font-paragraph">
-                  Click to load {Math.min(100, totalItems - displayedColleges.length)} more colleges
+                  Click to load {Math.min(50, totalItems - displayedColleges.length)} more colleges
                 </p>
               </div>
             </div>
