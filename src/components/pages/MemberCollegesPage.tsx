@@ -177,7 +177,11 @@ export default function MemberCollegesPage() {
                     {displayedColleges.map((college, index) => (
                       <TableRow 
                         key={college._id} 
-                        className="hover:bg-primary/5 transition-colors"
+                        className={`transition-colors hover:bg-primary/10 ${
+                          index % 2 === 0 
+                            ? 'bg-white' 
+                            : 'bg-gray-50/50'
+                        }`}
                       >
                         <TableCell className="font-paragraph font-medium text-center">
                           {index + 1}
