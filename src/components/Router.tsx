@@ -19,6 +19,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import DebugUploads from '@/debug-uploads';
 import MemberCollegesDataChecker from '@/components/debug/MemberCollegesDataChecker';
 import Check2014Data from '@/check-2014-15-data';
+import Check2015Data from '@/check-2015-16-data';
 // Layout component that includes ScrollToTop
 function Layout() {
   return (
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: "check-2014-15-data",
         element: <Check2014Data />,
+      },
+      {
+        path: "check-2015-16-data",
+        element: <Check2015Data />,
       },
       {
         path: "*",
