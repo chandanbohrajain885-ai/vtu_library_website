@@ -41,17 +41,21 @@ export default function MemberCollegesPage() {
     
     if (term.length === 0) {
       setFilteredColleges(colleges);
-      setDisplayedColleges(colleges.slice(0, itemsToShow));
+      setItemsToShow(50); // Reset to initial load amount
+      setDisplayedColleges(colleges.slice(0, 50));
       setTotalItems(colleges.length);
     } else {
       const filtered = colleges.filter(college => 
         college.collegeName?.toLowerCase().includes(term.toLowerCase()) ||
         college.librarianName?.toLowerCase().includes(term.toLowerCase()) ||
         college.communicationAddress?.toLowerCase().includes(term.toLowerCase()) ||
-        college.communicationAdress?.toLowerCase().includes(term.toLowerCase())
+        college.communicationAdress?.toLowerCase().includes(term.toLowerCase()) ||
+        college.email?.toLowerCase().includes(term.toLowerCase()) ||
+        college.phone?.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredColleges(filtered);
-      setDisplayedColleges(filtered.slice(0, itemsToShow));
+      setItemsToShow(50); // Reset to initial load amount for search results
+      setDisplayedColleges(filtered.slice(0, 50));
       setTotalItems(filtered.length);
     }
   };
@@ -60,7 +64,8 @@ export default function MemberCollegesPage() {
     setSearchTerm('');
     setIsSearchActive(false);
     setFilteredColleges(colleges);
-    setDisplayedColleges(colleges.slice(0, itemsToShow));
+    setItemsToShow(50); // Reset to initial load amount
+    setDisplayedColleges(colleges.slice(0, 50));
     setTotalItems(colleges.length);
   };
 
@@ -92,8 +97,11 @@ export default function MemberCollegesPage() {
       setColleges(sortedItems);
       setFilteredColleges(sortedItems);
       setTotalItems(sortedItems.length);
-      setDisplayedColleges(sortedItems.slice(0, itemsToShow));
+      setDisplayedColleges(sortedItems.slice(0, 50)); // Always start with 50
       setLastUpdated(new Date());
+      
+      // Log for debugging
+      console.log(`✅ Loaded ${sortedItems.length} colleges, displaying first 50`);
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
       setError('Failed to load member colleges. Please try refreshing the page.');
@@ -105,13 +113,18 @@ export default function MemberCollegesPage() {
   const loadMoreColleges = () => {
     try {
       setLoadingMore(true);
+      
+      // Use a shorter delay for better responsiveness
       setTimeout(() => {
         const newItemsToShow = itemsToShow + 50;
         setItemsToShow(newItemsToShow);
         const sourceData = isSearchActive ? filteredColleges : colleges;
         setDisplayedColleges(sourceData.slice(0, newItemsToShow));
         setLoadingMore(false);
-      }, 300); // Small delay for better UX
+        
+        // Log for debugging
+        console.log(`📊 Load More: Showing ${Math.min(newItemsToShow, sourceData.length)} of ${sourceData.length} colleges`);
+      }, 200); // Reduced delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
       setLoadingMore(false);
@@ -417,9 +430,9 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Enhanced Load More Button - Optimized for 211 colleges */}
+          {/* Enhanced Load More Button - Fixed for all 211 colleges */}
           {displayedColleges.length < totalItems && (
-            <div className="mt-8 text-center">
+            <div className="mt-8 mb-8 text-center">
               <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-xl p-6 max-w-lg mx-auto border border-primary/10 shadow-sm">
                 <div className="mb-4">
                   <h3 className="font-heading text-lg font-bold text-primary mb-2">
@@ -430,9 +443,9 @@ export default function MemberCollegesPage() {
                   </p>
                   
                   {/* Progress Bar */}
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                  <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
                     <div 
-                      className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-primary to-secondary h-3 rounded-full transition-all duration-500"
                       style={{ width: `${(displayedColleges.length / totalItems) * 100}%` }}
                     ></div>
                   </div>
@@ -444,13 +457,13 @@ export default function MemberCollegesPage() {
                 <Button 
                   onClick={loadMoreColleges}
                   disabled={loadingMore}
-                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-6 py-3 text-base font-paragraph font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-8 py-4 text-base font-paragraph font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70 w-full sm:w-auto"
                   size="lg"
                 >
                   {loadingMore ? (
                     <>
                       <LoadingSpinner className="w-4 h-4 mr-2" />
-                      Loading More...
+                      Loading More Colleges...
                     </>
                   ) : (
                     <>
