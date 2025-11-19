@@ -126,7 +126,7 @@ export default function MemberCollegesPage() {
         
         // Log for debugging
         console.log(`📊 Load More: Showing ${Math.min(newItemsToShow, sourceData.length)} of ${sourceData.length} colleges`);
-        console.log(`📊 Load More Button should ${newItemsToShow < sourceData.length ? 'remain visible' : 'be hidden'} after this load`);
+        console.log(`📊 Load More Button should ${newItemsToShow < sourceData.length ? 'remain visible'} after this load`);
       }, 200); // Reduced delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
