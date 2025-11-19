@@ -97,7 +97,7 @@ export default function MemberCollegesPage() {
       setColleges(sortedItems);
       setFilteredColleges(sortedItems);
       setTotalItems(sortedItems.length);
-      setDisplayedColleges(sortedItems.slice(0, 211)); // Always start with 50
+      setDisplayedColleges(sortedItems.slice(0, 211)); // Always start with 50 // come here
       setItemsToShow(211); // Reset items to show
       setLastUpdated(new Date());
       
@@ -485,7 +485,7 @@ export default function MemberCollegesPage() {
                   Showing {displayedColleges.length} of {sourceData.length} colleges
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  Click to load 50 more colleges
+                  Click to load 211 more colleges
                 </p>
               </div>
             ) : null;
@@ -502,9 +502,9 @@ export default function MemberCollegesPage() {
                 <Button 
                   onClick={() => {
                     // Reset to show only first 50 and enable load more functionality
-                    setItemsToShow(50);
+                    setItemsToShow(211);
                     const sourceData = isSearchActive ? filteredColleges : colleges;
-                    setDisplayedColleges(sourceData.slice(0, 50));
+                    setDisplayedColleges(sourceData.slice(0, 211));
                   }}
                   variant="outline"
                   className="mb-4 text-sm px-4 py-2"
@@ -529,7 +529,7 @@ export default function MemberCollegesPage() {
                   <p className="text-sm text-green-600 mt-1">
                     Displaying all {sourceData.length} colleges
                   </p>
-                  {sourceData.length <= 50 && (
+                  {sourceData.length <= 211 && (
                     <p className="text-xs text-green-600 mt-1">
                       All available colleges are shown
                     </p>
