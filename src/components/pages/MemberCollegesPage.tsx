@@ -41,7 +41,7 @@ export default function MemberCollegesPage() {
     
     if (term.length === 0) {
       setFilteredColleges(colleges);
-      setItemsToShow(50); // Reset to initial load amount
+      setItemsToShow(211); // Reset to initial load amount
       setDisplayedColleges(colleges.slice(0, 50));
       setTotalItems(colleges.length);
     } else {
