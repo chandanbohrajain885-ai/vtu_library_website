@@ -435,67 +435,65 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Enhanced Load More Button - Highly Visible & Always at Bottom */}
+          {/* Card-Style Load More Button */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
-            <div className="mt-12 mb-12 text-center">
-              
-              {/* Attention-grabbing container with enhanced visibility */}
-              <div className="bg-gradient-to-br from-primary/8 via-secondary/5 to-primary/8 rounded-2xl p-8 max-w-2xl mx-auto border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
-                {/* Subtle background pattern for visual appeal */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-y-1"></div>
-                
-                <div className="relative z-10">
-                  <div className="mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full mb-4 shadow-lg">
-                      <ChevronDown className="w-8 h-8 text-white animate-bounce" />
-                    </div>
-                    
-                    <h3 className="font-heading text-xl font-bold text-primary mb-3">
-                      More Colleges Available
-                    </h3>
-                    <p className="font-paragraph text-gray-700 text-base mb-4 font-medium">
-                      Showing {displayedColleges.length} of {totalItems} member colleges
-                    </p>
-                    
-                    {/* Enhanced Progress Bar */}
-                    <div className="w-full bg-gray-200 rounded-full h-4 mb-3 shadow-inner">
-                      <div 
-                        className="bg-gradient-to-r from-primary via-secondary to-primary h-4 rounded-full transition-all duration-700 shadow-sm relative overflow-hidden"
-                        style={{ width: `${(displayedColleges.length / totalItems) * 100}%` }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+            <div className="mt-6">
+              <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-12 gap-4 items-center">
+                    {/* Icon Section */}
+                    <div className="col-span-1">
+                      <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full shadow-md">
+                        <ChevronDown className="w-6 h-6 text-white animate-bounce" />
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 font-medium">
-                      {Math.round((displayedColleges.length / totalItems) * 100)}% loaded
-                    </p>
+                    
+                    {/* Content Section */}
+                    <div className="col-span-8">
+                      <div className="text-left">
+                        <h3 className="font-heading font-bold text-primary text-lg mb-1">
+                          Load More Colleges
+                        </h3>
+                        <p className="font-paragraph text-gray-700 text-sm mb-2">
+                          Showing {displayedColleges.length} of {totalItems} member colleges
+                        </p>
+                        {/* Progress Bar */}
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
+                          <div 
+                            className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-700"
+                            style={{ width: `${(displayedColleges.length / totalItems) * 100}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-gray-600">
+                          {Math.round((displayedColleges.length / totalItems) * 100)}% loaded • {totalItems - displayedColleges.length} remaining
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Button Section */}
+                    <div className="col-span-3">
+                      <Button 
+                        onClick={loadMoreColleges}
+                        disabled={loadingMore}
+                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-paragraph font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70"
+                        size="lg"
+                      >
+                        {loadingMore ? (
+                          <>
+                            <LoadingSpinner className="w-4 h-4 mr-2" />
+                            Loading...
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="w-4 h-4 mr-2" />
+                            Load More
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                  
-                  {/* Prominent Load More Button */}
-                  <Button 
-                    onClick={loadMoreColleges}
-                    disabled={loadingMore}
-                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white px-12 py-5 text-lg font-paragraph font-bold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 disabled:transform-none disabled:opacity-70 w-full sm:w-auto border-2 border-white/20"
-                    size="lg"
-                  >
-                    {loadingMore ? (
-                      <>
-                        <LoadingSpinner className="w-5 h-5 mr-3" />
-                        Loading More Colleges...
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="w-5 h-5 mr-3" />
-                        Load More ({totalItems - displayedColleges.length} remaining)
-                      </>
-                    )}
-                  </Button>
-                  
-                  <p className="text-sm text-gray-600 mt-4 font-paragraph font-medium">
-                    Click to load {Math.min(50, totalItems - displayedColleges.length)} more colleges
-                  </p>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           )}
 
