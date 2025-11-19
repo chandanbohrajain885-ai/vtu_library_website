@@ -126,7 +126,6 @@ export default function MemberCollegesPage() {
         
         // Log for debugging
         console.log(`📊 Load More: Showing ${Math.min(newItemsToShow, sourceData.length)} of ${sourceData.length} colleges`);
-        console.log(`📊 Load More Button should ${newItemsToShow < sourceData.length ? 'remain visible'} after this load`);
       }, 200); // Reduced delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
@@ -435,7 +434,7 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Card-Style Load More Button */}
+          {/* Card-Style Load More Button - Enhanced Visibility Check */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
             <div className="mt-6">
               <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
