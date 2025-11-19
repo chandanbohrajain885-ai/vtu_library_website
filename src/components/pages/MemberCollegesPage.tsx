@@ -8,19 +8,15 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ChevronDown, ExternalLink, ArrowLeft, Search, X } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, RefreshCw, AlertCircle, ExternalLink, ArrowLeft, Search, X } from 'lucide-react';
 
 export default function MemberCollegesPage() {
   const navigate = useNavigate();
   const [colleges, setColleges] = useState<MemberColleges[]>([]);
-  const [displayedColleges, setDisplayedColleges] = useState<MemberColleges[]>([]);
   const [filteredColleges, setFilteredColleges] = useState<MemberColleges[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [itemsToShow, setItemsToShow] = useState(211);
-  const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -41,9 +37,6 @@ export default function MemberCollegesPage() {
     
     if (term.length === 0) {
       setFilteredColleges(colleges);
-      setItemsToShow(211); // Reset to initial load amount
-      setDisplayedColleges(colleges.slice(0, 211));
-      setTotalItems(colleges.length);
     } else {
       const filtered = colleges.filter(college => 
         college.collegeName?.toLowerCase().includes(term.toLowerCase()) ||
@@ -54,9 +47,6 @@ export default function MemberCollegesPage() {
         college.phone?.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredColleges(filtered);
-      setItemsToShow(211); // Reset to initial load amount for search results
-      setDisplayedColleges(filtered.slice(0, 211));
-      setTotalItems(filtered.length);
     }
   };
 
@@ -64,9 +54,6 @@ export default function MemberCollegesPage() {
     setSearchTerm('');
     setIsSearchActive(false);
     setFilteredColleges(colleges);
-    setItemsToShow(211); // Reset to initial load amount
-    setDisplayedColleges(colleges.slice(0, 211));
-    setTotalItems(colleges.length);
   };
 
   const fetchColleges = async () => {
@@ -96,14 +83,10 @@ export default function MemberCollegesPage() {
       
       setColleges(sortedItems);
       setFilteredColleges(sortedItems);
-      setTotalItems(sortedItems.length);
-      setDisplayedColleges(sortedItems.slice(0, 211)); // Always start with 50 // come here
-      setItemsToShow(211); // Reset items to show
       setLastUpdated(new Date());
       
       // Log for debugging
-      console.log(`✅ Loaded ${sortedItems.length} colleges, displaying first 211`);
-      console.log(`📊 Load More Button should ${sortedItems.length > 211 ? 'be visible' : 'be hidden'} (${sortedItems.length} total items)`);
+      console.log(`✅ Loaded ${sortedItems.length} colleges, displaying all`);
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
       setError('Failed to load member colleges. Please try refreshing the page.');
@@ -112,47 +95,9 @@ export default function MemberCollegesPage() {
     }
   };
 
-  const loadMoreColleges = () => {
-    try {
-      setLoadingMore(true);
-      
-      // Use a shorter delay for better responsiveness
-      setTimeout(() => {
-        const newItemsToShow = itemsToShow + 211;
-        setItemsToShow(newItemsToShow);
-        const sourceData = isSearchActive ? filteredColleges : colleges;
-        const newDisplayedColleges = sourceData.slice(0, newItemsToShow);
-        setDisplayedColleges(newDisplayedColleges);
-        setLoadingMore(false);
-        
-        // Enhanced logging for debugging
-        console.log(`📊 Load More: Requested ${newItemsToShow} items`);
-        console.log(`📊 Load More: Source data has ${sourceData.length} total items`);
-        console.log(`📊 Load More: Now showing ${newDisplayedColleges.length} of ${sourceData.length} colleges`);
-        console.log(`📊 Load More: Remaining items: ${sourceData.length - newDisplayedColleges.length}`);
-        console.log(`📊 Load More: Button should ${newDisplayedColleges.length < sourceData.length ? 'remain visible' : 'be hidden'}`);
-      }, 200); // Reduced delay for better UX
-    } catch (err) {
-      console.error('❌ Error loading more colleges:', err);
-      setLoadingMore(false);
-    }
-  };
 
-  useEffect(() => {
-    const sourceData = isSearchActive ? filteredColleges : colleges;
-    const newDisplayedColleges = sourceData.slice(0, itemsToShow);
-    setDisplayedColleges(newDisplayedColleges);
-    
-    // Ensure totalItems is always in sync with the current data source
-    setTotalItems(sourceData.length);
-    
-    // Enhanced debugging
-    console.log(`🔄 useEffect: Source data length: ${sourceData.length}`);
-    console.log(`🔄 useEffect: Items to show: ${itemsToShow}`);
-    console.log(`🔄 useEffect: Displayed colleges: ${newDisplayedColleges.length}`);
-    console.log(`🔄 useEffect: Total items: ${sourceData.length}`);
-    console.log(`🔄 useEffect: Load More should be ${newDisplayedColleges.length < sourceData.length ? 'VISIBLE' : 'HIDDEN'}`);
-  }, [colleges, filteredColleges, itemsToShow, isSearchActive]);
+
+
 
   useEffect(() => {
     fetchColleges();
@@ -240,7 +185,7 @@ export default function MemberCollegesPage() {
             </div>
             {isSearchActive && (
               <p className="text-white/80 text-sm mt-2">
-                Found {totalItems} college{totalItems !== 1 ? 's' : ''} matching "{searchTerm}"
+                Found {filteredColleges.length} college{filteredColleges.length !== 1 ? 's' : ''} matching "{searchTerm}"
               </p>
             )}
           </div>
@@ -248,13 +193,8 @@ export default function MemberCollegesPage() {
           <div className="mt-6">
             <Badge variant="secondary" className="text-lg px-4 py-2">
               <GraduationCap className="w-5 h-5 mr-2" />
-              {totalItems} {isSearchActive ? 'Found' : 'Member'} Institution{totalItems !== 1 ? 's' : ''}
+              {isSearchActive ? filteredColleges.length : colleges.length} {isSearchActive ? 'Found' : 'Member'} Institution{(isSearchActive ? filteredColleges.length : colleges.length) !== 1 ? 's' : ''}
             </Badge>
-            {displayedColleges.length < totalItems && (
-              <Badge variant="outline" className="text-sm px-3 py-1 ml-2">
-                Showing {displayedColleges.length} of {totalItems}
-              </Badge>
-            )}
           </div>
         </div>
       </section>
@@ -268,7 +208,7 @@ export default function MemberCollegesPage() {
               <CardContent className="p-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                   <div>
-                    <div className="text-3xl font-bold text-primary mb-1">{isSearchActive ? totalItems : colleges.length}</div>
+                    <div className="text-3xl font-bold text-primary mb-1">{isSearchActive ? filteredColleges.length : colleges.length}</div>
                     <div className="text-sm text-gray-600 font-medium">{isSearchActive ? 'Search Results' : 'Total Colleges'}</div>
                   </div>
                   <div>
@@ -322,7 +262,7 @@ export default function MemberCollegesPage() {
             <CardContent className="p-6">
               {/* Compact Card Grid Layout */}
               <div className="space-y-4">
-                {displayedColleges.map((college, index) => (
+                {(isSearchActive ? filteredColleges : colleges).map((college, index) => (
                   <Card 
                     key={college._id} 
                     className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
@@ -448,96 +388,7 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Load More Button - ALWAYS visible when more items available - HARD FIX */}
-          {(() => {
-            const sourceData = isSearchActive ? filteredColleges : colleges;
-            const hasMoreItems = displayedColleges.length < sourceData.length;
-            const shouldShowButton = hasMoreItems && sourceData.length > 0;
-            
-            console.log(`🔧 HARD FIX - Load More Button Logic:`);
-            console.log(`   - Source data length: ${sourceData.length}`);
-            console.log(`   - Displayed colleges: ${displayedColleges.length}`);
-            console.log(`   - Has more items: ${hasMoreItems}`);
-            console.log(`   - Should show button: ${shouldShowButton}`);
-            console.log(`   - Total items: ${totalItems}`);
-            
-            return shouldShowButton ? (
-              <div className="mt-6 text-center bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <Button 
-                  onClick={loadMoreColleges}
-                  disabled={loadingMore}
-                  className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 text-sm"
-                  size="default"
-                >
-                  {loadingMore ? (
-                    <>
-                      <LoadingSpinner className="w-4 h-4 mr-2" />
-                      Loading More Colleges...
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="w-4 h-4 mr-2" />
-                      Load More Colleges ({sourceData.length - displayedColleges.length} remaining)
-                    </>
-                  )}
-                </Button>
-                <p className="text-sm text-gray-600 mt-2 font-medium">
-                  Showing {displayedColleges.length} of {sourceData.length} colleges
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Click to load 211 more colleges
-                </p>
-              </div>
-            ) : null;
-          })()}
 
-          {/* Reset Button - Only show when all items are loaded and there are more than 50 total */}
-          {(() => {
-            const sourceData = isSearchActive ? filteredColleges : colleges;
-            const allItemsLoaded = displayedColleges.length >= sourceData.length;
-            const shouldShowReset = allItemsLoaded && sourceData.length > 50;
-            
-            return shouldShowReset ? (
-              <div className="mt-6 text-center">
-                <Button 
-                  onClick={() => {
-                    // Reset to show only first 50 and enable load more functionality
-                    setItemsToShow(211);
-                    const sourceData = isSearchActive ? filteredColleges : colleges;
-                    setDisplayedColleges(sourceData.slice(0, 211));
-                  }}
-                  variant="outline"
-                  className="mb-4 text-sm px-4 py-2"
-                  size="sm"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Reset to Load More Mode
-                </Button>
-              </div>
-            ) : null;
-          })()}
-
-          {/* Completion message - Only show when all items are loaded */}
-          {(() => {
-            const sourceData = isSearchActive ? filteredColleges : colleges;
-            const allItemsLoaded = displayedColleges.length >= sourceData.length;
-            
-            return allItemsLoaded && sourceData.length > 0 ? (
-              <div className="mt-4 text-center">
-                <div className="bg-green-100 border border-green-300 rounded-lg p-4">
-                  <p className="text-green-800 font-semibold">✅ All colleges loaded!</p>
-                  <p className="text-sm text-green-600 mt-1">
-                    Displaying all {sourceData.length} colleges
-                  </p>
-                  {sourceData.length <= 211 && (
-                    <p className="text-xs text-green-600 mt-1">
-                      All available colleges are shown
-                    </p>
-                  )}
-                </div>
-              </div>
-            ) : null;
-          })()}
 
           {colleges.length === 0 && !loading && (
             <Card className="mt-8">
