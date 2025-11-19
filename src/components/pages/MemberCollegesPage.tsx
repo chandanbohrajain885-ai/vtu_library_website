@@ -464,14 +464,38 @@ export default function MemberCollegesPage() {
             </div>
           )}
 
-          {/* Debug: Always show button for testing (remove this in production) */}
+          {/* Load More Button - Above completion message when all items are loaded but user might want to refresh */}
+          {totalItems > 0 && displayedColleges.length >= totalItems && totalItems > 50 && (
+            <div className="mt-6 text-center">
+              <Button 
+                onClick={() => {
+                  // Reset to show only first 50 and enable load more functionality
+                  setItemsToShow(50);
+                  setDisplayedColleges(colleges.slice(0, 50));
+                }}
+                variant="outline"
+                className="mb-4 text-sm px-4 py-2"
+                size="sm"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Reset to Load More Mode
+              </Button>
+            </div>
+          )}
+
+          {/* Completion message */}
           {totalItems > 0 && displayedColleges.length >= totalItems && (
-            <div className="mt-8 text-center">
+            <div className="mt-4 text-center">
               <div className="bg-green-100 border border-green-300 rounded-lg p-4">
                 <p className="text-green-800 font-semibold">✅ All colleges loaded!</p>
                 <p className="text-sm text-green-600 mt-1">
                   Displaying all {totalItems} colleges
                 </p>
+                {totalItems <= 50 && (
+                  <p className="text-xs text-green-600 mt-1">
+                    All available colleges are shown
+                  </p>
+                )}
               </div>
             </div>
           )}
