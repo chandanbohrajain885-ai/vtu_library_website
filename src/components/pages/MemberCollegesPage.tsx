@@ -438,10 +438,6 @@ export default function MemberCollegesPage() {
           {/* Enhanced Load More Button - Highly Visible & Always at Bottom */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
             <div className="mt-12 mb-12 text-center">
-              {/* Debug information - remove in production */}
-              <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
-                Debug: Displayed={displayedColleges.length}, Total={totalItems}, Should show button={displayedColleges.length < totalItems}
-              </div>
               
               {/* Attention-grabbing container with enhanced visibility */}
               <div className="bg-gradient-to-br from-primary/8 via-secondary/5 to-primary/8 rounded-2xl p-8 max-w-2xl mx-auto border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
