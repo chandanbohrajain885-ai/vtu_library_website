@@ -434,29 +434,29 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Simple Load More Button - Always visible when more items available */}
+          {/* Small Load More Button - Compact and clearly visible */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
-            <div className="mt-8 text-center">
+            <div className="mt-6 text-center">
               <Button 
                 onClick={loadMoreColleges}
                 disabled={loadingMore}
-                className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:transform-none"
-                size="lg"
+                className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70"
+                size="sm"
               >
                 {loadingMore ? (
                   <>
-                    <LoadingSpinner className="w-4 h-4 mr-2" />
+                    <LoadingSpinner className="w-3 h-3 mr-1" />
                     Loading...
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4 mr-2" />
-                    Load More ({totalItems - displayedColleges.length} remaining)
+                    <ChevronDown className="w-3 h-3 mr-1" />
+                    Load More ({totalItems - displayedColleges.length})
                   </>
                 )}
               </Button>
-              <p className="text-sm text-gray-600 mt-2">
-                Showing {displayedColleges.length} of {totalItems} colleges
+              <p className="text-xs text-gray-500 mt-1">
+                {displayedColleges.length} of {totalItems} colleges
               </p>
             </div>
           )}
