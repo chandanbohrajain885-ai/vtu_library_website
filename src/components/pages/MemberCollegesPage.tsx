@@ -121,11 +121,16 @@ export default function MemberCollegesPage() {
         const newItemsToShow = itemsToShow + 50;
         setItemsToShow(newItemsToShow);
         const sourceData = isSearchActive ? filteredColleges : colleges;
-        setDisplayedColleges(sourceData.slice(0, newItemsToShow));
+        const newDisplayedColleges = sourceData.slice(0, newItemsToShow);
+        setDisplayedColleges(newDisplayedColleges);
         setLoadingMore(false);
         
-        // Log for debugging
-        console.log(`📊 Load More: Showing ${Math.min(newItemsToShow, sourceData.length)} of ${sourceData.length} colleges`);
+        // Enhanced logging for debugging
+        console.log(`📊 Load More: Requested ${newItemsToShow} items`);
+        console.log(`📊 Load More: Source data has ${sourceData.length} total items`);
+        console.log(`📊 Load More: Now showing ${newDisplayedColleges.length} of ${sourceData.length} colleges`);
+        console.log(`📊 Load More: Remaining items: ${sourceData.length - newDisplayedColleges.length}`);
+        console.log(`📊 Load More: Button should ${newDisplayedColleges.length < sourceData.length ? 'remain visible' : 'be hidden'}`);
       }, 200); // Reduced delay for better UX
     } catch (err) {
       console.error('❌ Error loading more colleges:', err);
@@ -135,9 +140,18 @@ export default function MemberCollegesPage() {
 
   useEffect(() => {
     const sourceData = isSearchActive ? filteredColleges : colleges;
-    setDisplayedColleges(sourceData.slice(0, itemsToShow));
+    const newDisplayedColleges = sourceData.slice(0, itemsToShow);
+    setDisplayedColleges(newDisplayedColleges);
+    
     // Ensure totalItems is always in sync with the current data source
     setTotalItems(sourceData.length);
+    
+    // Enhanced debugging
+    console.log(`🔄 useEffect: Source data length: ${sourceData.length}`);
+    console.log(`🔄 useEffect: Items to show: ${itemsToShow}`);
+    console.log(`🔄 useEffect: Displayed colleges: ${newDisplayedColleges.length}`);
+    console.log(`🔄 useEffect: Total items: ${sourceData.length}`);
+    console.log(`🔄 useEffect: Load More should be ${newDisplayedColleges.length < sourceData.length ? 'VISIBLE' : 'HIDDEN'}`);
   }, [colleges, filteredColleges, itemsToShow, isSearchActive]);
 
   useEffect(() => {
@@ -434,71 +448,96 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Load More Button - Always visible when more items available */}
-          {displayedColleges.length < totalItems && totalItems > 0 && (
-            <div className="mt-6 text-center bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <Button 
-                onClick={loadMoreColleges}
-                disabled={loadingMore}
-                className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 text-sm"
-                size="default"
-              >
-                {loadingMore ? (
-                  <>
-                    <LoadingSpinner className="w-4 h-4 mr-2" />
-                    Loading More Colleges...
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="w-4 h-4 mr-2" />
-                    Load More Colleges ({totalItems - displayedColleges.length} remaining)
-                  </>
-                )}
-              </Button>
-              <p className="text-sm text-gray-600 mt-2 font-medium">
-                Showing {displayedColleges.length} of {totalItems} colleges
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Click to load 50 more colleges
-              </p>
-            </div>
-          )}
-
-          {/* Load More Button - Above completion message when all items are loaded but user might want to refresh */}
-          {totalItems > 0 && displayedColleges.length >= totalItems && totalItems > 50 && (
-            <div className="mt-6 text-center">
-              <Button 
-                onClick={() => {
-                  // Reset to show only first 50 and enable load more functionality
-                  setItemsToShow(50);
-                  setDisplayedColleges(colleges.slice(0, 50));
-                }}
-                variant="outline"
-                className="mb-4 text-sm px-4 py-2"
-                size="sm"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Reset to Load More Mode
-              </Button>
-            </div>
-          )}
-
-          {/* Completion message */}
-          {totalItems > 0 && displayedColleges.length >= totalItems && (
-            <div className="mt-4 text-center">
-              <div className="bg-green-100 border border-green-300 rounded-lg p-4">
-                <p className="text-green-800 font-semibold">✅ All colleges loaded!</p>
-                <p className="text-sm text-green-600 mt-1">
-                  Displaying all {totalItems} colleges
+          {/* Load More Button - ALWAYS visible when more items available - HARD FIX */}
+          {(() => {
+            const sourceData = isSearchActive ? filteredColleges : colleges;
+            const hasMoreItems = displayedColleges.length < sourceData.length;
+            const shouldShowButton = hasMoreItems && sourceData.length > 0;
+            
+            console.log(`🔧 HARD FIX - Load More Button Logic:`);
+            console.log(`   - Source data length: ${sourceData.length}`);
+            console.log(`   - Displayed colleges: ${displayedColleges.length}`);
+            console.log(`   - Has more items: ${hasMoreItems}`);
+            console.log(`   - Should show button: ${shouldShowButton}`);
+            console.log(`   - Total items: ${totalItems}`);
+            
+            return shouldShowButton ? (
+              <div className="mt-6 text-center bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <Button 
+                  onClick={loadMoreColleges}
+                  disabled={loadingMore}
+                  className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 text-sm"
+                  size="default"
+                >
+                  {loadingMore ? (
+                    <>
+                      <LoadingSpinner className="w-4 h-4 mr-2" />
+                      Loading More Colleges...
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-4 h-4 mr-2" />
+                      Load More Colleges ({sourceData.length - displayedColleges.length} remaining)
+                    </>
+                  )}
+                </Button>
+                <p className="text-sm text-gray-600 mt-2 font-medium">
+                  Showing {displayedColleges.length} of {sourceData.length} colleges
                 </p>
-                {totalItems <= 50 && (
-                  <p className="text-xs text-green-600 mt-1">
-                    All available colleges are shown
-                  </p>
-                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Click to load 50 more colleges
+                </p>
               </div>
-            </div>
-          )}
+            ) : null;
+          })()}
+
+          {/* Reset Button - Only show when all items are loaded and there are more than 50 total */}
+          {(() => {
+            const sourceData = isSearchActive ? filteredColleges : colleges;
+            const allItemsLoaded = displayedColleges.length >= sourceData.length;
+            const shouldShowReset = allItemsLoaded && sourceData.length > 50;
+            
+            return shouldShowReset ? (
+              <div className="mt-6 text-center">
+                <Button 
+                  onClick={() => {
+                    // Reset to show only first 50 and enable load more functionality
+                    setItemsToShow(50);
+                    const sourceData = isSearchActive ? filteredColleges : colleges;
+                    setDisplayedColleges(sourceData.slice(0, 50));
+                  }}
+                  variant="outline"
+                  className="mb-4 text-sm px-4 py-2"
+                  size="sm"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Reset to Load More Mode
+                </Button>
+              </div>
+            ) : null;
+          })()}
+
+          {/* Completion message - Only show when all items are loaded */}
+          {(() => {
+            const sourceData = isSearchActive ? filteredColleges : colleges;
+            const allItemsLoaded = displayedColleges.length >= sourceData.length;
+            
+            return allItemsLoaded && sourceData.length > 0 ? (
+              <div className="mt-4 text-center">
+                <div className="bg-green-100 border border-green-300 rounded-lg p-4">
+                  <p className="text-green-800 font-semibold">✅ All colleges loaded!</p>
+                  <p className="text-sm text-green-600 mt-1">
+                    Displaying all {sourceData.length} colleges
+                  </p>
+                  {sourceData.length <= 50 && (
+                    <p className="text-xs text-green-600 mt-1">
+                      All available colleges are shown
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : null;
+          })()}
 
           {colleges.length === 0 && !loading && (
             <Card className="mt-8">
