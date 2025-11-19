@@ -19,7 +19,7 @@ export default function MemberCollegesPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [itemsToShow, setItemsToShow] = useState(50);
+  const [itemsToShow, setItemsToShow] = useState(211);
   const [totalItems, setTotalItems] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -42,7 +42,7 @@ export default function MemberCollegesPage() {
     if (term.length === 0) {
       setFilteredColleges(colleges);
       setItemsToShow(211); // Reset to initial load amount
-      setDisplayedColleges(colleges.slice(0, 50));
+      setDisplayedColleges(colleges.slice(0, 211));
       setTotalItems(colleges.length);
     } else {
       const filtered = colleges.filter(college => 
@@ -54,8 +54,8 @@ export default function MemberCollegesPage() {
         college.phone?.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredColleges(filtered);
-      setItemsToShow(50); // Reset to initial load amount for search results
-      setDisplayedColleges(filtered.slice(0, 50));
+      setItemsToShow(211); // Reset to initial load amount for search results
+      setDisplayedColleges(filtered.slice(0, 211));
       setTotalItems(filtered.length);
     }
   };
@@ -64,8 +64,8 @@ export default function MemberCollegesPage() {
     setSearchTerm('');
     setIsSearchActive(false);
     setFilteredColleges(colleges);
-    setItemsToShow(50); // Reset to initial load amount
-    setDisplayedColleges(colleges.slice(0, 50));
+    setItemsToShow(211); // Reset to initial load amount
+    setDisplayedColleges(colleges.slice(0, 211));
     setTotalItems(colleges.length);
   };
 
@@ -97,13 +97,13 @@ export default function MemberCollegesPage() {
       setColleges(sortedItems);
       setFilteredColleges(sortedItems);
       setTotalItems(sortedItems.length);
-      setDisplayedColleges(sortedItems.slice(0, 50)); // Always start with 50
-      setItemsToShow(50); // Reset items to show
+      setDisplayedColleges(sortedItems.slice(0, 211)); // Always start with 50
+      setItemsToShow(211); // Reset items to show
       setLastUpdated(new Date());
       
       // Log for debugging
-      console.log(`✅ Loaded ${sortedItems.length} colleges, displaying first 50`);
-      console.log(`📊 Load More Button should ${sortedItems.length > 50 ? 'be visible' : 'be hidden'} (${sortedItems.length} total items)`);
+      console.log(`✅ Loaded ${sortedItems.length} colleges, displaying first 211`);
+      console.log(`📊 Load More Button should ${sortedItems.length > 211 ? 'be visible' : 'be hidden'} (${sortedItems.length} total items)`);
     } catch (err) {
       console.error('❌ Error fetching colleges:', err);
       setError('Failed to load member colleges. Please try refreshing the page.');
@@ -118,7 +118,7 @@ export default function MemberCollegesPage() {
       
       // Use a shorter delay for better responsiveness
       setTimeout(() => {
-        const newItemsToShow = itemsToShow + 50;
+        const newItemsToShow = itemsToShow + 211;
         setItemsToShow(newItemsToShow);
         const sourceData = isSearchActive ? filteredColleges : colleges;
         const newDisplayedColleges = sourceData.slice(0, newItemsToShow);
