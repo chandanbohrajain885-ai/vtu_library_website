@@ -434,29 +434,32 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Small Load More Button - Compact and clearly visible */}
+          {/* Load More Button - Always visible when more items available */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center bg-gray-50 border border-gray-200 rounded-lg p-4">
               <Button 
                 onClick={loadMoreColleges}
                 disabled={loadingMore}
-                className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70"
-                size="sm"
+                className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-70 text-sm"
+                size="default"
               >
                 {loadingMore ? (
                   <>
-                    <LoadingSpinner className="w-3 h-3 mr-1" />
-                    Loading...
+                    <LoadingSpinner className="w-4 h-4 mr-2" />
+                    Loading More Colleges...
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-3 h-3 mr-1" />
-                    Load More ({totalItems - displayedColleges.length})
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                    Load More Colleges ({totalItems - displayedColleges.length} remaining)
                   </>
                 )}
               </Button>
+              <p className="text-sm text-gray-600 mt-2 font-medium">
+                Showing {displayedColleges.length} of {totalItems} colleges
+              </p>
               <p className="text-xs text-gray-500 mt-1">
-                {displayedColleges.length} of {totalItems} colleges
+                Click to load 50 more colleges
               </p>
             </div>
           )}
