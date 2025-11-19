@@ -434,65 +434,42 @@ export default function MemberCollegesPage() {
             </CardContent>
           </Card>
 
-          {/* Card-Style Load More Button - Enhanced Visibility Check */}
+          {/* Simple Load More Button - Always visible when more items available */}
           {displayedColleges.length < totalItems && totalItems > 0 && (
-            <div className="mt-6">
-              <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-2 border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/30">
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-12 gap-4 items-center">
-                    {/* Icon Section */}
-                    <div className="col-span-1">
-                      <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full shadow-md">
-                        <ChevronDown className="w-6 h-6 text-white animate-bounce" />
-                      </div>
-                    </div>
-                    
-                    {/* Content Section */}
-                    <div className="col-span-8">
-                      <div className="text-left">
-                        <h3 className="font-heading font-bold text-primary text-lg mb-1">
-                          Load More Colleges
-                        </h3>
-                        <p className="font-paragraph text-gray-700 text-sm mb-2">
-                          Showing {displayedColleges.length} of {totalItems} member colleges
-                        </p>
-                        {/* Progress Bar */}
-                        <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
-                          <div 
-                            className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-700"
-                            style={{ width: `${(displayedColleges.length / totalItems) * 100}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-xs text-gray-600">
-                          {Math.round((displayedColleges.length / totalItems) * 100)}% loaded • {totalItems - displayedColleges.length} remaining
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Button Section */}
-                    <div className="col-span-3">
-                      <Button 
-                        onClick={loadMoreColleges}
-                        disabled={loadingMore}
-                        className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-paragraph font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:transform-none disabled:opacity-70"
-                        size="lg"
-                      >
-                        {loadingMore ? (
-                          <>
-                            <LoadingSpinner className="w-4 h-4 mr-2" />
-                            Loading...
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="w-4 h-4 mr-2" />
-                            Load More
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="mt-8 text-center">
+              <Button 
+                onClick={loadMoreColleges}
+                disabled={loadingMore}
+                className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:transform-none"
+                size="lg"
+              >
+                {loadingMore ? (
+                  <>
+                    <LoadingSpinner className="w-4 h-4 mr-2" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                    Load More ({totalItems - displayedColleges.length} remaining)
+                  </>
+                )}
+              </Button>
+              <p className="text-sm text-gray-600 mt-2">
+                Showing {displayedColleges.length} of {totalItems} colleges
+              </p>
+            </div>
+          )}
+
+          {/* Debug: Always show button for testing (remove this in production) */}
+          {totalItems > 0 && displayedColleges.length >= totalItems && (
+            <div className="mt-8 text-center">
+              <div className="bg-green-100 border border-green-300 rounded-lg p-4">
+                <p className="text-green-800 font-semibold">✅ All colleges loaded!</p>
+                <p className="text-sm text-green-600 mt-1">
+                  Displaying all {totalItems} colleges
+                </p>
+              </div>
             </div>
           )}
 
