@@ -108,6 +108,8 @@ export interface MemberColleges {
   sl_noo?: number;
   /** @wixFieldType url */
   url?: string;
+  /** @wixFieldType number */
+  sl1No?: number;
 }
 
 
@@ -187,6 +189,6 @@ export interface UserGuideArticles {
   author?: string;
   /** @wixFieldType text */
   slug?: string;
-  /** @wixFieldType image */
+  /** @wixFieldType image - Contains image URL, render with <Image> component, NOT as text */
   featuredImage?: string;
 }
